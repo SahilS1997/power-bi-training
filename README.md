@@ -27,7 +27,7 @@ A comprehensive 12-day Power BI training program with interactive presentations 
 
 ## 🚀 Live Demo
 
-Visit the training portal: [Power BI Training Portal](https://yourusername.github.io/power-bi-training/)
+Visit the training portal: [Power BI Training Portal](https://sahils1997.github.io/power-bi-training/PowerBI_Training_Portal.html)
 
 ## 👨‍🏫 Trainer
 
