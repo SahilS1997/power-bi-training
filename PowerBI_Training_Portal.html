@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power BI Training - 12-Day Accelerated Program</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Fabric Client -->
+    <script src="scripts/fabricClient.js"></script>
     <style>
         :root {
             --dark-bg: #1a1a2e;
@@ -1665,12 +1667,40 @@
 
     <!-- Content Control System -->
     <script>
-        // Check content state and apply locks/recordings
-        (function() {
-            const state = localStorage.getItem('powerbi_content_state');
-            if (!state) return;
-
-            const contentState = JSON.parse(state);
+        // Initialize Fabric Client
+        const fabricClient = new FabricClient();
+        
+        // Load content state from Fabric and apply locks/recordings
+        (async function() {
+            try {
+                const days = await fabricClient.getAllTrainingDays();
+                
+                // Create state object for compatibility
+                const contentState = {
+                    unlockedDays: days.filter(d => d.isUnlocked).map(d => d.dayNumber),
+                    recordings: {}
+                };
+                
+                days.forEach(day => {
+                    if (day.recording) {
+                        contentState.recordings[day.dayNumber] = {
+                            url: day.recording.videoUrl,
+                            title: day.recording.title,
+                            duration: day.recording.duration,
+                            embedUrl: day.recording.embedUrl
+                        };
+                    }
+                });
+                
+                console.log('✅ Loaded from Microsoft Fabric:', contentState);
+            } catch (error) {
+                console.warn('⚠️ Fabric unavailable, checking localStorage:', error);
+                const state = localStorage.getItem('powerbi_content_state');
+                if (!state) {
+                    console.log('ℹ️ No content restrictions - all days visible');
+                    return;
+                }
+                const contentState = JSON.parse(state);
             const dayCards = document.querySelectorAll('.day-card');
 
             dayCards.forEach((card, index) => {
@@ -1698,7 +1728,8 @@
                     if (actionsDiv) {
                         const isGitHub = window.location.hostname.includes('github.io');
                         const basePath = isGitHub ? '/power-bi-training/' : './';
-                        const playerUrl = `${basePath}Video_Player.html?url=${encodeURIComponent(recording.url)}&title=${encodeURIComponent(recording.title)}&duration=${encodeURIComponent(recording.duration)}&day=${dayNumber}`;
+                        const videoUrl = recording.embedUrl || recording.url;
+                        const playerUrl = `${basePath}Video_Player.html?url=${encodeURIComponent(videoUrl)}&title=${encodeURIComponent(recording.title)}&duration=${encodeURIComponent(recording.duration)}&day=${dayNumber}`;
                         
                         const recordingBtn = document.createElement('a');
                         recordingBtn.href = playerUrl;
@@ -1714,6 +1745,9 @@
                     }
                 }
             });
+            } catch (e) {
+                console.error('Error applying content state:', e);
+            }
         })();
     </script>
 </body>

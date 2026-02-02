@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - Power BI Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Microsoft Authentication Library -->
+    <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
+    <!-- Fabric Client -->
+    <script src="scripts/fabricClient.js"></script>
     <style>
         :root {
             --dark-bg: #1a1a2e;
@@ -524,6 +528,9 @@
     </div>
 
     <script>
+        // Initialize Fabric Client
+        const fabricClient = new FabricClient();
+        
         // Admin Credentials (In production, use backend authentication)
         const ADMIN_CREDENTIALS = {
             username: 'admin@powerbi.training',
@@ -548,18 +555,40 @@
 
         let currentUploadDay = null;
 
-        // Initialize content state from localStorage
-        function getContentState() {
-            const state = localStorage.getItem('powerbi_content_state');
-            return state ? JSON.parse(state) : {
-                unlockedDays: [],
-                recordings: {}
-            };
+        // Get content state from Fabric (with localStorage fallback)
+        async function getContentState() {
+            try {
+                const days = await fabricClient.getAllTrainingDays();
+                const recordings = await fabricClient.getAllRecordings();
+                
+                return {
+                    days: days,
+                    unlockedDays: days.filter(d => d.isUnlocked).map(d => d.dayNumber),
+                    recordings: recordings.reduce((acc, r) => {
+                        acc[r.dayNumber] = {
+                            url: r.videoUrl,
+                            title: r.title,
+                            duration: r.duration,
+                            embedUrl: r.embedUrl
+                        };
+                        return acc;
+                    }, {})
+                };
+            } catch (error) {
+                console.error('Failed to load from Fabric, using localStorage:', error);
+                const state = localStorage.getItem('powerbi_content_state');
+                return state ? JSON.parse(state) : {
+                    days: [],
+                    unlockedDays: [],
+                    recordings: {}
+                };
+            }
         }
 
-        function saveContentState(state) {
+        async function saveContentState(state) {
+            // Also save to localStorage as backup
             localStorage.setItem('powerbi_content_state', JSON.stringify(state));
-            updateStats();
+            await updateStats();
         }
 
         // Login handling
@@ -584,12 +613,12 @@
             }
         });
 
-        function showDashboard() {
+        async function showDashboard() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
             document.getElementById('adminUserName').textContent = localStorage.getItem('admin_username');
-            renderDays();
-            updateStats();
+            await renderDays();
+            await updateStats();
         }
 
         function logout() {
@@ -598,10 +627,10 @@
             location.reload();
         }
 
-        // Render days
-        function renderDays() {
+        // Render days from Fabric
+        async function renderDays() {
             const container = document.getElementById('daysContainer');
-            const state = getContentState();
+            const state = await getContentState();
             
             container.innerHTML = TRAINING_DAYS.map(day => {
                 const isUnlocked = state.unlockedDays.includes(day.day);
@@ -635,29 +664,51 @@
             }).join('');
         }
 
-        // Toggle day lock/unlock
-        function toggleDayLock(day) {
-            const state = getContentState();
-            const index = state.unlockedDays.indexOf(day);
-            
-            if (index > -1) {
-                state.unlockedDays.splice(index, 1);
-            } else {
-                state.unlockedDays.push(day);
-                state.unlockedDays.sort((a, b) => a - b);
+        // Toggle day lock/unlock with Fabric
+        async function toggleDayLock(day) {
+            try {
+                const state = await getContentState();
+                const isUnlocked = state.unlockedDays.includes(day);
+                
+                if (isUnlocked) {
+                    await fabricClient.lockDay(day);
+                    alert(`Day ${day} locked successfully!`);
+                } else {
+                    await fabricClient.unlockDay(day, ADMIN_CREDENTIALS.username);
+                    alert(`Day ${day} unlocked successfully!`);
+                }
+                
+                await renderDays();
+            } catch (error) {
+                console.error('Error toggling lock:', error);
+                alert('Failed to update: ' + error.message + '. Changes saved locally.');
+                
+                // Fallback to localStorage
+                const state = await getContentState();
+                const index = state.unlockedDays.indexOf(day);
+                if (index > -1) {
+                    state.unlockedDays.splice(index, 1);
+                } else {
+                    state.unlockedDays.push(day);
+                }
+                await saveContentState(state);
+                await renderDays();
             }
-            
-            saveContentState(state);
-            renderDays();
         }
 
         // Unlock all days
-        function unlockAllDays() {
-            if (confirm('Unlock all 12 training days?')) {
-                const state = getContentState();
-                state.unlockedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-                saveContentState(state);
-                renderDays();
+        async function unlockAllDays() {
+            if (!confirm('Unlock all 12 training days?')) return;
+            
+            try {
+                for (let day = 1; day <= 12; day++) {
+                    await fabricClient.unlockDay(day, ADMIN_CREDENTIALS.username);
+                }
+                alert('All days unlocked successfully!');
+                await renderDays();
+            } catch (error) {
+                console.error('Error unlocking all:', error);
+                alert('Failed to unlock all days: ' + error.message);
             }
         }
 
@@ -681,7 +732,7 @@
             currentUploadDay = null;
         }
 
-        function saveRecording() {
+        async function saveRecording() {
             const url = document.getElementById('recordingUrl').value;
             const title = document.getElementById('recordingTitle').value;
             const duration = document.getElementById('recordingDuration').value;
@@ -691,30 +742,73 @@
                 return;
             }
 
-            const state = getContentState();
-            state.recordings[currentUploadDay] = { url, title, duration };
-            saveContentState(state);
-            
-            closeUploadModal();
-            renderDays();
-            alert('Recording saved successfully!');
-        }
+            try {
+                // Detect platform
+                let platform = 'DIRECT';
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    platform = 'YOUTUBE';
+                } else if (url.includes('vimeo.com')) {
+                    platform = 'VIMEO';
+                }
 
-        function removeRecording(day) {
-            if (confirm('Remove this recording?')) {
-                const state = getContentState();
-                delete state.recordings[day];
-                saveContentState(state);
-                renderDays();
+                await fabricClient.uploadRecording({
+                    dayNumber: currentUploadDay,
+                    title: title,
+                    videoUrl: url,
+                    platform: platform,
+                    duration: duration,
+                    uploadedBy: ADMIN_CREDENTIALS.username
+                });
+                
+                closeUploadModal();
+                await renderDays();
+                alert('Recording uploaded to Fabric successfully!');
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload: ' + error.message + '. Saved locally.');
+                
+                // Fallback to localStorage
+                const state = await getContentState();
+                state.recordings[currentUploadDay] = { url, title, duration };
+                await saveContentState(state);
+                closeUploadModal();
+                await renderDays();
             }
         }
 
-        // Update statistics
-        function updateStats() {
-            const state = getContentState();
-            document.getElementById('statUnlocked').textContent = state.unlockedDays.length;
-            document.getElementById('statRecordings').textContent = Object.keys(state.recordings).length;
-            document.getElementById('statLocked').textContent = 12 - state.unlockedDays.length;
+        async function removeRecording(day) {
+            if (!confirm('Remove this recording?')) return;
+            
+            try {
+                const state = await getContentState();
+                const recording = Object.values(state.days).find(d => d.dayNumber === day)?.recording;
+                
+                if (recording?.recordingId) {
+                    await fabricClient.removeRecording(recording.recordingId);
+                }
+                
+                await renderDays();
+                alert('Recording removed successfully!');
+            } catch (error) {
+                console.error('Remove error:', error);
+                alert('Failed to remove: ' + error.message);
+            }
+        }
+
+        // Update statistics from Fabric
+        async function updateStats() {
+            try {
+                const stats = await fabricClient.getDashboardStats();
+                document.getElementById('statUnlocked').textContent = stats.unlockedDays;
+                document.getElementById('statRecordings').textContent = stats.recordingsAvailable;
+                document.getElementById('statLocked').textContent = stats.lockedDays;
+            } catch (error) {
+                console.error('Stats error:', error);
+                const state = await getContentState();
+                document.getElementById('statUnlocked').textContent = state.unlockedDays.length;
+                document.getElementById('statRecordings').textContent = Object.keys(state.recordings).length;
+                document.getElementById('statLocked').textContent = 12 - state.unlockedDays.length;
+            }
         }
 
         // Close modal on outside click
