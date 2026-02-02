@@ -167,9 +167,44 @@
             align-items: center;
         }
 
-        .admin-user {
-            color: var(--accent-gold);
-            font-weight: 600;
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-image {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(242, 200, 17, 0.3);
+            transition: all 0.3s;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(242, 200, 17, 0.5);
+        }
+
+        .profile-skeleton {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.05) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .logout-btn {
@@ -458,7 +493,10 @@
             <div class="navbar-content">
                 <div class="navbar-brand">Admin</div>
                 <div class="navbar-actions">
-                    <span class="admin-user" id="adminUserName"></span>
+                    <div class="profile-container">
+                        <div id="profileSkeleton" class="profile-skeleton" style="display: none;"></div>
+                        <img id="profileImage" class="profile-image" src="" alt="Profile" style="display: none;">
+                    </div>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -633,7 +671,18 @@
         async function showDashboard() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
-            document.getElementById('adminUserName').textContent = localStorage.getItem('admin_username');
+            
+            // Show profile skeleton initially
+            document.getElementById('profileSkeleton').style.display = 'block';
+            
+            // Simulate loading profile image
+            setTimeout(() => {
+                const profileImage = document.getElementById('profileImage');
+                profileImage.src = 'https://ui-avatars.com/api/?name=Admin&background=F2C811&color=1a1a2e&size=128&bold=true';
+                profileImage.style.display = 'block';
+                document.getElementById('profileSkeleton').style.display = 'none';
+            }, 500);
+            
             await renderDays();
             await updateStats();
         }
