@@ -553,14 +553,11 @@
 
         let currentUploadDay = null;
 
-        // Get content state from GitHub data files (with localStorage fallback)
+        // Get content state from local data files
         async function getContentState() {
             try {
-                // Detect environment
-                const isGitHub = window.location.hostname.includes('github.io');
-                const baseUrl = isGitHub 
-                    ? 'https://sahils1997.github.io/power-bi-training'
-                    : '';
+                // Local-only mode for presentation
+                const baseUrl = 'data';
                 
                 // Load from GitHub data files
                 const [daysResponse, recordingsResponse] = await Promise.all([
@@ -679,11 +676,22 @@
             }).join('');
         }
 
-        // Toggle day lock/unlock with localStorage (read-only view)
+        // Toggle day lock/unlock locally
         async function toggleDayLock(day) {
-            // Show warning that this is read-only
-            alert('⚠️ This is a read-only dashboard.\n\nTo unlock/lock days, use the Python admin CLI:\npython scripts/admin_fabric.py unlock ' + day + '\n\nChanges will sync to GitHub automatically within 5 minutes.');
-            return;
+            const state = await getContentState();
+            const index = state.unlockedDays.indexOf(day);
+            
+            if (index > -1) {
+                state.unlockedDays.splice(index, 1);
+                alert(`Day ${day} locked locally! Run Python CLI to sync with Fabric.`);
+            } else {
+                state.unlockedDays.push(day);
+                alert(`Day ${day} unlocked locally! Run Python CLI to sync with Fabric.`);
+            }
+            
+            await saveContentState(state);
+            await renderDays();
+        }
             
             // Legacy code (disabled)
             try {
@@ -718,16 +726,22 @@
 
         // Unlock all days
         async function unlockAllDays() {
-            alert('⚠️ This is a read-only dashboard.\n\nTo unlock all days, use the Python admin CLI:\npython scripts/admin_fabric.py unlock-all\n\nChanges will sync to GitHub automatically within 5 minutes.');
+            if (!confirm('Unlock all 12 training days?')) return;
+            
+            const state = await getContentState();
+            state.unlockedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            await saveContentState(state);
+            alert('All days unlocked! Use Python CLI to sync with Fabric.');
+            await renderDays();
         }
 
         // Upload modal
         function openUploadModal(day) {
-            alert('⚠️ This is a read-only dashboard.\n\nTo upload recordings, use the Python admin CLI:\npython scripts/admin_fabric.py upload <day> "Title" "https://video-url" "Duration"\n\nExample:\npython scripts/admin_fabric.py upload 1 "Day 1 Recording" "https://youtu.be/xxx" "2h 30min"\n\nChanges will sync to GitHub automatically within 5 minutes.');
-            return;
-            
-            // Legacy code (disabled)
             currentUploadDay = day;
+            const dayInfo = TRAINING_DAYS.find(d => d.day === day);
+            document.getElementById('modalDayTitle').textContent = `Day ${day}: ${dayInfo.title}`;
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
             const dayData = TRAINING_DAYS.find(d => d.day === day);
             const state = getContentState();
             const recording = state.recordings[day];

@@ -1668,13 +1668,10 @@
         // Load training data from GitHub repo (synced from Fabric)
         (async function() {
             try {
-                // Detect environment
-                const isGitHub = window.location.hostname === 'sahils1997.github.io';
-                const baseUrl = isGitHub 
-                    ? 'https://sahils1997.github.io/power-bi-training/data'
-                    : 'data';
+                // Local-only mode for presentation
+                const baseUrl = 'data';
                 
-                // Fetch training data from GitHub repo
+                // Fetch training data from local folder
                 const [daysResponse, recordingsResponse] = await Promise.all([
                     fetch(`${baseUrl}/training_days.json`),
                     fetch(`${baseUrl}/recordings.json`)
