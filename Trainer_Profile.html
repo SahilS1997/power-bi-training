@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahil Sreedharan - Power BI Training Expert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --darkest-bg: #0f1419;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-silver: #C0C0C0;
+            --accent-platinum: #E5E4E2;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--darkest-bg) 0%, var(--darker-bg) 50%, var(--dark-bg) 100%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 20, 25, 0.85);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .navbar-brand:hover {
+            color: var(--accent-platinum);
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .navbar-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-silver);
+            transition: width 0.3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--accent-platinum);
+        }
+
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.9), rgba(26, 26, 46, 0.7));
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .profile-image-container {
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-image-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .profile-image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-platinum));
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .profile-image-wrapper:hover::before {
+            opacity: 0.3;
+        }
+
+        .profile-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 2px solid var(--glass-border);
+        }
+
+        .profile-placeholder {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(229, 228, 226, 0.1));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--glass-border);
+        }
+
+        .profile-placeholder svg {
+            width: 60%;
+            height: 60%;
+            fill: var(--accent-silver);
+            opacity: 0.4;
+        }
+
+        .profile-info {
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .profile-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 4rem;
+            color: var(--text-primary);
+            letter-spacing: 0.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent-silver);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .profile-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 2.5rem;
+        }
+
+        .credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .credential-badge {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            color: var(--accent-platinum);
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .credential-badge:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-silver);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            padding: 1.8rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-number {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-platinum));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+            text-transform: uppercase;
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            background: rgba(15, 20, 25, 0.6);
+        }
+
+        .section-alt {
+            background: linear-gradient(to bottom, 
+                        rgba(22, 33, 62, 0.4) 0%, 
+                        rgba(26, 26, 46, 0.6) 50%, 
+                        rgba(15, 20, 25, 0.4) 100%);
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3rem;
+            color: var(--text-primary);
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+            letter-spacing: 0.05rem;
+        }
+
+        /* Analytics Carousel Styles */
+        .analytics-carousel {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 0 1rem;
+        }
+
+        /* Story Card Styles */
+        .story-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: left;
+            transition: all 0.4s;
+        }
+
+        .story-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(242, 200, 17, 0.3);
+        }
+
+        .story-industry {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: rgba(242, 200, 17, 0.15);
+            border-radius: 10px;
+            border: 1px solid rgba(242, 200, 17, 0.3);
+        }
+
+        .story-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .story-client {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.8rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .story-challenge,
+        .story-solution {
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 4px solid rgba(242, 200, 17, 0.6);
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        .story-challenge strong,
+        .story-solution strong {
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 1.05rem;
+        }
+
+        .story-challenge {
+            color: rgba(255, 150, 150, 0.95);
+            border-left-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .story-solution {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tools-used {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1.8rem 0;
+        }
+
+        .tool-badge {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(242, 200, 17, 0.2), rgba(192, 192, 192, 0.2));
+            border: 1px solid rgba(242, 200, 17, 0.4);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            letter-spacing: 0.03rem;
+        }
+
+        .tool-badge:hover {
+            background: linear-gradient(135deg, rgba(242, 200, 17, 0.4), rgba(192, 192, 192, 0.4));
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(242, 200, 17, 0.3);
+        }
+
+        .story-impact {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .impact-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .impact-item:hover {
+            background: rgba(242, 200, 17, 0.15);
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(242, 200, 17, 0.2);
+        }
+
+        .impact-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F2C811, #E5E4E2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .impact-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.05rem;
+        }
+
+        /* Keep existing analytics card for backward compatibility */
+        .analytics-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            transition: all 0.4s;
+        }
+
+        .analytics-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .analytics-icon {
+            margin: 0 auto 2rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analytics-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 15px rgba(192, 192, 192, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .analytics-metric {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-platinum));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(192, 192, 192, 0.3);
+        }
+
+        .analytics-label {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .analytics-detail {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .analytics-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #F2C811, #C0C0C0, #E5E4E2);
+            border-radius: 10px;
+            animation: fillBar 1.5s ease-out;
+        }
+
+        @keyframes fillBar {
+            from { width: 0; }
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(192, 192, 192, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(192, 192, 192, 0.4);
+            border-color: var(--accent-silver);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-prev {
+            left: -25px;
+        }
+
+        .carousel-next {
+            right: -25px;
+        }
+
+        .carousel-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(192, 192, 192, 0.3);
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator:hover {
+            background: rgba(192, 192, 192, 0.5);
+            transform: scale(1.2);
+        }
+
+        .indicator.active {
+            background: var(--accent-platinum);
+            box-shadow: 0 0 15px rgba(229, 228, 226, 0.6);
+            transform: scale(1.3);
+        }
+
+        .experience-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                        transparent, 
+                        var(--accent-silver), 
+                        transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:first-child {
+            order: 2;
+        }
+
+        .timeline-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .timeline-content:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-silver);
+            border: 4px solid var(--dark-bg);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+            z-index: 10;
+        }
+
+        .timeline-year {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.1rem;
+            color: var(--accent-platinum);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .timeline-role {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-company {
+            color: var(--accent-silver);
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.98rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s;
+        }
+
+        .skill-category:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent-silver);
+        }
+
+        .skill-category-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .skill-category-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(192, 192, 192, 0.1);
+            border-radius: 10px;
+        }
+
+        .skill-category-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--accent-silver);
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            color: var(--text-secondary);
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.98rem;
+        }
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .skill-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-silver);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .certification-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certification-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-silver), var(--accent-platinum));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .certification-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .certification-card:hover::before {
+            opacity: 1;
+        }
+
+        .certification-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(192, 192, 192, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .certification-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: var(--accent-silver);
+        }
+
+        .certification-name {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.03rem;
+        }
+
+        .certification-issuer {
+            color: var(--accent-silver);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .certification-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .contact-section {
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            padding: 1.5rem 2.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--glass-border);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            transition: all 0.4s;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-silver);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(192, 192, 192, 0.3);
+        }
+
+        .contact-link svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent-silver);
+        }
+
+        .footer {
+            padding: 3rem 2rem;
+            background: var(--darkest-bg);
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+        }
+
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-title {
+                font-size: 3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .experience-timeline::before {
+                left: 0;
+            }
+
+            .timeline-dot {
+                left: 0;
+            }
+
+            .timeline-item:nth-child(even) .timeline-content:first-child {
+                order: 1;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar-links {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-title {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .credentials {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="mainNav">
+        <div class="navbar-content">
+            <a href="PowerBI_Training_Portal.html" class="navbar-brand">
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="2" width="9" height="9" fill="#F2C811" rx="1"/>
+                    <rect x="13" y="2" width="9" height="9" fill="#F25022" rx="1"/>
+                    <rect x="2" y="13" width="9" height="9" fill="#00A4EF" rx="1"/>
+                    <rect x="13" y="13" width="9" height="9" fill="#7FBA00" rx="1"/>
+                </svg>
+                Back to Portal
+            </a>
+            <div class="navbar-links">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#skills">Skills</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section" id="about">
+        <div class="hero-content">
+            <div class="profile-image-container">
+                <div class="profile-image-wrapper">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQHlXAwhNB4a8g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1700337481212?e=1771459200&v=beta&t=l-kZL38s0dQZk-S7_CEu12szwqZXrKGVycO-LMoL1V4" 
+                         alt="Sahil Sreedharan - Power BI Expert" 
+                         class="profile-image">
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <h1 class="profile-title">Sahil Sreedharan</h1>
+                <p class="profile-subtitle">Power BI Expert | Data Analytics Consultant</p>
+                <p class="profile-description">
+                    Senior Data Analytics Consultant with 5+ years of experience at Ernst & Young (EY), 
+                    one of the Big 4 consulting firms. Microsoft Certified professional specializing in 
+                    Power BI, DAX, and enterprise data modeling. Proven track record of delivering 
+                    scalable analytics solutions across Finance, Retail, Healthcare, and Manufacturing industries.
+                </p>
+                
+                <div class="credentials">
+                    <span class="credential-badge">Big 4 - EY</span>
+                    <span class="credential-badge">Microsoft Certified</span>
+                    <span class="credential-badge">5+ Years Experience</span>
+                    <span class="credential-badge">Multi-Industry</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Projects Delivered</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Professionals Trained</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Enterprise Clients</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="experience">
+        <div class="section-content">
+            <h2 class="section-title">Industry Delivery Stories</h2>
+            <p class="section-subtitle">Real-World Power BI Implementations Across Sectors</p>
+
+            <div class="analytics-carousel">
+                <button class="carousel-btn carousel-prev" onclick="moveCarousel(-1)">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+                </button>
+                
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        <!-- Slide 1: Financial Services -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">🏦 Financial Services</div>
+                                <h3 class="story-title">Real-Time Risk Analytics Dashboard</h3>
+                                <div class="story-client">Global Investment Bank | Fortune 100</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> Manual risk reporting taking 3 days, inability to monitor real-time exposure across 50+ trading desks.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">DAX</span>
+                                    <span class="tool-badge">Azure Synapse</span>
+                                    <span class="tool-badge">DirectQuery</span>
+                                    <span class="tool-badge">Row-Level Security</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Built enterprise data model with star schema connecting 12 source systems. Implemented advanced DAX for VaR calculations, time intelligence for trending, and RLS for 200+ users across regions.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">95%</div>
+                                        <div class="impact-label">Time Reduction</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">Real-Time</div>
+                                        <div class="impact-label">Risk Monitoring</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">$2M+</div>
+                                        <div class="impact-label">Annual Savings</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Retail & E-commerce -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">🛒 Retail & E-commerce</div>
+                                <h3 class="story-title">Omnichannel Sales Performance Platform</h3>
+                                <div class="story-client">National Retail Chain | 500+ Stores</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> Disconnected online/offline data, no visibility into customer journey, inventory issues causing lost sales.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">Power Query</span>
+                                    <span class="tool-badge">Azure Data Factory</span>
+                                    <span class="tool-badge">Incremental Refresh</span>
+                                    <span class="tool-badge">Composite Models</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Created unified data model merging POS, e-commerce, and inventory systems. Built customer 360 view with DAX measures for lifetime value, basket analysis, and demand forecasting using historical patterns.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">23%</div>
+                                        <div class="impact-label">Sales Increase</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">40%</div>
+                                        <div class="impact-label">Inventory Optimization</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">360°</div>
+                                        <div class="impact-label">Customer View</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Healthcare -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">⚕️ Healthcare</div>
+                                <h3 class="story-title">Patient Care Analytics & Resource Optimization</h3>
+                                <div class="story-client">Multi-Hospital Healthcare Network | 8 Facilities</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> Patient wait times averaging 4+ hours, inefficient bed utilization, no predictive capacity planning.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">Advanced DAX</span>
+                                    <span class="tool-badge">Azure ML Integration</span>
+                                    <span class="tool-badge">Dataflows</span>
+                                    <span class="tool-badge">Paginated Reports</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Developed patient flow analytics with time intelligence for trend analysis, resource allocation algorithms using CALCULATE and FILTER, and predictive models for admission forecasting. Integrated with EMR systems.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">58%</div>
+                                        <div class="impact-label">Wait Time Reduction</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">32%</div>
+                                        <div class="impact-label">Bed Utilization ↑</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">15K+</div>
+                                        <div class="impact-label">More Patients/Year</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4: Manufacturing -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">🏭 Manufacturing</div>
+                                <h3 class="story-title">Production Efficiency & Quality Control Dashboard</h3>
+                                <div class="story-client">Automotive Parts Manufacturer | Global Operations</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> 12% defect rate, unplanned downtime costing $50K/hour, no visibility into root causes across 6 plants.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">IoT Integration</span>
+                                    <span class="tool-badge">Azure Stream Analytics</span>
+                                    <span class="tool-badge">Power Automate</span>
+                                    <span class="tool-badge">Aggregations</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Built real-time IoT dashboard connecting 500+ sensors. Implemented OEE calculations with DAX, Pareto analysis for defect tracking, and predictive maintenance scoring. Automated alerts for threshold breaches.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">68%</div>
+                                        <div class="impact-label">Defect Reduction</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">45%</div>
+                                        <div class="impact-label">Downtime Decrease</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">$8M</div>
+                                        <div class="impact-label">Annual Savings</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 5: Professional Services -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">💼 Professional Services</div>
+                                <h3 class="story-title">Project Profitability & Resource Management</h3>
+                                <div class="story-client">Big 4 Consulting Firm | 2,000+ Consultants</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> 30% of projects over budget, resource utilization at 62%, manual timesheet reconciliation taking weeks.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">Complex DAX</span>
+                                    <span class="tool-badge">What-If Parameters</span>
+                                    <span class="tool-badge">Bookmarks</span>
+                                    <span class="tool-badge">Field Parameters</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Created project P&L model with variance analysis using EARLIER and RANKX for profitability ranking. Built capacity planning tool with scenario modeling, billability tracking, and forecast vs. actuals using time intelligence.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">87%</div>
+                                        <div class="impact-label">Utilization Rate</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">76%</div>
+                                        <div class="impact-label">On-Budget Projects</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">$4.5M</div>
+                                        <div class="impact-label">Margin Improvement</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 6: Supply Chain & Logistics -->
+                        <div class="carousel-slide">
+                            <div class="story-card">
+                                <div class="story-industry">📦 Supply Chain</div>
+                                <h3 class="story-title">End-to-End Supply Chain Visibility Platform</h3>
+                                <div class="story-client">Global Logistics Company | 30 Countries</div>
+                                
+                                <div class="story-challenge">
+                                    <strong>Challenge:</strong> No real-time shipment tracking, 18% on-time delivery rate, $12M in penalty costs annually.
+                                </div>
+                                
+                                <div class="tools-used">
+                                    <span class="tool-badge">Power BI</span>
+                                    <span class="tool-badge">Azure Maps</span>
+                                    <span class="tool-badge">REST API Integration</span>
+                                    <span class="tool-badge">Aggregations</span>
+                                    <span class="tool-badge">Drill-through</span>
+                                </div>
+                                
+                                <div class="story-solution">
+                                    <strong>Solution:</strong> Implemented geospatial analytics with Azure Maps integration. Built KPI dashboard tracking SLA compliance using SWITCH and CALCULATE, route optimization analysis, and carrier performance scorecards with conditional formatting.
+                                </div>
+                                
+                                <div class="story-impact">
+                                    <div class="impact-item">
+                                        <div class="impact-value">92%</div>
+                                        <div class="impact-label">On-Time Delivery</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">35%</div>
+                                        <div class="impact-label">Cost Reduction</div>
+                                    </div>
+                                    <div class="impact-item">
+                                        <div class="impact-value">Real-Time</div>
+                                        <div class="impact-label">Shipment Tracking</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-btn carousel-next" onclick="moveCarousel(1)">
+                    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" fill="currentColor"/></svg>
+                </button>
+            </div>
+
+            <div class="carousel-indicators">
+                <span class="indicator active" onclick="goToSlide(0)"></span>
+                <span class="indicator" onclick="goToSlide(1)"></span>
+                <span class="indicator" onclick="goToSlide(2)"></span>
+                <span class="indicator" onclick="goToSlide(3)"></span>
+                <span class="indicator" onclick="goToSlide(4)"></span>
+                <span class="indicator" onclick="goToSlide(5)"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt" id="skills">
+        <div class="section-content">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <p class="section-subtitle">Technical Competencies</p>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3 class="skill-category-title">
+                        <div class="skill-category-icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" fill="currentColor"/><rect x="14" y="3" width="7" height="7" fill="currentColor"/><rect x="3" y="14" width="7" height="7" fill="currentColor"/><rect x="14" y="14" width="7" height="7" fill="currentColor"/></svg>
+                        </div>
+                        Power BI
+                    </h3>
+                    <ul class="skill-list">
+                        <li>Power BI Desktop & Service</li>
+                        <li>DAX (Data Analysis Expressions)</li>
+                        <li>Power Query & M Language</li>
+                        <li>Data Modeling & Star Schema</li>
+                        <li>Custom Visuals & R/Python Integration</li>
+                        <li>Performance Optimization</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="skill-category-title">
+                        <div class="skill-category-icon">
+                            <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="currentColor"/></svg>
+                        </div>
+                        Data Technologies
+                    </h3>
+                    <ul class="skill-list">
+                        <li>SQL Server & T-SQL</li>
+                        <li>Azure Data Factory</li>
+                        <li>Azure Synapse Analytics</li>
+                        <li>SQL Server Analysis Services (SSAS)</li>
+                        <li>Azure SQL Database</li>
+                        <li>Data Warehousing</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="skill-category-title">
+                        <div class="skill-category-icon">
+                            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="currentColor"/></svg>
+                        </div>
+                        Analytics & Modeling
+                    </h3>
+                    <ul class="skill-list">
+                        <li>Dimensional Modeling</li>
+                        <li>Time Intelligence Calculations</li>
+                        <li>Advanced DAX Patterns</li>
+                        <li>KPI Framework Design</li>
+                        <li>Performance Tuning</li>
+                        <li>Data Governance</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="skill-category-title">
+                        <div class="skill-category-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" fill="currentColor"/></svg>
+                        </div>
+                        Industry Experience
+                    </h3>
+                    <ul class="skill-list">
+                        <li>Financial Services & Banking</li>
+                        <li>Retail & E-commerce</li>
+                        <li>Healthcare Analytics</li>
+                        <li>Manufacturing & Supply Chain</li>
+                        <li>Professional Services</li>
+                        <li>Cross-Industry Solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-content">
+            <h2 class="section-title">Certifications</h2>
+            <p class="section-subtitle">Professional Credentials</p>
+
+            <div class="certifications-grid">
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V7l-8-5zm-1 16l-4-4 1.4-1.4L11 15.2l5.6-5.6L18 11l-7 7z" fill="currentColor"/></svg>
+                    </div>
+                    <h3 class="certification-name">Microsoft Certified: Data Analyst Associate</h3>
+                    <p class="certification-issuer">Microsoft</p>
+                    <p class="certification-date">Valid 2023 - Present</p>
+                </div>
+
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V7l-8-5zm-1 16l-4-4 1.4-1.4L11 15.2l5.6-5.6L18 11l-7 7z" fill="currentColor"/></svg>
+                    </div>
+                    <h3 class="certification-name">Microsoft Certified: Power BI Data Analyst</h3>
+                    <p class="certification-issuer">Microsoft</p>
+                    <p class="certification-date">Exam PL-300</p>
+                </div>
+
+                <div class="certification-card">
+                    <div class="certification-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V7l-8-5zm-1 16l-4-4 1.4-1.4L11 15.2l5.6-5.6L18 11l-7 7z" fill="currentColor"/></svg>
+                    </div>
+                    <h3 class="certification-name">Azure Data Fundamentals</h3>
+                    <p class="certification-issuer">Microsoft</p>
+                    <p class="certification-date">Exam DP-900</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt contact-section" id="contact">
+        <div class="section-content">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Connect with me for training inquiries and professional collaboration</p>
+
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/sahil-sreedharan/" target="_blank" class="contact-link">
+                    <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                    LinkedIn
+                </a>
+                <a href="mailto:sahil.sreedharan@example.com" class="contact-link">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/></svg>
+                    Email
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2026 Sahil Sreedharan | Power BI Training Expert</p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNav');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Carousel functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        const track = document.querySelector('.carousel-track');
+
+        function updateCarousel() {
+            const offset = -currentSlide * 100;
+            track.style.transform = `translateX(${offset}%)`;
+            
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        function moveCarousel(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        // Auto-advance carousel every 6 seconds
+        setInterval(() => {
+            moveCarousel(1);
+        }, 6000);
+    </script>
+</body>
+</html>

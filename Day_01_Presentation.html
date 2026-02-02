@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1: Data Modeling Foundations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --darkest-bg: #0f1419;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-silver: #C0C0C0;
+            --accent-platinum: #E5E4E2;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--darkest-bg) 0%, var(--darker-bg) 50%, var(--dark-bg) 100%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.2rem 2rem;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: var(--text-primary);
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-silver);
+            transform: translateY(-2px);
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .slide {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 4rem;
+            margin-bottom: 3rem;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            letter-spacing: 0.1rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-subtitle {
+            font-size: 1.8rem;
+            color: var(--accent-silver);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .slide-content {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+
+        .slide-content ul, .slide-content ol {
+            margin-left: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .slide-content li {
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--accent-platinum);
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: var(--accent-platinum);
+            overflow-x: auto;
+        }
+
+        .example-box {
+            background: rgba(192, 192, 192, 0.05);
+            border-left: 4px solid var(--accent-silver);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .example-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-platinum);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .key-takeaway {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(229, 228, 226, 0.05));
+            border: 2px solid var(--accent-silver);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        @media (max-width: 968px) {
+            .slide {
+                padding: 2.5rem;
+            }
+
+            .slide-title {
+                font-size: 2.5rem;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-controls {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 1: Data Modeling Foundations</div>
+            <div class="nav-controls">
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">← Portal</a>
+                <a href="Day_02_Presentation.html" class="nav-btn">Next Day →</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Data Modeling Foundations</h1>
+            <h2 class="slide-subtitle">Module 3 | Day 1</h2>
+            <div class="slide-content">
+                <p>Master the fundamentals of data modeling in Power BI. Learn star schema design, table relationships, and cardinality to build efficient, scalable analytical models.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Learning Objectives</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Understand the <span class="highlight">star schema</span> design pattern and its importance</li>
+                    <li>Differentiate between <span class="highlight">fact tables</span> and <span class="highlight">dimension tables</span></li>
+                    <li>Create and manage <span class="highlight">table relationships</span> in Power BI</li>
+                    <li>Master <span class="highlight">cardinality</span> options: One-to-Many, Many-to-One, One-to-One</li>
+                    <li>Understand <span class="highlight">cross-filter direction</span> and its impact on calculations</li>
+                    <li>Apply best practices for building production-ready data models</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Star Schema Design</h2>
+            <div class="slide-content">
+                <p>The <span class="highlight">star schema</span> is the foundational design pattern for analytical data models. It consists of:</p>
+                
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Fact Tables</div>
+                        <ul>
+                            <li>Contain measurable events (sales, orders)</li>
+                            <li>Store numeric values (amounts, quantities)</li>
+                            <li>Include foreign keys to dimensions</li>
+                            <li>High row count, few columns</li>
+                            <li>Example: Sales, Inventory, Orders</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Dimension Tables</div>
+                        <ul>
+                            <li>Provide context for facts</li>
+                            <li>Store descriptive attributes</li>
+                            <li>Lower row count, more columns</li>
+                            <li>Used for filtering and grouping</li>
+                            <li>Example: Products, Customers, Dates</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <div class="example-title">Why Star Schema?</div>
+                    <p>Star schema optimizes query performance, simplifies DAX calculations, and makes models intuitive. It's the industry standard for OLAP systems and the recommended approach for Power BI.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Table Relationships</h2>
+            <div class="slide-content">
+                <p>Relationships connect tables and enable filter propagation across your data model.</p>
+
+                <div class="code-block">
+-- Relationship Structure:
+From Table (Many Side) → To Table (One Side)
+Sales[ProductKey] → Products[ProductKey]
+Sales[CustomerKey] → Customers[CustomerKey]
+Sales[DateKey] → Calendar[DateKey]
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">One-to-Many (1:*)</div>
+                        <p>Most common. One dimension record relates to many fact records. Default cross-filter: Single direction.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Many-to-One (*:1)</div>
+                        <p>Inverse of One-to-Many. Same behavior, different direction of relationship creation.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">One-to-One (1:1)</div>
+                        <p>Rare. Both sides have unique values. Typically used for extending tables or security scenarios.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Cardinality in Detail</h2>
+            <div class="slide-content">
+                <p>Cardinality defines how rows in one table relate to rows in another table.</p>
+
+                <div class="example-box">
+                    <div class="example-title">One-to-Many Example</div>
+                    <div class="code-block">
+Customers Table (One Side):
+CustomerKey | CustomerName
+1           | Contoso
+2           | Fabrikam
+
+Sales Table (Many Side):
+SalesKey | CustomerKey | Amount
+1001     | 1           | 500
+1002     | 1           | 750
+1003     | 2           | 300
+
+One customer can have many sales transactions.
+                    </div>
+                </div>
+
+                <div class="key-takeaway">
+                    <p><span class="highlight">Key Rule:</span> The "One" side must contain unique values. The "Many" side can have duplicate values. Power BI enforces this through referential integrity.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Cross-Filter Direction</h2>
+            <div class="slide-content">
+                <p>Controls how filters propagate through relationships.</p>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Single Direction →</div>
+                        <p><span class="highlight">Default and Recommended</span></p>
+                        <ul>
+                            <li>Filters flow from "One" to "Many"</li>
+                            <li>Dimension filters affect facts</li>
+                            <li>Better performance</li>
+                            <li>Easier to understand and debug</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Both Directions ↔</div>
+                        <p><span class="highlight">Use Sparingly</span></p>
+                        <ul>
+                            <li>Filters flow in both directions</li>
+                            <li>Can cause ambiguity</li>
+                            <li>Performance overhead</li>
+                            <li>Only for specific scenarios</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <div class="example-title">When to Use Both?</div>
+                    <p>Bi-directional filtering is needed for many-to-many relationships, role-playing dimensions with inactive relationships, or when dimension tables must filter each other. However, use with caution.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Best Practices</h2>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">✓ Do This</div>
+                        <ul>
+                            <li>Always use star schema design</li>
+                            <li>Create unique keys for relationships</li>
+                            <li>Use single-direction filters (default)</li>
+                            <li>Keep dimension tables narrow</li>
+                            <li>Create a separate Calendar table</li>
+                            <li>Document your model structure</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">✗ Avoid This</div>
+                        <ul>
+                            <li>Circular relationships</li>
+                            <li>Too many bi-directional filters</li>
+                            <li>Complex chain relationships</li>
+                            <li>Mixing fact and dimension data</li>
+                            <li>Storing aggregates in facts</li>
+                            <li>Using calculated columns for keys</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div class="example-box">
+                    <div class="example-title">Build Your First Star Schema</div>
+                    <p><span class="highlight">Scenario:</span> Create a sales analytics model with the Contoso sample data.</p>
+                    
+                    <ol style="font-size: 1.1rem; margin-top: 1.5rem;">
+                        <li>Load the <span class="highlight">Sample_Data_Sales.csv</span> file</li>
+                        <li>Identify fact vs dimension data within the flat table</li>
+                        <li>Create separate tables for:
+                            <ul style="margin-top: 0.8rem;">
+                                <li>Fact: Sales transactions</li>
+                                <li>Dimension: Products, Customers, Regions, SalesPersons</li>
+                            </ul>
+                        </li>
+                        <li>Establish relationships using unique keys</li>
+                        <li>Verify cardinality (1:* relationships)</li>
+                        <li>Test filter propagation with visuals</li>
+                    </ol>
+                </div>
+
+                <div class="key-takeaway">
+                    <p><span class="highlight">Success Metric:</span> Your model should show clear star pattern in Model View with all relationships pointing from facts to dimensions.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size: 1.2rem;">
+                        <li><span class="highlight">Star schema</span> is the foundation of good Power BI models</li>
+                        <li><span class="highlight">Fact tables</span> store measurable events; <span class="highlight">dimension tables</span> provide context</li>
+                        <li><span class="highlight">One-to-Many</span> is the most common cardinality type</li>
+                        <li><span class="highlight">Single-direction</span> cross-filtering is preferred for performance</li>
+                        <li>Proper relationships enable accurate DAX calculations</li>
+                        <li>Good data modeling is 80% of Power BI success</li>
+                    </ul>
+                </div>
+
+                <p style="text-align: center; margin-top: 3rem; font-size: 1.3rem;">
+                    Tomorrow: <span class="highlight">Advanced Data Modeling</span> - Many-to-many relationships, role-playing dimensions, and complex patterns
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

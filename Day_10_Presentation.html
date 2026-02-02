@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 10: Advanced DAX Patterns - Part 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 10: Advanced DAX Patterns - Part 2</div>
+            <div class="nav-controls">
+                <a href="Day_09_Presentation.html" class="nav-btn">← Day 9</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_11_Presentation.html" class="nav-btn">Day 11 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Advanced DAX Patterns - Part 2</h1>
+            <h2 class="slide-subtitle">Module 7 | Day 10</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Create virtual tables, build ABC classifications, and master advanced analytical patterns for business intelligence.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Build virtual tables with SUMMARIZE and SUMMARIZECOLUMNS</li>
+                    <li>Create ABC (Pareto) analysis for inventory management</li>
+                    <li>Use ADDCOLUMNS for dynamic calculations</li>
+                    <li>Combine multiple advanced patterns</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Understanding Virtual Tables</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Virtual tables</span> exist only in memory during calculation - they're not stored in your model.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Why Use Virtual Tables?</h3>
+                <ul style="font-size:1.05rem;line-height:1.9;margin-bottom:2rem;">
+                    <li><strong>Performance:</strong> No storage overhead</li>
+                    <li><strong>Flexibility:</strong> Create custom groupings on-the-fly</li>
+                    <li><strong>Advanced Calculations:</strong> Intermediate steps in complex logic</li>
+                    <li><strong>Dynamic Analysis:</strong> Group by different criteria without physical tables</li>
+                </ul>
+
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;"><strong>Real-World Example:</strong></p>
+                    <p style="margin-top:0.5rem;font-size:1.05rem;">Instead of creating a physical "Sales by Category" table, create it virtually when needed. This saves space and stays current automatically.</p>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Beginner Analogy:</strong> Think of virtual tables like a temporary workspace in Excel - you use it for calculations, then it disappears when you're done.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">SUMMARIZE Function</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;"><span class="highlight">SUMMARIZE</span> groups data and optionally adds aggregations.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Basic Syntax:</h3>
+                <div class="code-block">
+SUMMARIZE(
+    &lt;table&gt;,                    -- Source table
+    &lt;groupBy_columnName&gt;,       -- Column to group by
+    [&lt;groupBy_columnName&gt;],     -- Additional group by columns
+    [&lt;name&gt;, &lt;expression&gt;]     -- Aggregations (optional)
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Example: Sales by Category</h3>
+                <div class="code-block">
+-- Create virtual table of category totals
+Sales by Category = 
+SUMMARIZE(
+    Sales,
+    Products[Category],
+    "Total", SUM(Sales[Amount]),
+    "Avg", AVERAGE(Sales[Amount]),
+    "Count", COUNTROWS(Sales)
+)
+
+-- Returns a table like:
+-- Category      | Total    | Avg      | Count
+-- Electronics   | 500,000  | 1,250    | 400
+-- Clothing      | 300,000  | 75       | 4,000
+-- Home & Garden | 200,000  | 500      | 400
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>⚠️ Important:</strong> SUMMARIZE is older syntax. For new development, prefer SUMMARIZECOLUMNS (shown next slide).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">SUMMARIZECOLUMNS (Preferred)</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">SUMMARIZECOLUMNS</span> is the modern, faster way to create grouped virtual tables.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Why SUMMARIZECOLUMNS is Better:</h3>
+                <ul style="font-size:1.05rem;margin-bottom:2rem;">
+                    <li>✅ Better performance (query folding optimization)</li>
+                    <li>✅ Cleaner syntax</li>
+                    <li>✅ Proper filter context handling</li>
+                    <li>✅ Works better with measures</li>
+                </ul>
+
+                <div class="code-block">
+-- Modern approach: SUMMARIZECOLUMNS
+Category Summary = 
+SUMMARIZECOLUMNS(
+    Products[Category],
+    Products[SubCategory],
+    "Total Sales", [Total Sales],
+    "Product Count", COUNTROWS(Products),
+    "Avg Unit Price", [Average Unit Price]
+)
+
+-- Multiple grouping levels
+Region Category Summary = 
+SUMMARIZECOLUMNS(
+    Customers[Region],
+    Products[Category],
+    "Sales", [Total Sales],
+    "Customers", DISTINCTCOUNT(Sales[CustomerID])
+)
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-platinum);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Use Case:</strong> Create dynamic summary tables for export to Excel or for intermediate calculations in complex measures.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ADDCOLUMNS - Extend Virtual Tables</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;"><span class="highlight">ADDCOLUMNS</span> takes any table and adds calculated columns to it.</p>
+
+                <div class="code-block">
+-- Add calculated columns to Products table
+Products with Margin = 
+ADDCOLUMNS(
+    Products,
+    "Sales Amount", [Total Sales],
+    "Profit", [Total Sales] - [Total Cost],
+    "Margin %", DIVIDE([Total Sales] - [Total Cost], [Total Sales])
+)
+
+-- Chain multiple operations
+Enhanced Product List = 
+ADDCOLUMNS(
+    FILTER(
+        Products,
+        [Total Sales] > 10000
+    ),
+    "Performance", [Product Performance Category],
+    "Rank", [Product Rank],
+    "YoY Growth", [YoY Growth %]
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Combining with SUMMARIZE:</h3>
+                <div class="code-block">
+-- Group by category, then add calculations
+Category Performance = 
+ADDCOLUMNS(
+    SUMMARIZE(Sales, Products[Category]),
+    "Total Sales", [Total Sales],
+    "Share of Total", DIVIDE([Total Sales], CALCULATE([Total Sales], ALL(Products))),
+    "Rank", RANKX(ALL(Products[Category]), [Total Sales], , DESC)
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>📊 Visualization:</strong> These virtual tables can be returned in calculated tables or used within measures for complex logic.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ABC Classification (Pareto Analysis)</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">ABC Analysis</span> categorizes items based on the 80/20 rule: A items generate most revenue, C items generate least.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">The 80/20 Rule:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>A Items (Top 80%):</strong> 20% of products → 80% of revenue</li>
+                        <li><strong>B Items (Next 15%):</strong> 30% of products → 15% of revenue</li>
+                        <li><strong>C Items (Bottom 5%):</strong> 50% of products → 5% of revenue</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;"><strong>Business Value:</strong> Focus inventory, marketing, and pricing efforts on A items.</p>
+                </div>
+
+                <div class="code-block">
+-- ABC Classification for Products
+Product ABC = 
+VAR CurrentProduct = MAX(Products[ProductID])
+VAR AllProductSales = 
+    ADDCOLUMNS(
+        ALL(Products),
+        "Sales", [Total Sales]
+    )
+VAR SortedProducts = 
+    ADDCOLUMNS(
+        AllProductSales,
+        "Cumulative", 
+        SUMX(
+            FILTER(AllProductSales, [Sales] >= EARLIER([Sales])),
+            [Sales]
+        )
+    )
+VAR TotalSales = SUMX(AllProductSales, [Sales])
+VAR CurrentCumulative = 
+    SUMX(
+        FILTER(SortedProducts, [ProductID] = CurrentProduct),
+        [Cumulative]
+    )
+VAR Percentage = DIVIDE(CurrentCumulative, TotalSales)
+VAR Classification = 
+    SWITCH(
+        TRUE(),
+        Percentage <= 0.80, "A - Top",
+        Percentage <= 0.95, "B - Medium",
+        "C - Low"
+    )
+RETURN
+    Classification
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ABC Analysis - Step by Step</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Understanding the ABC Logic</h3>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Step 1: Get all products with sales</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+VAR AllProductSales = ADDCOLUMNS(ALL(Products), "Sales", [Total Sales])
+                    </div>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 2: Calculate cumulative sales</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- For each product, sum all products with equal or higher sales
+VAR Cumulative = SUMX(
+    FILTER(AllProductSales, [Sales] >= EARLIER([Sales])),
+    [Sales]
+)
+                    </div>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 3: Calculate percentage of total</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+VAR Percentage = DIVIDE(CurrentCumulative, TotalSales)
+-- If 0.75, this product and all better ones = 75% of revenue
+                    </div>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 4: Classify</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- ≤ 80% = A (top performers)
+-- ≤ 95% = B (middle)
+-- > 95% = C (low performers)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Practical ABC Dashboard</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Create measures to analyze ABC categories:</h3>
+
+                <div class="code-block">
+-- Count products in each category
+Products A Count = CALCULATE(COUNTROWS(Products), Products[ABC] = "A - Top")
+Products B Count = CALCULATE(COUNTROWS(Products), Products[ABC] = "B - Medium")
+Products C Count = CALCULATE(COUNTROWS(Products), Products[ABC] = "C - Low")
+
+-- Sales by category
+A Category Sales = CALCULATE([Total Sales], Products[ABC] = "A - Top")
+B Category Sales = CALCULATE([Total Sales], Products[ABC] = "B - Medium")
+C Category Sales = CALCULATE([Total Sales], Products[ABC] = "C - Low")
+
+-- Percentage breakdown
+A Category % = DIVIDE([A Category Sales], [Total Sales])
+-- This should be around 80%!
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:2rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>📸 Dashboard Layout:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>Top Row:</strong> 3 Cards showing A/B/C category sales and percentages</li>
+                        <li><strong>Left:</strong> Table with all products, sales, rank, and ABC classification</li>
+                        <li><strong>Right Top:</strong> Donut chart showing revenue contribution by ABC</li>
+                        <li><strong>Right Bottom:</strong> Bar chart showing product count by ABC</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Add conditional formatting: Green for A, Yellow for B, Red for C.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Exercise: Build ABC Analysis</strong></p>
+                    
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Task 1: Create ABC Classification Column</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Add calculated column [ABC] to Products table</li>
+                        <li>Use the ABC formula from slide 5</li>
+                        <li>Verify A items have highest sales</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Task 2: Create Summary Measures</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>[A Category Sales], [B Category Sales], [C Category Sales]</li>
+                        <li>[A Category %] = DIVIDE([A Category Sales], [Total Sales])</li>
+                        <li>Add to Card visuals</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Task 3: Create Analysis Table</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Table visual with Products[ProductName], [Total Sales], [ABC]</li>
+                        <li>Sort by [Total Sales] descending</li>
+                        <li>Add conditional formatting by ABC value</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-top:2rem;"><strong>Expected Result:</strong> You should see ~20% of products classified as A, generating ~80% of revenue.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;line-height:2.2;">
+                        <li>📊 <span class="highlight">SUMMARIZECOLUMNS</span> preferred over SUMMARIZE for performance</li>
+                        <li>➕ <span class="highlight">ADDCOLUMNS</span> extends tables with calculated columns</li>
+                        <li>🎯 <span class="highlight">ABC Classification</span> identifies high-value items (80/20 rule)</li>
+                        <li>💾 Virtual tables exist only during calculation - no storage cost</li>
+                        <li>🔄 Chain table functions (FILTER, ADDCOLUMNS, SUMMARIZE) for complex logic</li>
+                        <li>📈 Use ABC analysis for inventory, pricing, and marketing prioritization</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:3rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🎯 Next Up: Day 11</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">DAX Performance Optimization Part 1 - Query Engine, DAX Studio, Performance Analyzer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

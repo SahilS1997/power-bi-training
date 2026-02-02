@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Training - 12-Day Accelerated Program</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --darkest-bg: #0f1419;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-silver: #C0C0C0;
+            --accent-platinum: #E5E4E2;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--darkest-bg) 0%, var(--darker-bg) 50%, var(--dark-bg) 100%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 20, 25, 0.85);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-primary);
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .navbar-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-silver);
+            transition: width 0.3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--accent-platinum);
+        }
+
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        .navbar-links a {
+            animation: fadeInDown 0.8s ease-out backwards;
+        }
+
+        .navbar-links a:nth-child(1) { animation-delay: 0.1s; }
+        .navbar-links a:nth-child(2) { animation-delay: 0.2s; }
+        .navbar-links a:nth-child(3) { animation-delay: 0.3s; }
+        .navbar-links a:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .masthead {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 26, 46, 0.9)), 
+                        url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920') center/cover fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .masthead::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(192, 192, 192, 0.15) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .masthead::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(192,192,192,0.8), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(229,228,226,0.6), transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, rgba(192,192,192,0.7), transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            animation: moveParticles 20s ease-in-out infinite;
+        }
+
+        @keyframes moveParticles {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+        }
+
+        .masthead-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .masthead h1 {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 5.5rem;
+            color: var(--text-primary);
+            letter-spacing: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9),
+                         0 0 80px rgba(192, 192, 192, 0.4),
+                         0 0 120px rgba(229, 228, 226, 0.2);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from {
+                text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9),
+                             0 0 40px rgba(192, 192, 192, 0.3),
+                             0 0 80px rgba(229, 228, 226, 0.1);
+            }
+            to {
+                text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9),
+                             0 0 80px rgba(192, 192, 192, 0.5),
+                             0 0 120px rgba(229, 228, 226, 0.3);
+            }
+        }
+
+        .masthead h2 {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.05rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .masthead .description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 0 auto 3rem;
+            line-height: 1.9;
+            max-width: 700px;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.7);
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: rgba(192, 192, 192, 0.2);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            padding: 1.1rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            transition: all 0.4s;
+            border: 2px solid rgba(192, 192, 192, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out 0.7s backwards, float 3s ease-in-out infinite 1.7s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .btn-primary:hover {
+            background: rgba(192, 192, 192, 0.4);
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(192, 192, 192, 0.4),
+                        0 0 30px rgba(229, 228, 226, 0.3);
+            border-color: var(--accent-platinum);
+        }
+
+        .trainer-badge {
+            display: inline-block;
+            background: rgba(192, 192, 192, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            margin-top: 2.5rem;
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            animation: fadeInUp 1s ease-out 0.9s backwards;
+        }
+
+        .trainer-badge a {
+            color: var(--accent-platinum);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.05rem;
+            transition: all 0.3s;
+        }
+
+        .trainer-badge a:hover {
+            color: var(--text-primary);
+            text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+        }
+
+        .about-section {
+            padding: 10rem 2rem;
+            background: linear-gradient(to bottom, 
+                        rgba(15, 20, 25, 0.5) 0%, 
+                        rgba(26, 26, 46, 0.7) 50%, 
+                        rgba(22, 33, 62, 0.6) 100%);
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(192, 192, 192, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-silver);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.8rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 65px;
+            height: 65px;
+            filter: drop-shadow(0 4px 15px rgba(192, 192, 192, 0.3));
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover .feature-icon svg {
+            transform: scale(1.1);
+            filter: drop-shadow(0 6px 20px rgba(229, 228, 226, 0.5));
+        }
+
+        .feature-card h3 {
+            position: relative;
+            z-index: 1;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: 0.08rem;
+            text-transform: uppercase;
+        }
+
+        .feature-card p {
+            position: relative;
+            z-index: 1;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.98rem;
+        }
+
+        .days-section {
+            padding: 10rem 2rem;
+            background: rgba(15, 20, 25, 0.8);
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            letter-spacing: 0.3rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            margin-bottom: 5rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .days-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .day-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 2.8rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-silver), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .day-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-silver);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .day-card:hover::after {
+            opacity: 1;
+        }
+
+        .day-number {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-silver), var(--accent-platinum));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .day-status {
+            display: inline-block;
+            background: rgba(192, 192, 192, 0.15);
+            color: var(--accent-platinum);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-family: 'Varela Round', sans-serif;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .day-title {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.9rem;
+            letter-spacing: 0.03rem;
+        }
+
+        .day-module {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: var(--accent-silver);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-family: 'Varela Round', sans-serif;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .day-objectives {
+            color: var(--text-secondary);
+            font-size: 0.97rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .day-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            border: 2px solid;
+            cursor: pointer;
+        }
+
+        .btn-view {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            border-color: var(--glass-border);
+        }
+
+        .btn-view:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-silver);
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(192, 192, 192, 0.2);
+        }
+
+        .btn-resources {
+            background: transparent;
+            color: var(--accent-silver);
+            border-color: var(--glass-border);
+        }
+
+        .btn-resources:hover {
+            background: rgba(192, 192, 192, 0.1);
+            border-color: var(--accent-platinum);
+            color: var(--accent-platinum);
+            transform: translateX(5px);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 3rem;
+            position: relative;
+            animation: slideIn 0.4s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-header h2 {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            letter-spacing: 0.05rem;
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .resource-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .resource-section h3 {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.2rem;
+            color: var(--accent-platinum);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.05rem;
+            text-transform: uppercase;
+        }
+
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .resource-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-silver);
+            transform: translateX(8px);
+        }
+
+        .resource-link svg {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            fill: var(--accent-silver);
+        }
+
+        .resource-link-text {
+            flex: 1;
+        }
+
+        .resource-link-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .resource-link-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer {
+            padding: 5rem 2rem;
+            background: var(--darkest-bg);
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 0.05rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            width: 3.2rem;
+            height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-silver);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(192, 192, 192, 0.3);
+        }
+
+        .social-links svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--accent-silver);
+        }
+
+        @media (max-width: 768px) {
+            .masthead h1 {
+                font-size: 3rem;
+                letter-spacing: 0.4rem;
+            }
+            
+            .navbar-links {
+                gap: 1.5rem;
+            }
+
+            .days-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="mainNav">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                <svg width="35" height="35" viewBox="0 0 100 100" fill="none">
+                    <!-- Custom Power BI Logo -->
+                    <defs>
+                        <linearGradient id="barGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#F2C811;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#E5A712;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="barGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#C0C0C0;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#A0A0A0;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="barGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#E5E4E2;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Bar Chart Representation -->
+                    <rect x="10" y="60" width="18" height="35" rx="2" fill="url(#barGrad1)"/>
+                    <rect x="35" y="40" width="18" height="55" rx="2" fill="url(#barGrad2)"/>
+                    <rect x="60" y="20" width="18" height="75" rx="2" fill="url(#barGrad3)"/>
+                    <!-- Data Points -->
+                    <circle cx="19" cy="55" r="4" fill="#F2C811"/>
+                    <circle cx="44" cy="35" r="4" fill="#C0C0C0"/>
+                    <circle cx="69" cy="15" r="4" fill="#E5E4E2"/>
+                    <!-- Connecting Line -->
+                    <path d="M19 55 L44 35 L69 15" stroke="#E5E4E2" stroke-width="2" fill="none" opacity="0.6"/>
+                </svg>
+                Power BI Training
+            </div>
+            <div class="navbar-links">
+                <a href="#home">Home</a>
+                <a href="#about">Features</a>
+                <a href="#days">Training</a>
+                <a href="Trainer_Profile.html">Trainer</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" id="home">
+        <div class="masthead-content">
+            <h1>Power BI</h1>
+            <h2>12-Day Accelerated Data Analytics Mastery</h2>
+            <p class="description">
+                Transform your data analytics career with enterprise-level Power BI expertise. 
+                Master Data Modeling, DAX, Time Intelligence, and Performance Optimization 
+                through real-world Big 4 consulting scenarios.
+            </p>
+            <a href="#days" class="btn-primary">Get Started</a>
+            <div class="trainer-badge">
+                Led by <a href="Trainer_Profile.html">Sahil Sreedharan</a> | Big 4 | Microsoft Certified
+            </div>
+        </div>
+    </header>
+
+    <section class="about-section" id="about">
+        <div class="about-content">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="30" fill="url(#grad1)"/>
+                        <path d="M20 32L28 40L44 24" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0" y1="0" x2="64" y2="64">
+                                <stop offset="0%" stop-color="#C0C0C0"/>
+                                <stop offset="100%" stop-color="#E5E4E2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3>Comprehensive</h3>
+                <p>12 days covering Modules 3-9: Data Modeling, DAX Fundamentals, Essential DAX, Time Intelligence, Advanced Patterns, Performance Optimization</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <rect x="8" y="38" width="12" height="18" fill="url(#grad2)"/>
+                        <rect x="26" y="28" width="12" height="28" fill="url(#grad3)"/>
+                        <rect x="44" y="16" width="12" height="40" fill="url(#grad4)"/>
+                        <defs>
+                            <linearGradient id="grad2" x1="8" y1="38" x2="20" y2="56">
+                                <stop offset="0%" stop-color="#C0C0C0"/>
+                                <stop offset="100%" stop-color="#808080"/>
+                            </linearGradient>
+                            <linearGradient id="grad3" x1="26" y1="28" x2="38" y2="56">
+                                <stop offset="0%" stop-color="#D0D0D0"/>
+                                <stop offset="100%" stop-color="#909090"/>
+                            </linearGradient>
+                            <linearGradient id="grad4" x1="44" y1="16" x2="56" y2="56">
+                                <stop offset="0%" stop-color="#E5E4E2"/>
+                                <stop offset="100%" stop-color="#A0A0A0"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3>Practical</h3>
+                <p>Real-world projects with actual datasets and enterprise scenarios used in Big 4 consulting engagements</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="20" r="12" fill="url(#grad5)"/>
+                        <path d="M16 52C16 42 22 36 32 36C42 36 48 42 48 52" fill="url(#grad6)"/>
+                        <circle cx="44" cy="28" r="4" fill="#C0C0C0"/>
+                        <circle cx="20" cy="28" r="4" fill="#C0C0C0"/>
+                        <defs>
+                            <linearGradient id="grad5" x1="20" y1="8" x2="44" y2="32">
+                                <stop offset="0%" stop-color="#E5E4E2"/>
+                                <stop offset="100%" stop-color="#C0C0C0"/>
+                            </linearGradient>
+                            <linearGradient id="grad6" x1="16" y1="36" x2="48" y2="52">
+                                <stop offset="0%" stop-color="#C0C0C0"/>
+                                <stop offset="100%" stop-color="#808080"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3>Expert Led</h3>
+                <p>Microsoft Certified professional with 5+ years of experience at EY delivering multi-industry solutions</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <path d="M32 8L36 20H48L38 28L42 40L32 32L22 40L26 28L16 20H28L32 8Z" fill="url(#grad7)"/>
+                        <circle cx="32" cy="52" r="8" fill="url(#grad8)"/>
+                        <defs>
+                            <linearGradient id="grad7" x1="16" y1="8" x2="48" y2="40">
+                                <stop offset="0%" stop-color="#F2C811"/>
+                                <stop offset="100%" stop-color="#E5E4E2"/>
+                            </linearGradient>
+                            <linearGradient id="grad8" x1="24" y1="44" x2="40" y2="60">
+                                <stop offset="0%" stop-color="#C0C0C0"/>
+                                <stop offset="100%" stop-color="#808080"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3>Career Ready</h3>
+                <p>Interview-ready skills focused on performance optimization, scalable patterns, and production-grade DAX</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="days-section" id="days">
+        <h2 class="section-title">Training Schedule</h2>
+        <p class="section-subtitle">12 Days | Modules 3-9 | Enterprise-Grade Content</p>
+        
+        <div class="days-grid">
+            <div class="day-card">
+                <div class="day-number">Day 1</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Data Modeling Foundations</h3>
+                <span class="day-module">Module 3</span>
+                <p class="day-objectives">Master star schema design, table relationships, and cardinality. Build efficient data models for enterprise analytics.</p>
+                <div class="day-actions">
+                    <a href="Day_01_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day1')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 2</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Advanced Data Modeling</h3>
+                <span class="day-module">Module 3</span>
+                <p class="day-objectives">Explore many-to-many relationships, role-playing dimensions, and complex modeling patterns for enterprise solutions.</p>
+                <div class="day-actions">
+                    <a href="Day_02_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day2')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 3</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">DAX Fundamentals</h3>
+                <span class="day-module">Module 4</span>
+                <p class="day-objectives">Learn DAX syntax, calculated columns vs measures, and the evaluation context that powers Power BI calculations.</p>
+                <div class="day-actions">
+                    <a href="Day_03_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day3')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 4</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">DAX Context & Row Context</h3>
+                <span class="day-module">Module 4</span>
+                <p class="day-objectives">Deep dive into filter context, row context, and context transition. Master CALCULATE for dynamic calculations.</p>
+                <div class="day-actions">
+                    <a href="Day_04_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day4')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 5</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Essential DAX Functions - Part 1</h3>
+                <span class="day-module">Module 5</span>
+                <p class="day-objectives">Master CALCULATE, FILTER, and ALL family functions. Build complex calculations with proper filter manipulation.</p>
+                <div class="day-actions">
+                    <a href="Day_05_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day5')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 6</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Essential DAX Functions - Part 2</h3>
+                <span class="day-module">Module 5</span>
+                <p class="day-objectives">Learn iterator functions (SUMX, AVERAGEX), RELATED, RELATEDTABLE, and build powerful aggregations.</p>
+                <div class="day-actions">
+                    <a href="Day_06_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day6')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 7</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Time Intelligence - Part 1</h3>
+                <span class="day-module">Module 6</span>
+                <p class="day-objectives">Create calendar tables and use DATESYTD, DATESMTD, DATESQTD for year-to-date, month-to-date calculations.</p>
+                <div class="day-actions">
+                    <a href="Day_07_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day7')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 8</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Time Intelligence - Part 2</h3>
+                <span class="day-module">Module 6</span>
+                <p class="day-objectives">Build year-over-year comparisons, moving averages, and custom time intelligence patterns for complex scenarios.</p>
+                <div class="day-actions">
+                    <a href="Day_08_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day8')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 9</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Advanced DAX Patterns - Part 1</h3>
+                <span class="day-module">Module 7</span>
+                <p class="day-objectives">Master RANKX, TOPN for rankings and selections. Use variables (VAR) for readable, efficient code.</p>
+                <div class="day-actions">
+                    <a href="Day_09_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day9')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 10</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">Advanced DAX Patterns - Part 2</h3>
+                <span class="day-module">Module 7</span>
+                <p class="day-objectives">Create virtual tables with SUMMARIZE, dynamic ABC classifications, and complex analytical patterns.</p>
+                <div class="day-actions">
+                    <a href="Day_10_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day10')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 11</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">DAX Performance Optimization - Part 1</h3>
+                <span class="day-module">Module 9</span>
+                <p class="day-objectives">Understand query engine vs storage engine. Learn DAX Studio and performance analyzer for optimization.</p>
+                <div class="day-actions">
+                    <a href="Day_11_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day11')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+
+            <div class="day-card">
+                <div class="day-number">Day 12</div>
+                <div class="day-status">Available</div>
+                <h3 class="day-title">DAX Performance Optimization - Part 2</h3>
+                <span class="day-module">Module 9</span>
+                <p class="day-objectives">Apply best practices for scalable DAX code. Optimize measures, reduce cardinality, and improve report performance.</p>
+                <div class="day-actions">
+                    <a href="Day_12_Presentation.html" class="btn btn-view">
+                        <svg viewBox="0 0 24 24"><path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 16h-2v-2h2v2zm0-4h-2V7h2v8z" fill="currentColor"/></svg>
+                        View Presentation
+                    </a>
+                    <button class="btn btn-resources" onclick="openModal('day12')">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/></svg>
+                        Learning Resources
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div>
+            <p>&copy; 2026 Power BI Training Program | Led by Sahil Sreedharan</p>
+            <p>Microsoft Certified | Big 4 Consulting | Enterprise Data Analytics</p>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/sahil-sreedharan/" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                </a>
+                <a href="#" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Resource Modals -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Learning Resources</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNav');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Resource data for each day
+        const resources = {
+            day1: {
+                title: "Day 1: Data Modeling Resources",
+                links: [
+                    {
+                        title: "Model relationships in Power BI Desktop",
+                        desc: "Official Microsoft documentation on creating and managing table relationships",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-relationships-understand"
+                    },
+                    {
+                        title: "Star schema design",
+                        desc: "Learn the fundamentals of star schema and dimensional modeling",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+                    },
+                    {
+                        title: "Cardinality and cross-filter direction",
+                        desc: "Deep dive into relationship cardinality options",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-create-and-manage-relationships"
+                    },
+                    {
+                        title: "SQLBI: Data Modeling Best Practices",
+                        desc: "Comprehensive guide from SQLBI experts",
+                        url: "https://www.sqlbi.com/topics/data-modeling/"
+                    },
+                    {
+                        title: "Sample Files: Contoso Sales Data",
+                        desc: "Download practice files for data modeling exercises",
+                        url: "Sample_Data_Sales.csv"
+                    }
+                ]
+            },
+            day2: {
+                title: "Day 2: Advanced Modeling Resources",
+                links: [
+                    {
+                        title: "Many-to-many relationships",
+                        desc: "Working with many-to-many relationships in Power BI",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-many-to-many-relationships"
+                    },
+                    {
+                        title: "Role-playing dimensions",
+                        desc: "Implement role-playing dimensions using inactive relationships",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/relationships-active-inactive"
+                    },
+                    {
+                        title: "Bi-directional relationships",
+                        desc: "When and how to use bi-directional cross-filtering",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-bidirectional-filtering"
+                    },
+                    {
+                        title: "SQLBI: Advanced Modeling Patterns",
+                        desc: "Complex modeling scenarios and solutions",
+                        url: "https://www.sqlbi.com/articles/tag/data-modeling/"
+                    }
+                ]
+            },
+            day3: {
+                title: "Day 3: DAX Fundamentals Resources",
+                links: [
+                    {
+                        title: "DAX overview",
+                        desc: "Introduction to DAX in Power BI Desktop",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-quickstart-learn-dax-basics"
+                    },
+                    {
+                        title: "Calculated columns vs measures",
+                        desc: "Understanding when to use columns vs measures",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-tutorial-create-calculated-columns"
+                    },
+                    {
+                        title: "DAX function reference",
+                        desc: "Complete DAX function reference documentation",
+                        url: "https://learn.microsoft.com/en-us/dax/dax-function-reference"
+                    },
+                    {
+                        title: "SQLBI: DAX Guide",
+                        desc: "Comprehensive DAX function guide with examples",
+                        url: "https://dax.guide/"
+                    }
+                ]
+            },
+            day4: {
+                title: "Day 4: DAX Context Resources",
+                links: [
+                    {
+                        title: "Context in DAX",
+                        desc: "Understanding filter context and row context",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-qna-learn-dax"
+                    },
+                    {
+                        title: "CALCULATE function",
+                        desc: "Master the most important DAX function",
+                        url: "https://learn.microsoft.com/en-us/dax/calculate-function-dax"
+                    },
+                    {
+                        title: "Context transition",
+                        desc: "Deep dive into context transition mechanics",
+                        url: "https://www.sqlbi.com/articles/context-transition-and-filters-in-calculate/"
+                    },
+                    {
+                        title: "SQLBI: Row Context and Filter Context",
+                        desc: "Detailed explanation of DAX evaluation contexts",
+                        url: "https://www.sqlbi.com/articles/row-context-and-filter-context-in-dax/"
+                    }
+                ]
+            },
+            day5: {
+                title: "Day 5: Essential DAX Functions - Part 1",
+                links: [
+                    {
+                        title: "FILTER function",
+                        desc: "Learn to use FILTER for advanced filtering",
+                        url: "https://learn.microsoft.com/en-us/dax/filter-function-dax"
+                    },
+                    {
+                        title: "ALL and ALLEXCEPT",
+                        desc: "Remove filters with ALL family functions",
+                        url: "https://learn.microsoft.com/en-us/dax/all-function-dax"
+                    },
+                    {
+                        title: "REMOVEFILTERS",
+                        desc: "Modern approach to removing filters",
+                        url: "https://learn.microsoft.com/en-us/dax/removefilters-function-dax"
+                    },
+                    {
+                        title: "SQLBI: Filter Functions",
+                        desc: "Complete guide to DAX filter manipulation",
+                        url: "https://www.sqlbi.com/topics/filter-functions/"
+                    }
+                ]
+            },
+            day6: {
+                title: "Day 6: Essential DAX Functions - Part 2",
+                links: [
+                    {
+                        title: "Iterator functions (X functions)",
+                        desc: "SUMX, AVERAGEX, and other iterators",
+                        url: "https://learn.microsoft.com/en-us/dax/sumx-function-dax"
+                    },
+                    {
+                        title: "RELATED and RELATEDTABLE",
+                        desc: "Navigate relationships in DAX",
+                        url: "https://learn.microsoft.com/en-us/dax/related-function-dax"
+                    },
+                    {
+                        title: "CALCULATE vs CALCULATETABLE",
+                        desc: "Understanding scalar vs table calculations",
+                        url: "https://learn.microsoft.com/en-us/dax/calculatetable-function-dax"
+                    },
+                    {
+                        title: "SQLBI: Iterator Functions",
+                        desc: "Mastering X functions for row-by-row calculations",
+                        url: "https://www.sqlbi.com/articles/understanding-dax-auto-exist/"
+                    }
+                ]
+            },
+            day7: {
+                title: "Day 7: Time Intelligence - Part 1",
+                links: [
+                    {
+                        title: "Time intelligence in DAX",
+                        desc: "Introduction to time intelligence functions",
+                        url: "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-date-tables"
+                    },
+                    {
+                        title: "Create date tables",
+                        desc: "Building proper calendar tables",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/model-date-tables"
+                    },
+                    {
+                        title: "Year-to-date calculations",
+                        desc: "YTD, QTD, and MTD calculations",
+                        url: "https://learn.microsoft.com/en-us/dax/totalytd-function-dax"
+                    },
+                    {
+                        title: "SQLBI: Time Intelligence",
+                        desc: "Complete guide to time-based calculations",
+                        url: "https://www.sqlbi.com/topics/time-intelligence/"
+                    },
+                    {
+                        title: "Sample Files: Calendar Table",
+                        desc: "Download pre-built calendar table",
+                        url: "Sample_Data_Calendar.csv"
+                    }
+                ]
+            },
+            day8: {
+                title: "Day 8: Time Intelligence - Part 2",
+                links: [
+                    {
+                        title: "Year-over-year comparisons",
+                        desc: "Compare periods across years",
+                        url: "https://learn.microsoft.com/en-us/dax/sameperiodlastyear-function-dax"
+                    },
+                    {
+                        title: "Moving averages",
+                        desc: "Calculate rolling averages and trends",
+                        url: "https://learn.microsoft.com/en-us/dax/datesinperiod-function-dax"
+                    },
+                    {
+                        title: "Custom time periods",
+                        desc: "Build custom time intelligence patterns",
+                        url: "https://www.sqlbi.com/articles/time-intelligence-in-power-bi-desktop/"
+                    },
+                    {
+                        title: "SQLBI: Advanced Time Intelligence",
+                        desc: "Complex time-based calculations",
+                        url: "https://www.sqlbi.com/articles/tag/time-intelligence/"
+                    }
+                ]
+            },
+            day9: {
+                title: "Day 9: Advanced DAX Patterns - Part 1",
+                links: [
+                    {
+                        title: "RANKX function",
+                        desc: "Create rankings and top N selections",
+                        url: "https://learn.microsoft.com/en-us/dax/rankx-function-dax"
+                    },
+                    {
+                        title: "TOPN function",
+                        desc: "Filter top or bottom N records",
+                        url: "https://learn.microsoft.com/en-us/dax/topn-function-dax"
+                    },
+                    {
+                        title: "Variables in DAX",
+                        desc: "Using VAR for better performance and readability",
+                        url: "https://learn.microsoft.com/en-us/dax/var-dax"
+                    },
+                    {
+                        title: "SQLBI: DAX Patterns",
+                        desc: "Common DAX patterns and best practices",
+                        url: "https://www.daxpatterns.com/"
+                    }
+                ]
+            },
+            day10: {
+                title: "Day 10: Advanced DAX Patterns - Part 2",
+                links: [
+                    {
+                        title: "SUMMARIZE and SUMMARIZECOLUMNS",
+                        desc: "Create virtual tables for analysis",
+                        url: "https://learn.microsoft.com/en-us/dax/summarize-function-dax"
+                    },
+                    {
+                        title: "ABC Classification",
+                        desc: "Implement Pareto analysis in DAX",
+                        url: "https://www.sqlbi.com/articles/abc-classification-in-dax/"
+                    },
+                    {
+                        title: "Table functions",
+                        desc: "Working with table-returning functions",
+                        url: "https://learn.microsoft.com/en-us/dax/addcolumns-function-dax"
+                    },
+                    {
+                        title: "SQLBI: Advanced Patterns",
+                        desc: "Complex analytical patterns",
+                        url: "https://www.sqlbi.com/topics/dax/"
+                    }
+                ]
+            },
+            day11: {
+                title: "Day 11: Performance Optimization - Part 1",
+                links: [
+                    {
+                        title: "Optimize Power BI performance",
+                        desc: "Official performance optimization guide",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/power-bi-optimization"
+                    },
+                    {
+                        title: "Query folding",
+                        desc: "Understand and leverage query folding",
+                        url: "https://learn.microsoft.com/en-us/power-query/power-query-folding"
+                    },
+                    {
+                        title: "DAX Studio",
+                        desc: "Download and use DAX Studio for optimization",
+                        url: "https://daxstudio.org/"
+                    },
+                    {
+                        title: "SQLBI: Performance Tuning",
+                        desc: "Advanced performance optimization techniques",
+                        url: "https://www.sqlbi.com/topics/performance/"
+                    }
+                ]
+            },
+            day12: {
+                title: "Day 12: Performance Optimization - Part 2",
+                links: [
+                    {
+                        title: "Reduce model size",
+                        desc: "Techniques to minimize model memory footprint",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/import-modeling-data-reduction"
+                    },
+                    {
+                        title: "Optimize DAX expressions",
+                        desc: "Write efficient DAX code",
+                        url: "https://learn.microsoft.com/en-us/power-bi/guidance/dax-avoid-avoid-filter-as-filter-argument"
+                    },
+                    {
+                        title: "Cardinality optimization",
+                        desc: "Reduce cardinality for better performance",
+                        url: "https://www.sqlbi.com/articles/optimizing-high-cardinality-columns-in-vertipaq/"
+                    },
+                    {
+                        title: "SQLBI: Best Practices",
+                        desc: "Comprehensive DAX best practices guide",
+                        url: "https://www.sqlbi.com/articles/best-practices-using-summarize-and-addcolumns/"
+                    }
+                ]
+            }
+        };
+
+        function openModal(day) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const data = resources[day];
+            modalTitle.textContent = data.title;
+            
+            let html = '<div class="resource-section"><h3>Official Documentation</h3><div class="resource-links">';
+            
+            data.links.forEach(link => {
+                html += `
+                    <a href="${link.url}" class="resource-link" target="_blank">
+                        <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z" fill="currentColor"/></svg>
+                        <div class="resource-link-text">
+                            <div class="resource-link-title">${link.title}</div>
+                            <div class="resource-link-desc">${link.desc}</div>
+                        </div>
+                    </a>
+                `;
+            });
+            
+            html += '</div></div>';
+            modalBody.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

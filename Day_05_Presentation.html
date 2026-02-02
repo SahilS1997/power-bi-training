@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5: Essential DAX Functions - Part 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.example-box{background:rgba(192,192,192,0.05);border-left:4px solid var(--accent-silver);padding:2rem;margin:2rem 0;border-radius:8px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:2rem 0}.card{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:1.8rem;transition:all .3s}.card:hover{background:rgba(255,255,255,0.08);transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}.card-title{font-family:'Varela Round',sans-serif;font-size:1.2rem;color:var(--text-primary);margin-bottom:1rem}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}.pbi-card{background:linear-gradient(135deg,rgba(100,149,237,0.2),rgba(100,149,237,0.1));border:2px solid rgba(100,149,237,0.3);border-radius:12px;padding:2rem;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center}.pbi-card-title{font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05rem}.pbi-card-value{font-size:2.5rem;font-weight:800;color:var(--accent-platinum);margin-bottom:0.3rem}.pbi-card-subtitle{font-size:0.85rem;color:var(--text-secondary)}.pbi-kpi{background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.1));border:2px solid rgba(46,204,113,0.3);border-radius:12px;padding:1.5rem;text-align:center}.pbi-kpi-title{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem}.pbi-kpi-value{font-size:2.2rem;font-weight:800;color:#2ecc71;margin-bottom:0.3rem}.pbi-kpi-target{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.3rem}.pbi-kpi-trend{font-size:1.1rem;color:#2ecc71}.pbi-bar{display:flex;align-items:center;margin-bottom:1.5rem}.pbi-bar-label{width:120px;color:var(--text-secondary);font-size:0.9rem}.pbi-bar-track{flex:1;height:30px;background:rgba(255,255,255,0.1);border-radius:5px;position:relative;overflow:hidden}.pbi-bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:0.5rem;color:var(--text-primary);font-weight:bold;font-size:0.85rem}.comparison-table{width:100%;border-collapse:collapse;margin:2rem 0}.comparison-table th,.comparison-table td{border:1px solid var(--glass-border);padding:1.2rem;text-align:left}.comparison-table th{background:rgba(192,192,192,0.1);color:var(--accent-platinum);font-family:'Varela Round',sans-serif}.comparison-table td{background:rgba(0,0,0,0.2)}.yes{color:#64ff64}.no{color:#ff6464}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 5: Essential DAX Functions - Part 1</div>
+            <div class="nav-controls">
+                <a href="Day_04_Presentation.html" class="nav-btn">← Day 4</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_06_Presentation.html" class="nav-btn">Day 6 →</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide">
+            <h1 class="slide-title">Essential DAX Functions - Part 1</h1>
+            <h2 class="slide-subtitle">Module 5 | Day 5</h2>
+            <div class="slide-content">
+                <p><span class="highlight">Master the foundational DAX filter functions</span> that control context and create dynamic calculations. These functions are the building blocks of advanced DAX formulas.</p>
+                
+                <div class="grid-3" style="margin-top: 3rem;">
+                    <div class="card">
+                        <div class="card-title">🔍 FILTER</div>
+                        <p>Iterate through tables and return filtered rows based on conditions</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🌐 ALL Family</div>
+                        <p>Remove filters to access the full dataset or specific columns</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📊 VALUES</div>
+                        <p>Get unique values from a column respecting filter context</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: FILTER Function Deep Dive -->
+        <div class="slide">
+            <h1 class="slide-title">The FILTER Function</h1>
+            <h2 class="slide-subtitle">Row-by-Row Iteration & Filtering</h2>
+            <div class="slide-content">
+                <p><span class="highlight">FILTER</span> iterates through each row of a table and returns only rows where the condition is TRUE. It's one of the most powerful yet resource-intensive functions in DAX.</p>
+                
+                <div class="code-block">
+FILTER(<Table>, <FilterCondition>)
+
+-- Example: Get all sales above $1,000
+Sales Above 1K = 
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Sales, Sales[Amount] > 1000)
+)
+
+-- Example: Get sales for specific products
+Premium Sales = 
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(
+        Products,
+        Products[Category] = "Premium"
+    )
+)
+                </div>
+
+                <div class="example-box">
+                    <strong>💡 How FILTER Works:</strong>
+                    <ol>
+                        <li><strong>Iteration:</strong> FILTER goes through each row in the table</li>
+                        <li><strong>Evaluation:</strong> For each row, it evaluates the condition in row context</li>
+                        <li><strong>Selection:</strong> Only rows where condition = TRUE are kept</li>
+                        <li><strong>Return:</strong> Returns a filtered table (not a value!)</li>
+                    </ol>
+                </div>
+
+                <div class="grid-3" style="margin-top: 2rem;">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">All Sales</div>
+                        <div class="pbi-card-value">$10.5M</div>
+                        <div class="pbi-card-subtitle">No filters applied</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Sales > $1,000</div>
+                        <div class="pbi-card-value">$8.2M</div>
+                        <div class="pbi-card-subtitle">78% of total sales</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Premium Category</div>
+                        <div class="pbi-card-value">$3.4M</div>
+                        <div class="pbi-card-subtitle">32% of total sales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: FILTER Performance Considerations -->
+        <div class="slide">
+            <h1 class="slide-title">FILTER Performance</h1>
+            <h2 class="slide-subtitle">When to Use (and When to Avoid)</h2>
+            <div class="slide-content">
+                <p>FILTER is powerful but can be <span class="highlight">resource-intensive</span>. Understanding when to use it (and alternatives) is crucial for performance.</p>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>❌ Avoid FILTER For:</strong>
+                        <ul>
+                            <li><strong>Simple column filters:</strong> Use direct filters instead
+                            <div class="code-block" style="font-size:0.9rem;">
+-- DON'T
+CALCULATE(
+    [Total Sales],
+    FILTER(Products, Products[Color] = "Red")
+)
+
+-- DO
+CALCULATE(
+    [Total Sales],
+    Products[Color] = "Red"
+)
+                            </div>
+                            </li>
+                            <li><strong>Large tables:</strong> FILTER iterates through every row</li>
+                            <li><strong>Multiple conditions on same table:</strong> Use AND/OR instead</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>✅ Use FILTER For:</strong>
+                        <ul>
+                            <li><strong>Complex conditions:</strong> Multiple columns or calculations</li>
+                            <li><strong>Measure-based filtering:</strong> Filter by calculated values</li>
+                            <li><strong>Row context needed:</strong> When comparing columns</li>
+                        </ul>
+                        <div class="code-block" style="font-size:0.9rem;">
+-- Example: Filter by calculation
+High Margin Products = 
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        Products,
+        Products[Price] - Products[Cost] > 100
+    )
+)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <table style="width:100%;">
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Best Approach</th>
+                            <th>Reason</th>
+                        </tr>
+                        <tr>
+                            <td>Single column = value</td>
+                            <td><span class="yes">Direct filter</span></td>
+                            <td>Much faster, no iteration</td>
+                        </tr>
+                        <tr>
+                            <td>Multiple columns with AND</td>
+                            <td><span class="yes">Multiple direct filters</span></td>
+                            <td>Optimized by engine</td>
+                        </tr>
+                        <tr>
+                            <td>Calculated comparison</td>
+                            <td><span class="yes">FILTER</span></td>
+                            <td>Need row context for calculation</td>
+                        </tr>
+                        <tr>
+                            <td>Large table (>1M rows)</td>
+                            <td><span class="no">Avoid FILTER if possible</span></td>
+                            <td>Performance impact</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: ALL Function -->
+        <div class="slide">
+            <h1 class="slide-title">The ALL Function</h1>
+            <h2 class="slide-subtitle">Remove All Filters</h2>
+            <div class="slide-content">
+                <p><span class="highlight">ALL</span> removes all filters from specified columns or tables, allowing you to calculate against the entire dataset regardless of filter context.</p>
+
+                <div class="code-block">
+ALL(<TableOrColumn>)
+
+-- Example: Grand total (ignores all filters)
+Grand Total Sales = 
+CALCULATE(
+    SUM(Sales[Amount]),
+    ALL(Sales)
+)
+
+-- Example: % of grand total
+% of Grand Total = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE([Total Sales], ALL(Sales))
+)
+
+-- Example: Remove filter from specific column
+Total All Products = 
+CALCULATE(
+    [Total Sales],
+    ALL(Products[ProductName])
+)
+                </div>
+
+                <div class="grid-3">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Filtered Sales</div>
+                        <div class="pbi-card-value">$2.5M</div>
+                        <div class="pbi-card-subtitle">Electronics Only</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.1));border-color:rgba(46,204,113,0.3);">
+                        <div class="pbi-card-title">Grand Total (ALL)</div>
+                        <div class="pbi-card-value">$10.5M</div>
+                        <div class="pbi-card-subtitle">All Categories</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(243,156,18,0.2),rgba(243,156,18,0.1));border-color:rgba(243,156,18,0.3);">
+                        <div class="pbi-card-title">% of Total</div>
+                        <div class="pbi-card-value">23.8%</div>
+                        <div class="pbi-card-subtitle">Electronics Share</div>
+                    </div>
+                </div>
+
+                <div class="example-box" style="margin-top:2rem;">
+                    <strong>🎯 Common Use Cases:</strong>
+                    <ul>
+                        <li><strong>Percentage calculations:</strong> Calculate portion of grand total</li>
+                        <li><strong>Ranking:</strong> Compare individual items against entire dataset</li>
+                        <li><strong>Baseline comparisons:</strong> Show difference from overall average</li>
+                        <li><strong>Cumulative totals:</strong> Running totals that ignore filters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: ALLEXCEPT Function -->
+        <div class="slide">
+            <h1 class="slide-title">The ALLEXCEPT Function</h1>
+            <h2 class="slide-subtitle">Remove All Filters Except...</h2>
+            <div class="slide-content">
+                <p><span class="highlight">ALLEXCEPT</span> removes all filters from a table <em>except</em> the columns you specify. This is incredibly useful for creating flexible calculations.</p>
+
+                <div class="code-block">
+ALLEXCEPT(<Table>, <Column1>, [<Column2>], ...)
+
+-- Example: Total by category (ignore year, product filters)
+Category Total = 
+CALCULATE(
+    [Total Sales],
+    ALLEXCEPT(Sales, Products[Category])
+)
+
+-- Example: % of category total
+% of Category = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE(
+        [Total Sales],
+        ALLEXCEPT(Sales, Products[Category])
+    )
+)
+
+-- Multiple columns
+Regional Category Total = 
+CALCULATE(
+    [Total Sales],
+    ALLEXCEPT(Sales, Products[Category], Customers[Region])
+)
+                </div>
+
+                <div class="grid-2" style="margin-top:2rem;">
+                    <div>
+                        <div class="pbi-kpi">
+                            <div class="pbi-kpi-title">iPhone Pro Sales</div>
+                            <div class="pbi-kpi-value">$500K</div>
+                            <div class="pbi-kpi-target">Total Electronics: $2.5M</div>
+                            <div class="pbi-kpi-trend">↑ 20% of Category</div>
+                        </div>
+                        <div class="pbi-kpi" style="margin-top:1rem;">
+                            <div class="pbi-kpi-title">MacBook Sales</div>
+                            <div class="pbi-kpi-value">$800K</div>
+                            <div class="pbi-kpi-target">Total Electronics: $2.5M</div>
+                            <div class="pbi-kpi-trend">↑ 32% of Category</div>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>💡 ALLEXCEPT vs ALL:</strong>
+                        <div class="code-block" style="font-size:0.9rem;margin-top:1rem;">
+-- These are EQUIVALENT:
+
+-- Using ALLEXCEPT
+CALCULATE(
+    [Total Sales],
+    ALLEXCEPT(Sales, Products[Category])
+)
+
+-- Using ALL
+CALCULATE(
+    [Total Sales],
+    ALL(Sales),
+    VALUES(Products[Category])
+)
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Tip:</strong> ALLEXCEPT is cleaner when you want to keep filters on specific columns.</p>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <table style="width:100%;">
+                        <tr>
+                            <th>Function</th>
+                            <th>What It Does</th>
+                            <th>Example Use</th>
+                        </tr>
+                        <tr>
+                            <td><strong>ALL(Table)</strong></td>
+                            <td>Removes ALL filters from the table</td>
+                            <td>Grand total calculations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ALL(Column)</strong></td>
+                            <td>Removes filters from specific column only</td>
+                            <td>Total across one dimension</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ALLEXCEPT</strong></td>
+                            <td>Removes all filters EXCEPT specified columns</td>
+                            <td>Subtotals by category/region</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: ALLSELECTED Function -->
+        <div class="slide">
+            <h1 class="slide-title">The ALLSELECTED Function</h1>
+            <h2 class="slide-subtitle">Respect External Filters</h2>
+            <div class="slide-content">
+                <p><span class="highlight">ALLSELECTED</span> removes filters from inside a visual but respects filters applied <em>outside</em> the visual (slicers, page filters, report filters).</p>
+
+                <div class="code-block">
+ALLSELECTED([<TableOrColumn>])
+
+-- Example: % of visual total (respects slicers)
+% of Visual Total = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE([Total Sales], ALLSELECTED())
+)
+
+-- Example: Rank within filtered set
+Rank in Selection = 
+RANKX(
+    ALLSELECTED(Products),
+    [Total Sales],,
+    DESC
+)
+                </div>
+
+                <div class="example-box">
+                    <strong>📊 Scenario: Matrix Visual with Year Slicer</strong>
+                    <p style="margin-top:1rem;">User selects "2024" in slicer. Matrix shows products by category.</p>
+                    <table class="comparison-table" style="margin-top:1.5rem;">
+                        <tr>
+                            <th>Function</th>
+                            <th>Behavior</th>
+                            <th>Result</th>
+                        </tr>
+                        <tr>
+                            <td><strong>ALL(Sales)</strong></td>
+                            <td>Ignores slicer & matrix filters</td>
+                            <td class="yes">$10.5M (all years, all products)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ALLSELECTED(Sales)</strong></td>
+                            <td>Respects slicer, ignores matrix rows</td>
+                            <td class="yes">$2.8M (2024 only, all products)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No filter removal</strong></td>
+                            <td>Respects everything</td>
+                            <td class="yes">Varies by row (2024, per product)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Product A (2024)</div>
+                        <div class="pbi-kpi-value">$800K</div>
+                        <div class="pbi-kpi-target">Visual Total: $2.8M</div>
+                        <div class="pbi-kpi-trend">↑ 28.6%</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Product B (2024)</div>
+                        <div class="pbi-kpi-value">$600K</div>
+                        <div class="pbi-kpi-target">Visual Total: $2.8M</div>
+                        <div class="pbi-kpi-trend">↑ 21.4%</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Product C (2024)</div>
+                        <div class="pbi-kpi-value">$1.4M</div>
+                        <div class="pbi-kpi-target">Visual Total: $2.8M</div>
+                        <div class="pbi-kpi-trend">↑ 50.0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: VALUES and DISTINCT Functions -->
+        <div class="slide">
+            <h1 class="slide-title">VALUES vs DISTINCT</h1>
+            <h2 class="slide-subtitle">Get Unique Values</h2>
+            <div class="slide-content">
+                <p>Both <span class="highlight">VALUES</span> and <span class="highlight">DISTINCT</span> return unique values from a column, but they differ in handling blank rows.</p>
+
+                <div class="code-block">
+VALUES(<TableOrColumn>)
+DISTINCT(<TableOrColumn>)
+
+-- Count unique customers
+Unique Customers = 
+COUNTROWS(VALUES(Sales[CustomerID]))
+
+-- Count distinct products (no blanks)
+Distinct Products = 
+COUNTROWS(DISTINCT(Products[ProductName]))
+
+-- Use with CALCULATE
+Sales to Premium Customers = 
+CALCULATE(
+    [Total Sales],
+    VALUES(Customers[Tier]) = "Premium"
+)
+                </div>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>VALUES Function:</strong>
+                        <ul>
+                            <li><strong>Respects filter context</strong> - returns only visible values</li>
+                            <li><strong>Includes blank row</strong> if there's a relationship mismatch</li>
+                            <li><strong>More common</strong> in DAX formulas</li>
+                        </ul>
+                        <div class="code-block" style="font-size:0.9rem;">
+-- Scenario: Some sales have no customer
+-- Result includes blank row
+
+VALUES(Sales[CustomerID])
+// Returns: C001, C002, (blank)
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>DISTINCT Function:</strong>
+                        <ul>
+                            <li><strong>Respects filter context</strong> - returns only visible values</li>
+                            <li><strong>Excludes blank row</strong> - only actual values</li>
+                            <li><strong>Use for counting</strong> when blanks shouldn't count</li>
+                        </ul>
+                        <div class="code-block" style="font-size:0.9rem;">
+-- Scenario: Some sales have no customer
+-- Result excludes blank
+
+DISTINCT(Sales[CustomerID])
+// Returns: C001, C002
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <table style="width:100%;">
+                        <tr>
+                            <th>Aspect</th>
+                            <th>VALUES</th>
+                            <th>DISTINCT</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Blank Row</strong></td>
+                            <td class="yes">Included if exists</td>
+                            <td class="no">Always excluded</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Filter Context</strong></td>
+                            <td class="yes">Respected</td>
+                            <td class="yes">Respected</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td class="yes">Slightly faster</td>
+                            <td class="yes">Slightly slower</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Common Use</strong></td>
+                            <td class="yes">General purpose</td>
+                            <td class="yes">Strict counting</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: KEEPFILTERS Function -->
+        <div class="slide">
+            <h1 class="slide-title">KEEPFILTERS Function</h1>
+            <h2 class="slide-subtitle">Preserve Existing Filters</h2>
+            <div class="slide-content">
+                <p><span class="highlight">KEEPFILTERS</span> ensures that new filters don't override existing ones - they combine instead (intersection).</p>
+
+                <div class="code-block">
+KEEPFILTERS(<FilterExpression>)
+
+-- Without KEEPFILTERS (replaces filter)
+Sales Red Products = 
+CALCULATE(
+    [Total Sales],
+    Products[Color] = "Red"
+)
+// If user selects "Blue", this still shows Red
+
+-- With KEEPFILTERS (combines filters)
+Sales Red Products Respectful = 
+CALCULATE(
+    [Total Sales],
+    KEEPFILTERS(Products[Color] = "Red")
+)
+// If user selects "Blue", returns BLANK (no overlap)
+                </div>
+
+                <div class="example-box">
+                    <strong>🎯 Real World Example:</strong>
+                    <p style="margin-top:1rem;">You want to show "Premium Product Sales" but also respect user's color filter.</p>
+                    <div class="grid-2" style="margin-top:1.5rem;">
+                        <div>
+                            <strong>Without KEEPFILTERS:</strong>
+                            <div class="code-block" style="font-size:0.9rem;margin-top:0.5rem;">
+Premium Sales = 
+CALCULATE(
+    [Total Sales],
+    Products[Tier] = "Premium"
+)
+
+// User selects "Red" color
+// Result: ALL Premium (ignores color)
+                            </div>
+                        </div>
+                        <div>
+                            <strong>With KEEPFILTERS:</strong>
+                            <div class="code-block" style="font-size:0.9rem;margin-top:0.5rem;">
+Premium Sales = 
+CALCULATE(
+    [Total Sales],
+    KEEPFILTERS(Products[Tier] = "Premium")
+)
+
+// User selects "Red" color
+// Result: Red AND Premium (intersection)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">All Colors</div>
+                        <div class="pbi-card-value">$10.5M</div>
+                        <div class="pbi-card-subtitle">No filter applied</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(231,76,60,0.2),rgba(231,76,60,0.1));border-color:rgba(231,76,60,0.3);">
+                        <div class="pbi-card-title">Red Products</div>
+                        <div class="pbi-card-value">$3.2M</div>
+                        <div class="pbi-card-subtitle">User selected "Red"</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(155,89,182,0.2),rgba(155,89,182,0.1));border-color:rgba(155,89,182,0.3);">
+                        <div class="pbi-card-title">Red + Premium</div>
+                        <div class="pbi-card-value">$1.1M</div>
+                        <div class="pbi-card-subtitle">With KEEPFILTERS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Hands-On Exercise -->
+        <div class="slide">
+            <h1 class="slide-title">Hands-On Exercise</h1>
+            <h2 class="slide-subtitle">Practice Filter Functions</h2>
+            <div class="slide-content">
+                <p>Using the sample sales data, create the following measures:</p>
+
+                <div class="grid-2" style="margin-top:2rem;">
+                    <div class="card">
+                        <div class="card-title">Exercise 1: High Value Sales</div>
+                        <p><strong>Task:</strong> Create a measure that shows sales where individual transaction amount > $500</p>
+                        <p style="margin-top:1rem;"><strong>Hint:</strong> Use FILTER with Sales table</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here
+High Value Sales = 
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Sales, Sales[Amount] > 500)
+)
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 2: % of Grand Total</div>
+                        <p><strong>Task:</strong> Create a measure showing current sales as % of grand total (all filters removed)</p>
+                        <p style="margin-top:1rem;"><strong>Hint:</strong> Use ALL function</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here
+% of Grand Total = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE([Total Sales], ALL(Sales))
+)
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 3: Category Share</div>
+                        <p><strong>Task:</strong> Show each product's share within its category (remove all filters except category)</p>
+                        <p style="margin-top:1rem;"><strong>Hint:</strong> Use ALLEXCEPT</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here
+% of Category = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE(
+        [Total Sales],
+        ALLEXCEPT(Sales, Products[Category])
+    )
+)
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 4: Visual Total %</div>
+                        <p><strong>Task:</strong> Create % of visual total that respects slicers but not row filters</p>
+                        <p style="margin-top:1rem;"><strong>Hint:</strong> Use ALLSELECTED</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here
+% of Visual Total = 
+DIVIDE(
+    [Total Sales],
+    CALCULATE([Total Sales], ALLSELECTED())
+)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box" style="margin-top:2rem;">
+                    <strong>🎯 Expected Results:</strong>
+                    <table class="comparison-table" style="margin-top:1rem;">
+                        <tr>
+                            <th>Measure</th>
+                            <th>Electronics</th>
+                            <th>Clothing</th>
+                            <th>Home</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td><strong>High Value Sales</strong></td>
+                            <td>$2.1M</td>
+                            <td>$1.8M</td>
+                            <td>$1.5M</td>
+                            <td>$5.4M</td>
+                        </tr>
+                        <tr>
+                            <td><strong>% of Grand Total</strong></td>
+                            <td>23.8%</td>
+                            <td>30.5%</td>
+                            <td>22.9%</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>% of Category</strong></td>
+                            <td colspan="3">(varies by product within category)</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>% of Visual Total</strong></td>
+                            <td colspan="3">(depends on slicer selection)</td>
+                            <td>100%</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Key Takeaways -->
+        <div class="slide">
+            <h1 class="slide-title">Key Takeaways</h1>
+            <h2 class="slide-subtitle">Essential DAX Functions - Part 1</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;">
+                        <li><span class="highlight">FILTER</span> - Iterate and filter tables; powerful but resource-intensive. Use direct filters when possible.</li>
+                        <li><span class="highlight">ALL</span> - Remove all filters from table/column; perfect for grand totals and percentage calculations.</li>
+                        <li><span class="highlight">ALLEXCEPT</span> - Remove filters except specified columns; great for subtotals and grouped calculations.</li>
+                        <li><span class="highlight">ALLSELECTED</span> - Respect external filters (slicers), remove internal ones; ideal for "% of visual total".</li>
+                        <li><span class="highlight">VALUES vs DISTINCT</span> - Both get unique values, but VALUES includes blanks while DISTINCT doesn't.</li>
+                        <li><span class="highlight">KEEPFILTERS</span> - Preserve existing filters instead of replacing them; use for filter intersection.</li>
+                    </ul>
+                </div>
+
+                <div class="grid-3" style="margin-top:3rem;">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Functions Mastered</div>
+                        <div class="pbi-kpi-value">6</div>
+                        <div class="pbi-kpi-target">FILTER, ALL, ALLEXCEPT, ALLSELECTED, VALUES, KEEPFILTERS</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(52,152,219,0.2),rgba(52,152,219,0.1));border-color:rgba(52,152,219,0.3);">
+                        <div class="pbi-kpi-title">Next Up</div>
+                        <div class="pbi-kpi-value">Day 6</div>
+                        <div class="pbi-kpi-target">Essential DAX Functions Part 2</div>
+                        <div class="pbi-kpi-trend" style="color:#3498db;">RELATED, EARLIER, LOOKUPVALUE →</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(243,156,18,0.2),rgba(243,156,18,0.1));border-color:rgba(243,156,18,0.3);">
+                        <div class="pbi-kpi-title">Practice Time</div>
+                        <div class="pbi-kpi-value">30m</div>
+                        <div class="pbi-kpi-target">Complete the exercises</div>
+                        <div class="pbi-kpi-trend" style="color:#f39c12;">↑ Build muscle memory</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

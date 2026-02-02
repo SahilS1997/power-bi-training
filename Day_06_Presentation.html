@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 6: Essential DAX Functions - Part 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.example-box{background:rgba(192,192,192,0.05);border-left:4px solid var(--accent-silver);padding:2rem;margin:2rem 0;border-radius:8px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:2rem 0}.card{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:1.8rem;transition:all .3s}.card:hover{background:rgba(255,255,255,0.08);transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}.card-title{font-family:'Varela Round',sans-serif;font-size:1.2rem;color:var(--text-primary);margin-bottom:1rem}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}.pbi-card{background:linear-gradient(135deg,rgba(100,149,237,0.2),rgba(100,149,237,0.1));border:2px solid rgba(100,149,237,0.3);border-radius:12px;padding:2rem;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center}.pbi-card-title{font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05rem}.pbi-card-value{font-size:2.5rem;font-weight:800;color:var(--accent-platinum);margin-bottom:0.3rem}.pbi-card-subtitle{font-size:0.85rem;color:var(--text-secondary)}.pbi-kpi{background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.1));border:2px solid rgba(46,204,113,0.3);border-radius:12px;padding:1.5rem;text-align:center}.pbi-kpi-title{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem}.pbi-kpi-value{font-size:2.2rem;font-weight:800;color:#2ecc71;margin-bottom:0.3rem}.pbi-kpi-target{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.3rem}.pbi-kpi-trend{font-size:1.1rem;color:#2ecc71}.comparison-table{width:100%;border-collapse:collapse;margin:2rem 0}.comparison-table th,.comparison-table td{border:1px solid var(--glass-border);padding:1.2rem;text-align:left}.comparison-table th{background:rgba(192,192,192,0.1);color:var(--accent-platinum);font-family:'Varela Round',sans-serif}.comparison-table td{background:rgba(0,0,0,0.2)}.yes{color:#64ff64}.no{color:#ff6464}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 6: Essential DAX Functions - Part 2</div>
+            <div class="nav-controls">
+                <a href="Day_05_Presentation.html" class="nav-btn">← Day 5</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_07_Presentation.html" class="nav-btn">Day 7 →</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide">
+            <h1 class="slide-title">Essential DAX Functions - Part 2</h1>
+            <h2 class="slide-subtitle">Module 5 | Day 6</h2>
+            <div class="slide-content">
+                <p><span class="highlight">Master relationship navigation and data lookup functions</span> that enable you to build calculations across related tables and find specific values dynamically.</p>
+                
+                <div class="grid-3" style="margin-top: 3rem;">
+                    <div class="card">
+                        <div class="card-title">🔗 RELATED</div>
+                        <p>Navigate from many-side to one-side of relationships</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📚 EARLIER</div>
+                        <p>Access outer row context in nested iterations</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🔍 LOOKUPVALUE</div>
+                        <p>Find values without relationships</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: RELATED Function -->
+        <div class="slide">
+            <h1 class="slide-title">The RELATED Function</h1>
+            <h2 class="slide-subtitle">Navigate from Many to One</h2>
+            <div class="slide-content">
+                <p><span class="highlight">RELATED</span> retrieves a value from the "one" side of a relationship. You use it when you're on the "many" side and need data from the related "one" side.</p>
+                
+                <div class="code-block">
+RELATED(<Column>)
+
+-- Example: Get product category in Sales table
+-- Sales (many) → Products (one)
+Category = RELATED(Products[Category])
+
+-- Example: Get customer region in Sales table
+-- Sales (many) → Customers (one)
+Customer Region = RELATED(Customers[Region])
+
+-- Example: Calculate margin using related cost
+-- In Sales table, get cost from Products
+Margin = 
+Sales[Revenue] - RELATED(Products[Cost]) * Sales[Quantity]
+                </div>
+
+                <div class="example-box">
+                    <strong>💡 How RELATED Works:</strong>
+                    <ol>
+                        <li><strong>Relationship Required:</strong> There must be a relationship between tables</li>
+                        <li><strong>Direction:</strong> Can only go from many-side → one-side (follow arrow)</li>
+                        <li><strong>Row Context:</strong> Works in calculated columns and iterator functions</li>
+                        <li><strong>Returns Single Value:</strong> Gets exactly one value from the related row</li>
+                    </ol>
+                </div>
+
+                <table class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th>Sales Table (Many)</th>
+                        <th>ProductKey</th>
+                        <th>Quantity</th>
+                        <th>Revenue</th>
+                        <th>Category (RELATED)</th>
+                    </tr>
+                    <tr>
+                        <td>Sale 1</td>
+                        <td>P001</td>
+                        <td>5</td>
+                        <td>$500</td>
+                        <td class="yes">Electronics</td>
+                    </tr>
+                    <tr>
+                        <td>Sale 2</td>
+                        <td>P002</td>
+                        <td>3</td>
+                        <td>$300</td>
+                        <td class="yes">Clothing</td>
+                    </tr>
+                    <tr>
+                        <td>Sale 3</td>
+                        <td>P001</td>
+                        <td>2</td>
+                        <td>$200</td>
+                        <td class="yes">Electronics</td>
+                    </tr>
+                </table>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Total Sales</div>
+                        <div class="pbi-card-value">$10.5M</div>
+                        <div class="pbi-card-subtitle">All transactions</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Electronics (RELATED)</div>
+                        <div class="pbi-card-value">$2.5M</div>
+                        <div class="pbi-card-subtitle">Via Products[Category]</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Premium Tier (RELATED)</div>
+                        <div class="pbi-card-value">$3.4M</div>
+                        <div class="pbi-card-subtitle">Via Customers[Tier]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: RELATEDTABLE Function -->
+        <div class="slide">
+            <h1 class="slide-title">The RELATEDTABLE Function</h1>
+            <h2 class="slide-subtitle">Navigate from One to Many</h2>
+            <div class="slide-content">
+                <p><span class="highlight">RELATEDTABLE</span> retrieves a filtered table from the "many" side when you're on the "one" side. Returns all related rows.</p>
+                
+                <div class="code-block">
+RELATEDTABLE(<Table>)
+
+-- Example: Count customer's total orders (in Customers table)
+-- Customers (one) ← Sales (many)
+Total Orders = COUNTROWS(RELATEDTABLE(Sales))
+
+-- Example: Sum customer's sales (in Customers table)
+Customer Sales = 
+SUMX(
+    RELATEDTABLE(Sales),
+    Sales[Amount]
+)
+
+-- Example: Average product price (in Categories calculated column)
+Avg Product Price = 
+AVERAGEX(
+    RELATEDTABLE(Products),
+    Products[Price]
+)
+                </div>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>RELATED vs RELATEDTABLE:</strong>
+                        <div class="comparison-table" style="margin-top:1rem;font-size:0.95rem;">
+                            <tr>
+                                <th>Aspect</th>
+                                <th>RELATED</th>
+                                <th>RELATEDTABLE</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Direction</strong></td>
+                                <td class="yes">Many → One</td>
+                                <td class="yes">One → Many</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Returns</strong></td>
+                                <td class="yes">Single Value</td>
+                                <td class="yes">Table</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Usage</strong></td>
+                                <td class="yes">Direct reference</td>
+                                <td class="yes">With aggregators (SUMX, COUNTROWS)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Example</strong></td>
+                                <td class="yes">Get product category</td>
+                                <td class="yes">Count customer orders</td>
+                            </tr>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>🎯 Real-World Example:</strong>
+                        <p style="margin-top:1rem;">Calculate customer lifetime value in Customers table:</p>
+                        <div class="code-block" style="font-size:0.9rem;margin-top:1rem;">
+-- In Customers table (calculated column)
+Customer LTV = 
+VAR CustomerSales = RELATEDTABLE(Sales)
+VAR TotalSpent = SUMX(CustomerSales, Sales[Amount])
+VAR AvgOrder = AVERAGEX(CustomerSales, Sales[Amount])
+VAR OrderCount = COUNTROWS(CustomerSales)
+RETURN
+    TotalSpent + (AvgOrder * 5)  // Predicted 5 more orders
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Customer A</div>
+                        <div class="pbi-kpi-value">$25,000</div>
+                        <div class="pbi-kpi-target">15 orders via RELATEDTABLE</div>
+                        <div class="pbi-kpi-trend">↑ Premium Customer</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Customer B</div>
+                        <div class="pbi-kpi-value">$8,500</div>
+                        <div class="pbi-kpi-target">8 orders via RELATEDTABLE</div>
+                        <div class="pbi-kpi-trend">↑ Standard Customer</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Customer C</div>
+                        <div class="pbi-kpi-value">$42,000</div>
+                        <div class="pbi-kpi-target">28 orders via RELATEDTABLE</div>
+                        <div class="pbi-kpi-trend">↑ VIP Customer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: EARLIER Function -->
+        <div class="slide">
+            <h1 class="slide-title">The EARLIER Function</h1>
+            <h2 class="slide-subtitle">Access Outer Row Context</h2>
+            <div class="slide-content">
+                <p><span class="highlight">EARLIER</span> allows you to reference a column value from an outer row context when you have nested iterations. This is crucial for ranking and comparisons.</p>
+                
+                <div class="code-block">
+EARLIER(<Column>, [<Number>])
+
+-- Example: Rank products by sales (calculated column)
+Product Rank = 
+COUNTROWS(
+    FILTER(
+        Products,
+        CALCULATE([Total Sales]) >= 
+        CALCULATE([Total Sales], EARLIER(Products[ProductKey]))
+    )
+)
+
+-- Example: Count customers in same region (calculated column)
+Same Region Count = 
+COUNTROWS(
+    FILTER(
+        Customers,
+        Customers[Region] = EARLIER(Customers[Region])
+    )
+)
+
+-- Example: Calculate running total
+Running Total = 
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        ALL(Calendar[Date]),
+        Calendar[Date] <= EARLIER(Calendar[Date])
+    )
+)
+                </div>
+
+                <div class="example-box">
+                    <strong>💡 Understanding EARLIER:</strong>
+                    <ol>
+                        <li><strong>Nested Context:</strong> Used when FILTER creates inner row context</li>
+                        <li><strong>Outer Reference:</strong> EARLIER accesses the row from outer iteration</li>
+                        <li><strong>Multiple Levels:</strong> EARLIER(column, 2) goes two levels out</li>
+                        <li><strong>Calculated Columns:</strong> Most common use case</li>
+                    </ol>
+                    <div class="code-block" style="font-size:0.9rem;margin-top:1.5rem;">
+-- Step-by-step breakdown:
+Product Rank = 
+COUNTROWS(                           -- Step 4: Count matching rows
+    FILTER(                          -- Step 3: Filter all products
+        Products,                    -- Step 2: Iterate through ALL products
+        [Total Sales] >=             -- Step 5: Compare each product's sales
+        EARLIER([Total Sales])       -- Step 1: Current row's sales (OUTER)
+    )
+)
+// For each product (outer), count how many products (inner) 
+// have sales >= current product's sales
+                    </div>
+                </div>
+
+                <table class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th>Product</th>
+                        <th>Sales</th>
+                        <th>Rank (EARLIER)</th>
+                        <th>Calculation Logic</th>
+                    </tr>
+                    <tr>
+                        <td>iPhone Pro</td>
+                        <td>$500K</td>
+                        <td class="yes">1</td>
+                        <td>1 product >= $500K (itself)</td>
+                    </tr>
+                    <tr>
+                        <td>MacBook</td>
+                        <td>$400K</td>
+                        <td class="yes">2</td>
+                        <td>2 products >= $400K</td>
+                    </tr>
+                    <tr>
+                        <td>iPad</td>
+                        <td>$300K</td>
+                        <td class="yes">3</td>
+                        <td>3 products >= $300K</td>
+                    </tr>
+                    <tr>
+                        <td>AirPods</td>
+                        <td>$150K</td>
+                        <td class="yes">4</td>
+                        <td>4 products >= $150K</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 5: LOOKUPVALUE Function -->
+        <div class="slide">
+            <h1 class="slide-title">The LOOKUPVALUE Function</h1>
+            <h2 class="slide-subtitle">Find Values Without Relationships</h2>
+            <div class="slide-content">
+                <p><span class="highlight">LOOKUPVALUE</span> searches for a value in a table based on one or more search criteria. Works like Excel's VLOOKUP but more powerful.</p>
+                
+                <div class="code-block">
+LOOKUPVALUE(
+    <ResultColumn>,
+    <SearchColumn1>, <SearchValue1>,
+    [<SearchColumn2>, <SearchValue2>],
+    ...
+    [<AlternateResult>]
+)
+
+-- Example: Get product price
+Product Price = 
+LOOKUPVALUE(
+    Products[Price],
+    Products[ProductKey], Sales[ProductKey]
+)
+
+-- Example: Get employee manager name
+Manager Name = 
+LOOKUPVALUE(
+    Employees[Name],
+    Employees[EmployeeID], Employees[ManagerID]
+)
+
+-- Example: Multi-column lookup with default
+Price = 
+LOOKUPVALUE(
+    PriceList[Price],
+    PriceList[Product], [ProductName],
+    PriceList[Region], [Region],
+    0  // Default if not found
+)
+                </div>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>✅ When to Use LOOKUPVALUE:</strong>
+                        <ul>
+                            <li><strong>No relationship:</strong> Tables not related in model</li>
+                            <li><strong>Calculated columns:</strong> Need value during data load</li>
+                            <li><strong>Multiple criteria:</strong> Match on 2+ columns</li>
+                            <li><strong>Self-reference:</strong> Lookup within same table</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>⚠️ LOOKUPVALUE Cautions:</strong>
+                        <ul>
+                            <li><strong>Performance:</strong> Slower than RELATED (scans table)</li>
+                            <li><strong>Duplicates:</strong> Returns error if multiple matches</li>
+                            <li><strong>Missing:</strong> Returns BLANK if no match (use alternate result)</li>
+                            <li><strong>Alternative:</strong> Use RELATED if relationship exists</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th colspan="2">Sales Table</th>
+                        <th colspan="2">Products Table (Lookup)</th>
+                        <th>Result</th>
+                    </tr>
+                    <tr>
+                        <th>OrderID</th>
+                        <th>ProductKey</th>
+                        <th>ProductKey</th>
+                        <th>Category</th>
+                        <th>Category (LOOKUPVALUE)</th>
+                    </tr>
+                    <tr>
+                        <td>ORD001</td>
+                        <td>P001</td>
+                        <td>P001</td>
+                        <td>Electronics</td>
+                        <td class="yes">Electronics</td>
+                    </tr>
+                    <tr>
+                        <td>ORD002</td>
+                        <td>P003</td>
+                        <td>P003</td>
+                        <td>Clothing</td>
+                        <td class="yes">Clothing</td>
+                    </tr>
+                    <tr>
+                        <td>ORD003</td>
+                        <td>P999</td>
+                        <td>(not found)</td>
+                        <td>-</td>
+                        <td class="no">BLANK</td>
+                    </tr>
+                </div>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Successful Lookups</div>
+                        <div class="pbi-card-value">9,847</div>
+                        <div class="pbi-card-subtitle">98.5% match rate</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(243,156,18,0.2),rgba(243,156,18,0.1));border-color:rgba(243,156,18,0.3);">
+                        <div class="pbi-card-title">Missing Values</div>
+                        <div class="pbi-card-value">153</div>
+                        <div class="pbi-card-subtitle">1.5% no match</div>
+                    </div>
+                    <div class="pbi-card" style="background:linear-gradient(135deg,rgba(231,76,60,0.2),rgba(231,76,60,0.1));border-color:rgba(231,76,60,0.3);">
+                        <div class="pbi-card-title">Duplicate Errors</div>
+                        <div class="pbi-card-value">0</div>
+                        <div class="pbi-card-subtitle">Unique keys only</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: SELECTEDVALUE Function -->
+        <div class="slide">
+            <h1 class="slide-title">The SELECTEDVALUE Function</h1>
+            <h2 class="slide-subtitle">Safe Single Value Extraction</h2>
+            <div class="slide-content">
+                <p><span class="highlight">SELECTEDVALUE</span> returns a column's value when there's only one distinct value in filter context. Perfect for dynamic titles and conditional logic.</p>
+                
+                <div class="code-block">
+SELECTEDVALUE(<Column>, [<AlternateResult>])
+
+-- Example: Dynamic title
+Selected Category = 
+SELECTEDVALUE(Products[Category], "All Categories")
+
+-- Example: Conditional calculation
+Price = 
+IF(
+    SELECTEDVALUE(Customers[Tier]) = "Premium",
+    [Base Price] * 0.9,  // 10% discount
+    [Base Price]
+)
+
+-- Example: Show selection in card visual
+Current Selection = 
+"Sales for " & 
+SELECTEDVALUE(Calendar[Year], "All Years") & 
+" in " & 
+SELECTEDVALUE(Customers[Region], "All Regions")
+                </div>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>💡 How SELECTEDVALUE Works:</strong>
+                        <ol>
+                            <li><strong>Single Value:</strong> Returns the value if only one exists</li>
+                            <li><strong>Multiple Values:</strong> Returns alternate result (or BLANK)</li>
+                            <li><strong>No Values:</strong> Returns alternate result (or BLANK)</li>
+                            <li><strong>Safe:</strong> Never throws an error</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>SELECTEDVALUE vs VALUES:</strong>
+                        <div class="code-block" style="font-size:0.9rem;margin-top:1rem;">
+-- These are EQUIVALENT:
+
+-- Using SELECTEDVALUE (easier)
+SELECTEDVALUE(Products[Category])
+
+-- Using VALUES (manual check)
+IF(
+    HASONEVALUE(Products[Category]),
+    VALUES(Products[Category]),
+    BLANK()
+)
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Tip:</strong> SELECTEDVALUE is cleaner and more readable.</p>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th>Filter State</th>
+                        <th>SELECTEDVALUE Result</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td><strong>One category selected</strong> (Electronics)</td>
+                        <td class="yes">"Electronics"</td>
+                        <td>Show selected value</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multiple categories</strong> (Electronics, Clothing)</td>
+                        <td class="no">"Multiple Categories"</td>
+                        <td>Show alternate text</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No filter applied</strong></td>
+                        <td class="no">"All Categories"</td>
+                        <td>Show default text</td>
+                    </tr>
+                </div>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Selected Year</div>
+                        <div class="pbi-card-value">2024</div>
+                        <div class="pbi-card-subtitle">SELECTEDVALUE(Year)</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Selected Region</div>
+                        <div class="pbi-card-value">USA</div>
+                        <div class="pbi-card-subtitle">SELECTEDVALUE(Region)</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Category Filter</div>
+                        <div class="pbi-card-value">Multiple</div>
+                        <div class="pbi-card-subtitle">2+ selected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Variables (VAR) -->
+        <div class="slide">
+            <h1 class="slide-title">Variables in DAX</h1>
+            <h2 class="slide-subtitle">Store & Reuse Calculations</h2>
+            <div class="slide-content">
+                <p><span class="highlight">Variables (VAR)</span> store intermediate results, improving performance and code readability. They're evaluated once and cached.</p>
+                
+                <div class="code-block">
+VAR <VariableName> = <Expression>
+RETURN <Result>
+
+-- Example: Calculate margin with variables
+Margin % = 
+VAR TotalRevenue = SUM(Sales[Revenue])
+VAR TotalCost = SUM(Sales[Cost])
+VAR Margin = TotalRevenue - TotalCost
+RETURN
+    DIVIDE(Margin, TotalRevenue)
+
+-- Example: Multiple calculations
+Customer Segmentation = 
+VAR AvgOrder = AVERAGEX(RELATEDTABLE(Sales), Sales[Amount])
+VAR OrderCount = COUNTROWS(RELATEDTABLE(Sales))
+VAR TotalSpent = SUMX(RELATEDTABLE(Sales), Sales[Amount])
+RETURN
+    SWITCH(
+        TRUE(),
+        TotalSpent > 10000 && OrderCount > 10, "VIP",
+        TotalSpent > 5000, "Premium",
+        OrderCount > 3, "Regular",
+        "New"
+    )
+                </div>
+
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>✅ Benefits of Variables:</strong>
+                        <ul>
+                            <li><strong>Performance:</strong> Calculated once, reused multiple times</li>
+                            <li><strong>Readability:</strong> Named variables explain logic</li>
+                            <li><strong>Maintainability:</strong> Change calculation in one place</li>
+                            <li><strong>Debugging:</strong> Break complex formulas into steps</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>⚡ Performance Comparison:</strong>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Without Variables (calculates 3 times!)
+Inefficient = 
+DIVIDE(
+    SUM(Sales[Revenue]) - SUM(Sales[Cost]),
+    SUM(Sales[Revenue])
+) * 100
+
+-- With Variables (calculates once!)
+Efficient = 
+VAR Revenue = SUM(Sales[Revenue])
+VAR Cost = SUM(Sales[Cost])
+RETURN
+    DIVIDE(Revenue - Cost, Revenue) * 100
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Without Variables</th>
+                        <th>With Variables</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance</strong></td>
+                        <td class="no">Recalculates repeatedly</td>
+                        <td class="yes">Calculates once, caches</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Readability</strong></td>
+                        <td class="no">Long, nested formulas</td>
+                        <td class="yes">Clear, named steps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td class="no">Change in multiple places</td>
+                        <td class="yes">Change in one place</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Debugging</strong></td>
+                        <td class="no">Hard to trace errors</td>
+                        <td class="yes">Test each step</td>
+                    </tr>
+                </table>
+
+                <div class="grid-3" style="margin-top:2rem;">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Formula Speed</div>
+                        <div class="pbi-kpi-value">3.2x</div>
+                        <div class="pbi-kpi-target">Faster with variables</div>
+                        <div class="pbi-kpi-trend">↑ Performance gain</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Code Length</div>
+                        <div class="pbi-kpi-value">-40%</div>
+                        <div class="pbi-kpi-target">Shorter & clearer</div>
+                        <div class="pbi-kpi-trend">↑ Better readability</div>
+                    </div>
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Errors Reduced</div>
+                        <div class="pbi-kpi-value">65%</div>
+                        <div class="pbi-kpi-target">Fewer mistakes</div>
+                        <div class="pbi-kpi-trend">↑ Higher quality</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Hands-On Exercise -->
+        <div class="slide">
+            <h1 class="slide-title">Hands-On Exercise</h1>
+            <h2 class="slide-subtitle">Practice Relationship & Lookup Functions</h2>
+            <div class="slide-content">
+                <p>Using the sample data with Sales, Products, and Customers tables, create these measures and calculated columns:</p>
+
+                <div class="grid-2" style="margin-top:2rem;">
+                    <div class="card">
+                        <div class="card-title">Exercise 1: Product Category Column</div>
+                        <p><strong>Task:</strong> In Sales table, create calculated column for product category using RELATED</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here (calculated column)
+Product Category = 
+RELATED(Products[Category])
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Expected:</strong> Each sale shows its product's category</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 2: Customer Order Count</div>
+                        <p><strong>Task:</strong> In Customers table, count each customer's total orders using RELATEDTABLE</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here (calculated column)
+Total Orders = 
+COUNTROWS(RELATEDTABLE(Sales))
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Expected:</strong> Shows number of orders per customer</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 3: Product Rank</div>
+                        <p><strong>Task:</strong> Rank products by sales using EARLIER</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here (calculated column)
+Sales Rank = 
+COUNTROWS(
+    FILTER(
+        Products,
+        CALCULATE([Total Sales]) >= 
+        CALCULATE([Total Sales], 
+            EARLIER(Products[ProductKey]))
+    )
+)
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Expected:</strong> 1=highest sales, ascending</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Exercise 4: Price Lookup</div>
+                        <p><strong>Task:</strong> Create measure to lookup product price by name</p>
+                        <div class="code-block" style="font-size:0.85rem;margin-top:1rem;">
+-- Your formula here (measure)
+Current Product Price = 
+VAR SelectedProduct = 
+    SELECTEDVALUE(Products[ProductName])
+RETURN
+    LOOKUPVALUE(
+        Products[Price],
+        Products[ProductName], SelectedProduct,
+        0
+    )
+                        </div>
+                        <p style="margin-top:1rem;"><strong>Expected:</strong> Shows price of selected product, 0 if multiple</p>
+                    </div>
+                </div>
+
+                <div class="example-box" style="margin-top:2rem;">
+                    <strong>🎯 Validation Checklist:</strong>
+                    <table class="comparison-table" style="margin-top:1rem;">
+                        <tr>
+                            <th>Exercise</th>
+                            <th>Test Case</th>
+                            <th>Expected Result</th>
+                        </tr>
+                        <tr>
+                            <td><strong>1: Category Column</strong></td>
+                            <td>Sale of ProductKey "P001"</td>
+                            <td class="yes">"Electronics"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2: Order Count</strong></td>
+                            <td>Customer "C001" with 5 orders</td>
+                            <td class="yes">5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3: Product Rank</strong></td>
+                            <td>Top selling product</td>
+                            <td class="yes">1</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4: Price Lookup</strong></td>
+                            <td>Select "iPhone Pro"</td>
+                            <td class="yes">$999</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Best Practices -->
+        <div class="slide">
+            <h1 class="slide-title">Best Practices</h1>
+            <h2 class="slide-subtitle">Relationship & Lookup Functions</h2>
+            <div class="slide-content">
+                <div class="grid-2">
+                    <div class="example-box">
+                        <strong>✅ DO:</strong>
+                        <ul>
+                            <li><strong>Use RELATED when possible:</strong> Faster than LOOKUPVALUE if relationship exists</li>
+                            <li><strong>Use variables:</strong> Store complex calculations for reuse</li>
+                            <li><strong>Add default values:</strong> Use alternate results in LOOKUPVALUE and SELECTEDVALUE</li>
+                            <li><strong>Validate relationships:</strong> Ensure proper relationships before using RELATED</li>
+                            <li><strong>Test EARLIER carefully:</strong> Verify outer context is correct</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>❌ DON'T:</strong>
+                        <ul>
+                            <li><strong>Overuse LOOKUPVALUE:</strong> Creates performance issues at scale</li>
+                            <li><strong>Skip error handling:</strong> Always consider missing values</li>
+                            <li><strong>Use EARLIER unnecessarily:</strong> Often RANKX is cleaner alternative</li>
+                            <li><strong>Forget variable scope:</strong> Variables evaluated once, can't change</li>
+                            <li><strong>Ignore relationship direction:</strong> RELATED only works one way</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="comparison-table" style="margin-top:2rem;">
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Best Function</th>
+                        <th>Reason</th>
+                    </tr>
+                    <tr>
+                        <td>Get related value (relationship exists)</td>
+                        <td class="yes">RELATED</td>
+                        <td>Fastest, uses relationships</td>
+                    </tr>
+                    <tr>
+                        <td>Get related value (no relationship)</td>
+                        <td class="yes">LOOKUPVALUE</td>
+                        <td>Works without relationships</td>
+                    </tr>
+                    <tr>
+                        <td>Count related rows</td>
+                        <td class="yes">COUNTROWS(RELATEDTABLE)</td>
+                        <td>Efficient for one-to-many</td>
+                    </tr>
+                    <tr>
+                        <td>Rank within group</td>
+                        <td class="yes">RANKX or EARLIER</td>
+                        <td>RANKX simpler, EARLIER more flexible</td>
+                    </tr>
+                    <tr>
+                        <td>Get single selected value</td>
+                        <td class="yes">SELECTEDVALUE</td>
+                        <td>Safe, handles multiple values</td>
+                    </tr>
+                    <tr>
+                        <td>Reuse calculations</td>
+                        <td class="yes">VAR</td>
+                        <td>Performance & readability</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 10: Key Takeaways -->
+        <div class="slide">
+            <h1 class="slide-title">Key Takeaways</h1>
+            <h2 class="slide-subtitle">Essential DAX Functions - Part 2</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;">
+                        <li><span class="highlight">RELATED</span> - Navigate from many-side to one-side of relationships; use in calculated columns and iterators.</li>
+                        <li><span class="highlight">RELATEDTABLE</span> - Navigate from one-side to many-side; returns table of related rows for aggregation.</li>
+                        <li><span class="highlight">EARLIER</span> - Access outer row context in nested iterations; useful for ranking and comparisons.</li>
+                        <li><span class="highlight">LOOKUPVALUE</span> - Find values without relationships; slower than RELATED but more flexible.</li>
+                        <li><span class="highlight">SELECTEDVALUE</span> - Get single value from filter context safely; perfect for dynamic titles and conditional logic.</li>
+                        <li><span class="highlight">VAR (Variables)</span> - Store calculations for reuse; improves performance and readability dramatically.</li>
+                    </ul>
+                </div>
+
+                <div class="grid-3" style="margin-top:3rem;">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Functions Mastered</div>
+                        <div class="pbi-kpi-value">6</div>
+                        <div class="pbi-kpi-target">RELATED, RELATEDTABLE, EARLIER, LOOKUPVALUE, SELECTEDVALUE, VAR</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(52,152,219,0.2),rgba(52,152,219,0.1));border-color:rgba(52,152,219,0.3);">
+                        <div class="pbi-kpi-title">Next Up</div>
+                        <div class="pbi-kpi-value">Day 7</div>
+                        <div class="pbi-kpi-target">Time Intelligence Part 1</div>
+                        <div class="pbi-kpi-trend" style="color:#3498db;">YTD, MTD, QTD →</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(243,156,18,0.2),rgba(243,156,18,0.1));border-color:rgba(243,156,18,0.3);">
+                        <div class="pbi-kpi-title">Practice Time</div>
+                        <div class="pbi-kpi-value">45m</div>
+                        <div class="pbi-kpi-target">Complete all exercises</div>
+                        <div class="pbi-kpi-trend" style="color:#f39c12;">↑ Master relationships</div>
+                    </div>
+                </div>
+
+                <div class="example-box" style="margin-top:2rem;">
+                    <strong>🎓 Module 5 Complete!</strong>
+                    <p style="margin-top:1rem;">You've now mastered 12 essential DAX functions across Days 5-6:</p>
+                    <ul style="margin-top:1rem;">
+                        <li><strong>Filter Functions:</strong> FILTER, ALL, ALLEXCEPT, ALLSELECTED, VALUES, KEEPFILTERS</li>
+                        <li><strong>Relationship Functions:</strong> RELATED, RELATEDTABLE, EARLIER</li>
+                        <li><strong>Lookup Functions:</strong> LOOKUPVALUE, SELECTEDVALUE, VAR</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.1rem;">These functions form the foundation of advanced DAX calculations. Practice them extensively before moving to time intelligence!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

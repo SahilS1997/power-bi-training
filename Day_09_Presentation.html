@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9: Advanced DAX Patterns - Part 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 9: Advanced DAX Patterns - Part 1</div>
+            <div class="nav-controls">
+                <a href="Day_08_Presentation.html" class="nav-btn">← Day 8</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_10_Presentation.html" class="nav-btn">Day 10 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Advanced DAX Patterns - Part 1</h1>
+            <h2 class="slide-subtitle">Module 7 | Day 9</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Master ranking functions, dynamic selections, and variables to write efficient, readable DAX code.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Create product/customer rankings with RANKX</li>
+                    <li>Filter top N records dynamically with TOPN</li>
+                    <li>Use variables (VAR) for better performance and readability</li>
+                    <li>Build complex analytical patterns efficiently</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">What is RANKX?</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">RANKX</span> assigns a rank number to each item based on a measure value.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Real-World Example:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;"><strong>Sales Performance Ranking:</strong></p>
+                    <ul style="margin-top:1rem;font-size:1.05rem;">
+                        <li>iPhone Pro - $500,000 → Rank #1</li>
+                        <li>Samsung Galaxy - $450,000 → Rank #2</li>
+                        <li>iPad Air - $380,000 → Rank #3</li>
+                        <li>MacBook - $320,000 → Rank #4</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;">This helps you identify your best and worst performers instantly.</p>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Basic RANKX Syntax:</h3>
+                <div class="code-block">
+RANKX(
+    &lt;table&gt;,         -- Table of items to rank
+    &lt;expression&gt;,    -- What to rank by (usually a measure)
+    &lt;value&gt;,         -- Optional: specific value to rank
+    &lt;order&gt;,         -- DESC (highest first) or ASC (lowest first)
+    &lt;ties&gt;           -- DENSE or SKIP (how to handle equal values)
+)
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Beginner Tip:</strong> Think of RANKX like a sports leaderboard - it sorts everyone by score and assigns position numbers.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Creating Product Rankings</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Simple Product Rank:</h3>
+                <div class="code-block">
+-- Rank all products by sales (highest to lowest)
+Product Rank = 
+RANKX(
+    ALL(Products[ProductName]),
+    [Total Sales],
+    ,
+    DESC,      -- Highest sales = Rank 1
+    DENSE      -- No gaps in ranking
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Understanding Parameters:</h3>
+                <ul style="font-size:1.05rem;line-height:1.9;">
+                    <li><strong>ALL(Products[ProductName]):</strong> Removes filters, ranks ALL products</li>
+                    <li><strong>[Total Sales]:</strong> Ranking criteria</li>
+                    <li><strong>DESC:</strong> Descending order (highest value = rank 1)</li>
+                    <li><strong>DENSE:</strong> No gaps (1, 2, 3, 4...)</li>
+                    <li><strong>SKIP (alternative):</strong> Skips ties (1, 2, 2, 4...)</li>
+                </ul>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📊 Product Ranking Example:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">Rank</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Product Name</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Total Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(192,192,192,0.15);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#FFD700;font-weight:bold;font-size:1.2rem;">1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;color:#FFD700;">iPhone Pro</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$500,000</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#C0C0C0;font-weight:bold;font-size:1.1rem;">2</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;color:#C0C0C0;">Samsung Galaxy</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$450,000</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#CD7F32;font-weight:bold;">3</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;color:#CD7F32;">iPad Air</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$380,000</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">4</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">MacBook Pro</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$320,000</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">5</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">AirPods Pro</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$280,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Context-Aware Rankings</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Rank products <strong>within each category</strong> or customers <strong>within each country</strong>.</p>
+
+                <div class="code-block">
+-- Rank products within their category
+Product Rank in Category = 
+RANKX(
+    ALLSELECTED(Products[ProductName]),
+    [Total Sales],
+    ,
+    DESC,
+    DENSE
+)
+
+-- How it works:
+-- Electronics: Phone = #1, Laptop = #2, Tablet = #3
+-- Clothing: Shirt = #1, Pants = #2, Shoes = #3
+-- (Rankings restart for each category)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Customer Rank by Country:</h3>
+                <div class="code-block">
+-- Rank customers within their country
+Customer Rank = 
+RANKX(
+    FILTER(
+        ALL(Customers),
+        Customers[Country] = MAX(Customers[Country])
+    ),
+    [Total Sales],
+    ,
+    DESC
+)
+
+-- USA: Customer A = #1, Customer B = #2
+-- Canada: Customer X = #1, Customer Y = #2
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-platinum);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Use Case:</strong> Sales managers can see top performers within their region without global rankings getting in the way.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">TOPN Function - Dynamic Filtering</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">TOPN</span> returns the top N rows from a table based on a measure.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Basic TOPN Syntax:</h3>
+                <div class="code-block">
+TOPN(
+    &lt;n&gt;,             -- Number of rows to return
+    &lt;table&gt;,         -- Table to filter
+    &lt;orderBy&gt;,       -- Expression to sort by
+    &lt;order&gt;          -- DESC or ASC
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Top 5 Products by Sales:</h3>
+                <div class="code-block">
+-- Calculate total sales for top 5 products only
+Top 5 Products Sales = 
+CALCULATE(
+    [Total Sales],
+    TOPN(
+        5,
+        ALL(Products),
+        [Total Sales],
+        DESC
+    )
+)
+
+-- Use in a Card visual to show contribution of top 5 products
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Top 10 Customers:</h3>
+                <div class="code-block">
+-- Filter to show only top 10 customers
+Top 10 Customers = 
+CALCULATE(
+    [Total Sales],
+    TOPN(
+        10,
+        ALL(Customers),
+        [Total Sales]
+    )
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>📊 Visualization:</strong> Create a Bar Chart showing only top 10 customers. Use TOPN in a measure instead of visual-level filters for better performance.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Variables (VAR) - Why They Matter</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Variables (VAR)</span> store intermediate results, improving performance and readability.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Without Variables (BAD):</h3>
+                <div class="code-block">
+-- Inefficient: Calculates SUM(Sales[Amount]) FOUR times!
+Margin % = 
+DIVIDE(
+    SUM(Sales[Amount]) - SUM(Sales[Cost]),
+    SUM(Sales[Amount])
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">✅ With Variables (GOOD):</h3>
+                <div class="code-block">
+-- Efficient: Calculates each value ONCE and reuses it
+Margin % = 
+VAR TotalRevenue = SUM(Sales[Amount])
+VAR TotalCost = SUM(Sales[Cost])
+VAR Margin = TotalRevenue - TotalCost
+RETURN
+    DIVIDE(Margin, TotalRevenue)
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Performance Impact:</strong> Variables are evaluated ONCE when defined. Reusing the variable is instant. This can make complex measures 10x faster!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Variables for Complex Logic</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Variables make complex calculations easy to read and debug.</p>
+
+                <div class="code-block">
+-- Complex: Sales Target Achievement
+Sales Performance = 
+VAR CurrentSales = [Total Sales]
+VAR Target = [Sales Target]
+VAR Achievement = DIVIDE(CurrentSales, Target)
+VAR PerformanceLevel = 
+    SWITCH(
+        TRUE(),
+        Achievement >= 1.2, "⭐ Excellent",
+        Achievement >= 1.0, "✅ Met Target",
+        Achievement >= 0.8, "⚠️ Below Target",
+        "❌ Critical"
+    )
+RETURN
+    PerformanceLevel
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Multi-Step Calculation:</h3>
+                <div class="code-block">
+-- Calculate discount impact
+Discount Impact = 
+VAR RegularPrice = [Total Sales at List Price]
+VAR ActualSales = [Total Sales]
+VAR DiscountAmount = RegularPrice - ActualSales
+VAR DiscountPercentage = DIVIDE(DiscountAmount, RegularPrice)
+VAR Impact = 
+    IF(
+        DiscountPercentage > 0.15,
+        "High discount impact - review pricing",
+        "Normal discount range"
+    )
+RETURN
+    Impact
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Best Practice:</strong> Use descriptive variable names (TotalRevenue, not x or temp). Your future self will thank you!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Combining RANKX with Variables</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Build sophisticated ranking logic with clear, maintainable code.</p>
+
+                <div class="code-block">
+-- Rank with performance categories
+Product Performance Category = 
+VAR CurrentRank = [Product Rank]
+VAR TotalProducts = COUNTROWS(ALL(Products))
+VAR TopPercentile = TotalProducts * 0.2  -- Top 20%
+VAR BottomPercentile = TotalProducts * 0.8  -- Bottom 20%
+VAR Category = 
+    SWITCH(
+        TRUE(),
+        CurrentRank <= TopPercentile, "🌟 Star Product",
+        CurrentRank > BottomPercentile, "📉 Underperformer",
+        "✓ Standard"
+    )
+RETURN
+    Category
+                </div>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>📸 Dashboard Visual:</strong></p>
+                    <p style="font-size:1.05rem;">Create a Table with:</p>
+                    <ul style="margin-top:0.5rem;font-size:1.05rem;">
+                        <li>Products[ProductName]</li>
+                        <li>[Total Sales]</li>
+                        <li>[Product Rank]</li>
+                        <li>[Product Performance Category]</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Add conditional formatting to highlight star products in green, underperformers in red.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Exercise: Top Products Analysis</strong></p>
+                    
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Task 1: Create Ranking Measures</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create [Product Rank] using RANKX on Products table</li>
+                        <li>Rank by [Total Sales] in descending order</li>
+                        <li>Use DENSE for tie handling</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Task 2: Create Top 10 Filter</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create [Top 10 Products] using TOPN function</li>
+                        <li>Return top 10 by [Total Sales]</li>
+                        <li>Test in a Card visual - should show sum of top 10 only</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Task 3: Add Performance Label</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Use VAR to store [Product Rank]</li>
+                        <li>Return "Top 10" if rank ≤ 10, "Other" otherwise</li>
+                        <li>Add to your visual to see the difference</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-top:2rem;"><strong>Bonus Challenge:</strong> Create a slicer to dynamically change the "N" in Top N (hint: use a parameter table).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;line-height:2.2;">
+                        <li>🏆 <span class="highlight">RANKX</span> creates dynamic rankings based on any measure</li>
+                        <li>🎯 <span class="highlight">TOPN</span> filters to top/bottom N records efficiently</li>
+                        <li>📦 <span class="highlight">Variables (VAR)</span> improve performance by 10x or more</li>
+                        <li>📖 Variables make complex code <strong>readable and maintainable</strong></li>
+                        <li>🔄 Variables evaluate ONCE, reuse is instant</li>
+                        <li>💡 Use ALL() or ALLSELECTED() to control ranking context</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:3rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🎯 Next Up: Day 10</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">Advanced DAX Patterns Part 2 - SUMMARIZE, Virtual Tables, ABC Classification</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11: DAX Performance Optimization - Part 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 11: DAX Performance Optimization - Part 1</div>
+            <div class="nav-controls">
+                <a href="Day_10_Presentation.html" class="nav-btn">← Day 10</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_12_Presentation.html" class="nav-btn">Day 12 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">DAX Performance Optimization - Part 1</h1>
+            <h2 class="slide-subtitle">Module 9 | Day 11</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Understand how Power BI processes queries and learn professional tools to identify and fix performance bottlenecks.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Understand Storage Engine vs Formula Engine architecture</li>
+                    <li>Use DAX Studio to analyze query performance</li>
+                    <li>Master Performance Analyzer in Power BI Desktop</li>
+                    <li>Identify and fix slow measures</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Power BI's Two-Engine Architecture</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">Power BI uses <span class="highlight">two engines</span> to process your queries - understanding this is key to optimization.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">1. Storage Engine (VertiPaq)</h3>
+                <div style="background:rgba(100,255,100,0.1);border-left:4px solid #64ff64;padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>What it does:</strong> In-memory columnar database</li>
+                        <li><strong>Speed:</strong> ⚡ EXTREMELY FAST (milliseconds)</li>
+                        <li><strong>Handles:</strong> Scans, filters, simple aggregations (SUM, COUNT, MIN, MAX)</li>
+                        <li><strong>Example:</strong> SUM(Sales[Amount]) WHERE Region = "West"</li>
+                    </ul>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">2. Formula Engine (DAX Engine)</h3>
+                <div style="background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;padding:1.5rem;border-radius:8px;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>What it does:</strong> Processes complex DAX logic</li>
+                        <li><strong>Speed:</strong> 🐌 SLOWER (can be seconds)</li>
+                        <li><strong>Handles:</strong> Row-by-row iterations, complex calculations, context transitions</li>
+                        <li><strong>Example:</strong> SUMX(Sales, Sales[Qty] * Sales[Price] * (1 - Sales[Discount%]))</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:2rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.2rem;color:var(--accent-platinum);"><strong>🎯 Golden Rule:</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">Push as much work as possible to the Storage Engine!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Storage Engine vs Formula Engine Examples</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Comparing Query Performance:</h3>
+
+                <div style="margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>✅ FAST: Storage Engine (Good)</strong></p>
+                    <div class="code-block">
+-- Simple aggregation - runs entirely in Storage Engine
+Total Sales = SUM(Sales[Amount])
+
+-- Still fast - Storage Engine handles filtering
+West Sales = CALCULATE(SUM(Sales[Amount]), Region[Name] = "West")
+
+-- Performance: < 10ms even with millions of rows
+                    </div>
+                </div>
+
+                <div>
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>❌ SLOW: Formula Engine (Bad)</strong></p>
+                    <div class="code-block">
+-- Row-by-row iteration - Formula Engine has to process each row
+Total Sales = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])
+
+-- Even worse - nested iteration
+Complex Calc = 
+SUMX(
+    Products,
+    SUMX(
+        FILTER(Sales, Sales[ProductID] = Products[ProductID]),
+        Sales[Amount]
+    )
+)
+
+-- Performance: Can take SECONDS with large datasets
+                    </div>
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>⚡ Performance Comparison:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Measure</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">Engine</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Time (1M rows)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(100,255,100,0.1);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;font-family:monospace;font-size:0.9rem;">SUM(Sales[Amount])</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#64ff64;font-weight:bold;">Storage ⚡</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;font-weight:bold;">15ms</td>
+                            </tr>
+                            <tr style="background:rgba(255,100,100,0.1);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;font-family:monospace;font-size:0.9rem;">SUMX(Sales, Sales[Amount])</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#ff6464;font-weight:bold;">Formula 🐌</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#ff6464;font-weight:bold;">2,500ms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.1rem;text-align:center;color:#64ff64;font-weight:bold;">167x Faster! ⚡</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">DAX Studio - Professional Performance Tool</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">DAX Studio</span> is a FREE external tool that shows exactly how Power BI executes your DAX queries.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Installing DAX Studio:</h3>
+                <ol style="font-size:1.05rem;line-height:1.9;margin-bottom:2rem;">
+                    <li>Download from <strong>daxstudio.org</strong></li>
+                    <li>Install (works with Power BI Desktop and Service)</li>
+                    <li>Connect to your open Power BI file</li>
+                </ol>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Key Features:</h3>
+                <ul style="font-size:1.05rem;line-height:1.9;">
+                    <li><strong>Server Timings:</strong> Shows SE vs FE duration breakdown</li>
+                    <li><strong>Query Plans:</strong> Visual representation of query execution</li>
+                    <li><strong>VertiPaq Analyzer:</strong> Model size, column cardinality, memory usage</li>
+                    <li><strong>Benchmark:</strong> Compare measure performance side-by-side</li>
+                    <li><strong>Query History:</strong> Track slow queries over time</li>
+                </ul>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>📸 DAX Studio Interface:</strong></p>
+                    <p style="font-size:1.05rem;">When you run a query, look for these metrics in the Server Timings tab:</p>
+                    <div class="code-block" style="margin-top:1rem;">
+Total Duration: 1,250ms
+├─ Storage Engine: 50ms   ✅ GOOD
+└─ Formula Engine: 1,200ms ❌ PROBLEM!
+
+-- Goal: Storage Engine should be 90%+ of total time
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Using DAX Studio - Practical Example</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Step-by-Step Performance Analysis</h3>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Step 1: Connect DAX Studio</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Open your Power BI Desktop file</li>
+                        <li>Launch DAX Studio</li>
+                        <li>Select your model from the dropdown</li>
+                    </ol>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 2: Test a Measure</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Type this query in DAX Studio
+EVALUATE
+ROW(
+    "Total Sales", [Total Sales],
+    "YTD Sales", [Sales YTD]
+)
+                    </div>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 3: Enable Server Timings</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Click <strong>Server Timings</strong> button (stopwatch icon)</li>
+                        <li>Run your query (F5)</li>
+                        <li>View timing breakdown in bottom pane</li>
+                    </ol>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 4: Analyze Results</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>Look for high Formula Engine times (red flag)</li>
+                        <li>Check for Scan operations (good - Storage Engine)</li>
+                        <li>Look for CallbackDataID (bad - row-by-row processing)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Performance Analyzer in Power BI Desktop</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;"><span class="highlight">Performance Analyzer</span> is built into Power BI Desktop - no installation needed!</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">How to Use It:</h3>
+                <ol style="font-size:1.05rem;line-height:1.9;margin-bottom:2rem;">
+                    <li>Open Power BI Desktop</li>
+                    <li>Go to <strong>View tab → Performance Analyzer</strong></li>
+                    <li>Click <strong>Start Recording</strong></li>
+                    <li>Interact with your report (click slicers, change pages)</li>
+                    <li>Click <strong>Stop Recording</strong></li>
+                    <li>Analyze the results</li>
+                </ol>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">What You'll See:</h3>
+                <div class="code-block">
+-- Example Performance Analyzer Output
+
+Page: Sales Dashboard
+├─ Card Visual - Total Sales: 125ms
+│  ├─ DAX Query: 120ms  ← Main bottleneck
+│  ├─ Visual Display: 3ms
+│  └─ Other: 2ms
+│
+├─ Column Chart - Sales by Category: 2,340ms  ← SLOW!
+│  ├─ DAX Query: 2,320ms  ← Problem here
+│  ├─ Visual Display: 15ms
+│  └─ Other: 5ms
+│
+└─ Table Visual - Top Products: 45ms  ← Fast
+   ├─ DAX Query: 40ms
+   └─ Visual Display: 5ms
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 What to Look For:</strong> Visuals taking > 1000ms (1 second). These need optimization!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Exercise: Measure Performance Comparison</strong></p>
+                    
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Task 1: Create Two Measures</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Fast Version (Storage Engine)
+Total Sales Fast = SUM(Sales[Amount])
+
+-- Slow Version (Formula Engine)
+Total Sales Slow = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])
+                    </div>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Task 2: Test with Performance Analyzer</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create two Card visuals side by side</li>
+                        <li>One shows [Total Sales Fast], other shows [Total Sales Slow]</li>
+                        <li>Open Performance Analyzer</li>
+                        <li>Start recording</li>
+                        <li>Refresh the page (Ctrl+Shift+R)</li>
+                        <li>Stop recording</li>
+                        <li>Compare DAX Query times</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-top:2rem;"><strong>Expected Result:</strong> Fast version should be 10-100x faster depending on your data size!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;line-height:2.2;">
+                        <li>⚡ <span class="highlight">Storage Engine (VertiPaq)</span> is FAST - columnar, compressed, in-memory</li>
+                        <li>🐌 <span class="highlight">Formula Engine</span> is SLOW - row-by-row processing</li>
+                        <li>🎯 Goal: Push 90%+ of work to Storage Engine</li>
+                        <li>🔧 <span class="highlight">DAX Studio</span> shows Storage vs Formula Engine breakdown</li>
+                        <li>📊 <span class="highlight">Performance Analyzer</span> identifies slow visuals in reports</li>
+                        <li>💾 Prefer calculated columns in source data when possible</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:3rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🎯 Next Up: Day 12</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">DAX Performance Optimization Part 2 - Best Practices, Cardinality, Real-World Fixes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

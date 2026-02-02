@@ -1,0 +1,11 @@
+ProductID,ProductName,Category,SubCategory,UnitPrice
+P001,Laptop Pro 15,Electronics,Computers,999.00
+P002,Gaming Desktop,Electronics,Computers,1299.00
+P003,Tablet X10,Electronics,Tablets,799.00
+P004,Wireless Mouse,Electronics,Accessories,39.99
+P005,USB-C Cable,Electronics,Accessories,29.99
+P006,Wireless Headphones,Electronics,Audio,449.00
+P007,Phone Charger,Electronics,Accessories,29.99
+P008,Monitor 27inch,Electronics,Displays,349.99
+P009,Mechanical Keyboard,Electronics,Accessories,499.00
+P010,Webcam HD,Electronics,Accessories,199.00

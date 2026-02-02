@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 7: Time Intelligence - Part 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 7: Time Intelligence - Part 1</div>
+            <div class="nav-controls">
+                <a href="Day_06_Presentation.html" class="nav-btn">← Day 6</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_08_Presentation.html" class="nav-btn">Day 8 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Time Intelligence - Part 1</h1>
+            <h2 class="slide-subtitle">Module 6 | Day 7</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Master calendar tables and time intelligence functions to create powerful year-to-date, month-to-date, and quarter-to-date calculations.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Understand why calendar tables are essential</li>
+                    <li>Create comprehensive calendar tables with DAX</li>
+                    <li>Build YTD, MTD, and QTD measures</li>
+                    <li>Handle fiscal year calculations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Why Calendar Tables Matter</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">Time intelligence functions in DAX <span class="highlight">require a dedicated calendar table</span> to work properly.</p>
+                
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Requirements for Calendar Tables:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li><span class="highlight">Continuous dates:</span> No gaps in date sequence</li>
+                    <li><span class="highlight">Marked as Date Table:</span> Use "Mark as Date Table" feature</li>
+                    <li><span class="highlight">One-to-many relationship:</span> Calendar → Fact tables</li>
+                    <li><span class="highlight">Date column:</span> Must be Date/Time data type</li>
+                </ul>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Beginner Tip:</strong> Think of your calendar table as the "master schedule" that connects all your date-based data. Every transaction, sale, or event should link to a date in this table.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Creating a Calendar Table - Step by Step</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Let's create a comprehensive calendar table using DAX.</p>
+                
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Step 1: Create the base date range</h3>
+                <div class="code-block">
+-- CALENDARAUTO() automatically detects date range from your data
+Calendar = CALENDARAUTO()
+
+-- OR specify exact range
+Calendar = CALENDAR(DATE(2020, 1, 1), DATE(2026, 12, 31))
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Step 2: Add calculated columns</h3>
+                <div class="code-block">
+Calendar = 
+ADDCOLUMNS(
+    CALENDARAUTO(),
+    "Year", YEAR([Date]),
+    "YearMonth", FORMAT([Date], "YYYY-MM"),
+    "Quarter", "Q" & QUARTER([Date]),
+    "QuarterYear", "Q" & QUARTER([Date]) & " " & YEAR([Date]),
+    "Month", FORMAT([Date], "MMMM"),
+    "MonthNumber", MONTH([Date]),
+    "Week", WEEKNUM([Date]),
+    "DayOfWeek", WEEKDAY([Date]),
+    "DayName", FORMAT([Date], "DDDD"),
+    "IsWeekend", WEEKDAY([Date]) IN {1, 7}
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="margin-bottom:1rem;"><strong>📊 Visual Result:</strong> Your calendar table will look like this:</p>
+                    <table style="width:100%;border-collapse:collapse;margin-top:1rem;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Date</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Year</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Quarter</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Month</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">MonthNumber</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">DayName</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">IsWeekend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1/1/2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Q1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Thursday</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">FALSE</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1/2/2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Q1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Friday</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">FALSE</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1/3/2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Q1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Saturday</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;color:#64ff64;">TRUE</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1/4/2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">2026</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Q1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Sunday</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;color:#64ff64;">TRUE</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Mark as Date Table</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">After creating your calendar table, you <span class="highlight">must mark it as a date table</span> for time intelligence to work.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Step-by-Step Instructions:</h3>
+                <ol style="font-size:1.1rem;line-height:2;">
+                    <li>Right-click your <strong>Calendar</strong> table in the Fields pane</li>
+                    <li>Select <strong>"Mark as date table"</strong></li>
+                    <li>Choose <strong>"Mark as date table"</strong> again from the submenu</li>
+                    <li>In the dialog, select your <strong>Date</strong> column</li>
+                    <li>Click <strong>OK</strong> - Power BI validates the date column</li>
+                </ol>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p><strong>📸 Visual Guide:</strong></p>
+                    <p style="margin-top:1rem;">You'll see a small calendar icon next to your table name in the Fields pane once it's marked as a date table.</p>
+                    <p style="margin-top:1rem;font-size:1.05rem;"><strong>✅ Validation Check:</strong> Power BI ensures your date column has no duplicates and no gaps.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Understanding Year-to-Date (YTD)</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Year-to-Date (YTD)</span> shows cumulative totals from January 1st to the current date.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Real-World Example:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;">If today is March 15, 2026:</p>
+                    <ul style="margin-top:1rem;">
+                        <li><strong>Regular Sales:</strong> Shows only March 15 sales</li>
+                        <li><strong>YTD Sales:</strong> Shows total from Jan 1 - Mar 15, 2026</li>
+                    </ul>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Three Ways to Create YTD Measures:</h3>
+                
+                <div class="code-block">
+-- Method 1: TOTALYTD (Simplest)
+Sales YTD = TOTALYTD([Total Sales], Calendar[Date])
+
+-- Method 2: CALCULATE with DATESYTD
+Sales YTD = CALCULATE([Total Sales], DATESYTD(Calendar[Date]))
+
+-- Method 3: Manual approach (for learning)
+Sales YTD = 
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        ALL(Calendar),
+        Calendar[Year] = YEAR(MAX(Calendar[Date]))
+        && Calendar[Date] <= MAX(Calendar[Date])
+    )
+)
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-platinum);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p><strong>🎯 Beginner Recommendation:</strong> Start with <strong>TOTALYTD</strong> - it's the easiest and most efficient. The other methods help you understand what's happening behind the scenes.</p>
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="margin-bottom:1rem;"><strong>📊 YTD Cumulative Example:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Month</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Sales</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">YTD Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$50,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$50,000</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">February</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$60,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$110,000</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">March</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$55,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$165,000</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">April</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$70,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$235,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Notice how YTD accumulates: Jan only, Jan+Feb, Jan+Feb+Mar, etc.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Fiscal Year Calculations</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">Many companies use <span class="highlight">fiscal years</span> that don't start in January.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Common Fiscal Year Scenarios:</h3>
+                <ul style="font-size:1.1rem;margin-bottom:2rem;">
+                    <li><strong>US Federal Government:</strong> October 1 - September 30</li>
+                    <li><strong>Australia:</strong> July 1 - June 30</li>
+                    <li><strong>UK:</strong> April 1 - March 31</li>
+                </ul>
+
+                <div class="code-block">
+-- Fiscal Year ending June 30
+-- (Fiscal year runs July 1 - June 30)
+Sales FY YTD = TOTALYTD([Total Sales], Calendar[Date], "6/30")
+
+-- Fiscal Year ending September 30
+Sales FY YTD = TOTALYTD([Total Sales], Calendar[Date], "9/30")
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 How It Works:</strong> The third parameter tells Power BI when your fiscal year ends. For a June 30 end date, the fiscal year 2026 runs from July 1, 2025 to June 30, 2026.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Month-to-Date (MTD) & Quarter-to-Date (QTD)</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:2rem;">Similar to YTD, but for shorter time periods.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Month-to-Date Example:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:1.5rem;">
+                    <p>If today is <strong>March 15</strong>:</p>
+                    <p style="margin-top:0.5rem;">MTD shows cumulative total from <strong>March 1 - March 15</strong></p>
+                </div>
+
+                <div class="code-block">
+-- Month-to-Date
+Sales MTD = TOTALMTD([Total Sales], Calendar[Date])
+
+-- Quarter-to-Date
+Sales QTD = TOTALQTD([Total Sales], Calendar[Date])
+
+-- Using CALCULATE approach
+Sales MTD = CALCULATE([Total Sales], DATESMTD(Calendar[Date]))
+Sales QTD = CALCULATE([Total Sales], DATESQTD(Calendar[Date]))
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Combining Multiple Time Intelligence Measures:</h3>
+                <div class="code-block">
+Sales Time Intelligence = 
+VAR CurrentSales = [Total Sales]
+VAR MTDSales = [Sales MTD]
+VAR QTDSales = [Sales QTD]
+VAR YTDSales = [Sales YTD]
+RETURN
+    -- Show daily if one date selected, otherwise YTD
+    IF(HASONEVALUE(Calendar[Date]), CurrentSales, YTDSales)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Practice Activity: Build Time Intelligence Dashboard</h3>
+                
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Task 1: Create Calendar Table</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Use the Sample_Data_Sales.csv file</li>
+                        <li>Create a calendar table using CALENDARAUTO()</li>
+                        <li>Add Year, Quarter, Month, Week columns</li>
+                        <li>Mark it as a date table</li>
+                        <li>Create relationship: Calendar[Date] → Sales[OrderDate]</li>
+                    </ol>
+
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;margin-top:2rem;"><strong>Task 2: Create Time Intelligence Measures</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Total Sales = SUM(Sales[Amount])</li>
+                        <li>Sales YTD = TOTALYTD([Total Sales], Calendar[Date])</li>
+                        <li>Sales MTD = TOTALMTD([Total Sales], Calendar[Date])</li>
+                        <li>Sales QTD = TOTALQTD([Total Sales], Calendar[Date])</li>
+                    </ol>
+
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;margin-top:2rem;"><strong>Task 3: Create Visual</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Add a Matrix visual</li>
+                        <li>Rows: Calendar[Year], Calendar[Month]</li>
+                        <li>Values: All four measures created above</li>
+                        <li>Observe how YTD accumulates throughout the year</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Common Mistakes & Solutions</h2>
+            <div class="slide-content">
+                <div style="background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;padding:1.5rem;margin-bottom:1.5rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>❌ Mistake 1:</strong> Not marking table as date table</p>
+                    <p style="font-size:1.05rem;color:rgba(255,255,255,0.7);"><strong>Solution:</strong> Right-click Calendar table → "Mark as date table"</p>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;padding:1.5rem;margin-bottom:1.5rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>❌ Mistake 2:</strong> Using transaction date directly in measures</p>
+                    <p style="font-size:1.05rem;color:rgba(255,255,255,0.7);"><strong>Solution:</strong> Always reference Calendar[Date] in time intelligence functions</p>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;padding:1.5rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>❌ Mistake 3:</strong> Gaps in calendar table</p>
+                    <p style="font-size:1.05rem;color:rgba(255,255,255,0.7);"><strong>Solution:</strong> Use CALENDAR or CALENDARAUTO to ensure continuous dates</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;line-height:2.2;">
+                        <li>📅 Always create a dedicated <span class="highlight">Calendar table</span> with continuous dates</li>
+                        <li>✅ <span class="highlight">Mark as date table</span> is mandatory for time intelligence</li>
+                        <li>📊 <span class="highlight">TOTALYTD, TOTALMTD, TOTALQTD</span> for cumulative calculations</li>
+                        <li>🎯 <span class="highlight">DATESYTD, DATESMTD, DATESQTD</span> return filtered date ranges</li>
+                        <li>💼 Fiscal year calculations supported with year-end date parameter</li>
+                        <li>🔗 Create relationships from Calendar[Date] to all fact table date columns</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:3rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🎯 Next Up: Day 8</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">Year-over-year comparisons, moving averages, and advanced time patterns</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

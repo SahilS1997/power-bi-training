@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 8: Time Intelligence - Part 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 8: Time Intelligence - Part 2</div>
+            <div class="nav-controls">
+                <a href="Day_07_Presentation.html" class="nav-btn">← Day 7</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_09_Presentation.html" class="nav-btn">Day 9 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Time Intelligence - Part 2</h1>
+            <h2 class="slide-subtitle">Module 6 | Day 8</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Build powerful year-over-year comparisons, moving averages, and custom time intelligence patterns for advanced business analysis.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Create year-over-year (YoY) and month-over-month (MoM) comparisons</li>
+                    <li>Build moving averages and rolling calculations</li>
+                    <li>Compare current vs previous periods</li>
+                    <li>Create variance analysis measures</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Understanding Year-over-Year (YoY)</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Year-over-Year comparison</span> shows performance against the same period last year.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Real-World Example:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;"><strong>Scenario:</strong> Retail Store Sales Analysis</p>
+                    <ul style="margin-top:1rem;font-size:1.05rem;">
+                        <li><strong>March 2026 Sales:</strong> $150,000</li>
+                        <li><strong>March 2025 Sales:</strong> $120,000</li>
+                        <li><strong>YoY Growth:</strong> +25% ($30,000 increase)</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;">This tells you if you're improving compared to last year, accounting for seasonality.</p>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Creating Previous Year Measure:</h3>
+                <div class="code-block">
+-- Previous Year (PY) Sales
+Sales PY = 
+CALCULATE(
+    [Total Sales], 
+    SAMEPERIODLASTYEAR(Calendar[Date])
+)
+
+-- What this does:
+-- If you're looking at March 2026, it shows March 2025 sales
+-- If you're looking at Q1 2026, it shows Q1 2025 sales
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 How SAMEPERIODLASTYEAR Works:</strong> It takes your current date selection and shifts it back exactly one year. It automatically handles months, quarters, or custom date ranges.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Year-over-Year Growth Percentage</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Calculate the percentage change between current and previous year.</p>
+
+                <div class="code-block">
+-- Year-over-Year Growth %
+Sales YoY % = 
+VAR CurrentSales = [Total Sales]
+VAR PreviousSales = [Sales PY]
+VAR Difference = CurrentSales - PreviousSales
+RETURN
+    DIVIDE(Difference, PreviousSales, 0)
+
+-- Shorter version
+Sales YoY % = 
+DIVIDE(
+    [Total Sales] - [Sales PY],
+    [Sales PY],
+    0  -- Returns 0 if division by zero
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Adding Conditional Formatting:</h3>
+                <div class="code-block">
+-- YoY with visual indicator
+Sales YoY Indicator = 
+VAR YoYGrowth = [Sales YoY %]
+RETURN
+    IF(
+        YoYGrowth > 0,
+        "↑ " & FORMAT(YoYGrowth, "0.0%") & " Growth",
+        "↓ " & FORMAT(ABS(YoYGrowth), "0.0%") & " Decline"
+    )
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📊 YoY Comparison Table:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Month</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">2026 Sales</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">2025 Sales</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">YoY %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(100,255,100,0.1);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$150,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$120,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;font-weight:bold;">+25.0%</td>
+                            </tr>
+                            <tr style="background:rgba(100,255,100,0.1);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">February</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$165,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$135,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;font-weight:bold;">+22.2%</td>
+                            </tr>
+                            <tr style="background:rgba(255,100,100,0.1);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">March</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$140,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$155,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#ff6464;font-weight:bold;">-9.7%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Green = Growth 📈 | Red = Decline 📉</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Month-over-Month & Quarter-over-Quarter</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Track shorter-term trends by comparing to previous month or quarter.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Using DATEADD Function:</h3>
+                <div class="code-block">
+-- Previous Month (PM)
+Sales PM = 
+CALCULATE(
+    [Total Sales], 
+    DATEADD(Calendar[Date], -1, MONTH)
+)
+
+-- Month-over-Month Growth %
+Sales MoM % = 
+DIVIDE([Total Sales] - [Sales PM], [Sales PM])
+
+-- Previous Quarter
+Sales PQ = 
+CALCULATE(
+    [Total Sales], 
+    DATEADD(Calendar[Date], -1, QUARTER)
+)
+
+-- Quarter-over-Quarter Growth %
+Sales QoQ % = 
+DIVIDE([Total Sales] - [Sales PQ], [Sales PQ])
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-platinum);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 When to Use Each:</strong></p>
+                    <ul style="margin-top:0.5rem;font-size:1.05rem;">
+                        <li><strong>YoY:</strong> Long-term trends, seasonal businesses</li>
+                        <li><strong>MoM:</strong> Short-term performance, fast-moving products</li>
+                        <li><strong>QoQ:</strong> Strategic planning, quarterly reviews</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Moving Averages - Smooth Out Trends</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Moving averages</span> help identify trends by smoothing daily/weekly fluctuations.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">3-Month Moving Average:</h3>
+                <div class="code-block">
+-- 3-Month Moving Average (includes current month)
+Sales 3M Avg = 
+CALCULATE(
+    [Total Sales],
+    DATESINPERIOD(
+        Calendar[Date], 
+        MAX(Calendar[Date]), 
+        -3, 
+        MONTH
+    )
+) / 3
+
+-- Better: Use AVERAGEX for automatic averaging
+Sales 3M Avg = 
+AVERAGEX(
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -3, MONTH),
+    [Total Sales]
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">7-Day Rolling Average:</h3>
+                <div class="code-block">
+-- 7-Day Rolling Average (great for daily sales)
+Sales 7D Avg = 
+AVERAGEX(
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -7, DAY),
+    [Total Sales]
+)
+
+-- 30-Day Rolling Average
+Sales 30D Avg = 
+AVERAGEX(
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -30, DAY),
+    [Total Sales]
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📊 Moving Average Effect:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Date</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Daily Sales</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">7-Day Avg</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Jan 1</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$5,200</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$5,100</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Jan 2</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$4,800</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$5,080</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Jan 3</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$6,100</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$5,150</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Jan 4</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$4,500</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#64ff64;">$5,100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Notice: Daily sales fluctuate wildly ($4,500-$6,100), but the 7-day average is smooth ($5,100 range). This reveals the true trend!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Understanding DATESINPERIOD</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">DATESINPERIOD is your swiss army knife for custom date ranges.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Syntax Breakdown:</h3>
+                <div class="code-block">
+DATESINPERIOD(
+    &lt;dates&gt;,         -- Your calendar date column
+    &lt;start_date&gt;,    -- Starting point (usually MAX or MIN)
+    &lt;number&gt;,        -- How many intervals (use negative to go back)
+    &lt;interval&gt;       -- DAY, MONTH, QUARTER, YEAR
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">Practical Examples:</h3>
+                <div class="code-block">
+-- Last 90 Days
+Last 90 Days Sales = 
+CALCULATE(
+    [Total Sales],
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -90, DAY)
+)
+
+-- Next 6 Months (forward-looking)
+Next 6 Months Forecast = 
+CALCULATE(
+    [Forecast Amount],
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), 6, MONTH)
+)
+
+-- Last 4 Quarters
+Last 4 Quarters Sales = 
+CALCULATE(
+    [Total Sales],
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -4, QUARTER)
+)
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Pro Tip:</strong> Negative numbers go backward in time (past), positive numbers go forward (future forecasts).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Complete Comparison Dashboard</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Build a Comprehensive Time Intelligence Dashboard</h3>
+
+                <div class="code-block">
+-- 1. Current Period
+Total Sales = SUM(Sales[Amount])
+
+-- 2. Previous Periods
+Sales PY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR(Calendar[Date]))
+Sales PM = CALCULATE([Total Sales], DATEADD(Calendar[Date], -1, MONTH))
+
+-- 3. Growth Metrics
+YoY Growth = [Total Sales] - [Sales PY]
+YoY Growth % = DIVIDE([YoY Growth], [Sales PY])
+
+MoM Growth = [Total Sales] - [Sales PM]
+MoM Growth % = DIVIDE([MoM Growth], [Sales PM])
+
+-- 4. Cumulative
+YTD Sales = TOTALYTD([Total Sales], Calendar[Date])
+YTD Sales PY = CALCULATE([YTD Sales], SAMEPERIODLASTYEAR(Calendar[Date]))
+
+-- 5. Moving Average
+Sales 3M Avg = AVERAGEX(
+    DATESINPERIOD(Calendar[Date], MAX(Calendar[Date]), -3, MONTH),
+    [Total Sales]
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:2rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>📸 Dashboard Layout Suggestion:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>Top Row:</strong> 4 Cards showing Total Sales, YoY%, MoM%, YTD</li>
+                        <li><strong>Middle:</strong> Line chart with Sales and Sales PY over time</li>
+                        <li><strong>Bottom Left:</strong> Column chart comparing monthly performance</li>
+                        <li><strong>Bottom Right:</strong> Line chart with moving average trend</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Exercise: Year-over-Year Analysis</strong></p>
+                    
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Step 1: Create Measures</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Total Sales = SUM(Sales[Amount])</li>
+                        <li>Sales PY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR(Calendar[Date]))</li>
+                        <li>YoY % = DIVIDE([Total Sales] - [Sales PY], [Sales PY])</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 2: Create Visual</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Add Matrix visual</li>
+                        <li>Rows: Calendar[Year], Calendar[Month]</li>
+                        <li>Values: Total Sales, Sales PY, YoY %</li>
+                        <li>Format YoY % as percentage</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 3: Add Conditional Formatting</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Click YoY % column in the visual</li>
+                        <li>Format → Conditional formatting → Background color</li>
+                        <li>Rules: Red if negative, Green if positive</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-top:2rem;"><strong>Expected Result:</strong> You should clearly see which months performed better or worse than the previous year.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.2rem;line-height:2.2;">
+                        <li>📊 <span class="highlight">SAMEPERIODLASTYEAR</span> compares to same period last year</li>
+                        <li>⏮️ <span class="highlight">DATEADD</span> shifts dates by any interval (month, quarter, year)</li>
+                        <li>📈 <span class="highlight">DATESINPERIOD</span> creates custom rolling date ranges</li>
+                        <li>📉 <span class="highlight">Moving averages</span> smooth out trends and reduce noise</li>
+                        <li>💹 Always use <span class="highlight">DIVIDE</span> to avoid division by zero errors</li>
+                        <li>🎨 Conditional formatting makes comparisons instantly visible</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-silver);padding:2rem;margin-top:3rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🎯 Next Up: Day 9</strong></p>
+                    <p style="font-size:1.1rem;margin-top:1rem;">Advanced DAX Patterns - RANKX, TOPN, and Variables</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

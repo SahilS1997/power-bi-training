@@ -1,0 +1,21 @@
+CustomerID,CustomerName,City,Region,Country
+C001,John Smith,New York,Northeast,USA
+C002,Sarah Johnson,Los Angeles,West,USA
+C003,Michael Brown,Chicago,Midwest,USA
+C004,Emily Davis,Houston,South,USA
+C005,David Wilson,Phoenix,West,USA
+C006,Jennifer Garcia,Philadelphia,Northeast,USA
+C007,Robert Martinez,San Antonio,South,USA
+C008,Linda Rodriguez,San Diego,West,USA
+C009,William Hernandez,Dallas,South,USA
+C010,Mary Lopez,San Jose,West,USA
+C011,James Gonzalez,Austin,South,USA
+C012,Patricia Wilson,Jacksonville,South,USA
+C013,Thomas Anderson,San Francisco,West,USA
+C014,Barbara Thomas,Columbus,Midwest,USA
+C015,Christopher Taylor,Indianapolis,Midwest,USA
+C016,Susan Moore,Charlotte,South,USA
+C017,Daniel Jackson,Seattle,West,USA
+C018,Jessica Martin,Denver,West,USA
+C019,Matthew Lee,Boston,Northeast,USA
+C020,Ashley White,Portland,West,USA

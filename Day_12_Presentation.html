@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 12: DAX Performance Optimization - Part 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 12: DAX Performance Optimization - Part 2</div>
+            <div class="nav-controls">
+                <a href="Day_11_Presentation.html" class="nav-btn">← Day 11</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Complete! →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">DAX Performance Optimization - Part 2</h1>
+            <h2 class="slide-subtitle">Module 9 | Day 12</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Apply proven best practices, optimize cardinality, and transform slow reports into lightning-fast dashboards.</p>
+                <h3 style="color:var(--accent-silver);font-size:1.4rem;margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;">
+                    <li>Apply 10 essential DAX performance best practices</li>
+                    <li>Understand and optimize column cardinality</li>
+                    <li>Fix common performance problems</li>
+                    <li>Build scalable, enterprise-ready reports</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Best Practice #1: Measures vs Calculated Columns</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Rule:</span> Use measures for aggregations, calculated columns for attributes.</p>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">✅ Good: Measure for Aggregation</h3>
+                    <div class="code-block">
+-- Calculated at query time, no storage cost
+Total Sales = SUM(Sales[Amount])
+
+-- Context-aware, works with any filter
+YTD Sales = TOTALYTD([Total Sales], Calendar[Date])
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Bad: Calculated Column for Aggregation</h3>
+                    <div class="code-block">
+-- Stores value for EVERY row, huge memory cost!
+Total Sales Column = SUM(Sales[Amount])  -- DON'T DO THIS
+
+-- Calculated once, doesn't update with filters
+-- Takes up storage space permanently
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 When to Use Each:</strong></p>
+                    <ul style="margin-top:0.5rem;font-size:1.05rem;">
+                        <li><strong>Measures:</strong> Totals, averages, counts, percentages</li>
+                        <li><strong>Calculated Columns:</strong> Categories, flags, grouping attributes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Best Practice #2: Avoid Unnecessary Iterators</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Don't use SUMX when SUM works!</p>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Slow: Unnecessary Iterator</h3>
+                    <div class="code-block">
+-- SUMX iterates row-by-row (Formula Engine)
+Total Sales = SUMX(Sales, Sales[Amount])
+
+-- Time: 2,500ms for 1M rows
+                    </div>
+                </div>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">✅ Fast: Direct Aggregation</h3>
+                    <div class="code-block">
+-- SUM runs in Storage Engine
+Total Sales = SUM(Sales[Amount])
+
+-- Time: 15ms for 1M rows (167x faster!)
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">When You NEED Iterators:</h3>
+                <div class="code-block">
+-- Complex calculation - no choice but to use SUMX
+Gross Profit = 
+SUMX(
+    Sales,
+    Sales[Quantity] * (Sales[UnitPrice] - Sales[UnitCost])
+)
+
+-- Better: Add calculated column in source data if possible
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Rule of Thumb:</strong> If you can write it without X (SUM vs SUMX), do it!</p>
+                </div>
+            </div>
+        </slide>
+
+        <div class="slide">
+            <h2 class="slide-title">Best Practice #3: Avoid FILTER in CALCULATE</h2>
+            <div class="slide-content">
+                <p style="margin-bottom:1.5rem;">Direct filters are much faster than FILTER function.</p>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Slow: FILTER Function</h3>
+                    <div class="code-block">
+-- FILTER iterates entire table (Formula Engine)
+Red Sales = 
+CALCULATE(
+    [Total Sales],
+    FILTER(Products, Products[Color] = "Red")
+)
+
+-- Performance: Slow with large tables
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">✅ Fast: Direct Filter</h3>
+                    <div class="code-block">
+-- Direct filter handled by Storage Engine
+Red Sales = 
+CALCULATE(
+    [Total Sales],
+    Products[Color] = "Red"
+)
+
+-- Performance: 10-100x faster!
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;margin-bottom:1rem;">When You NEED FILTER:</h3>
+                <div class="code-block">
+-- Complex conditions requiring AND/OR
+High Value Red Products = 
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        Products,
+        Products[Color] = "Red" 
+        && Products[Price] > 100
+    )
+)
+
+-- Multiple conditions on same column
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Best Practice #4: Use Variables</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">Variables evaluate ONCE and cache the result - massive performance gain!</p>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Bad: Repeated Calculations</h3>
+                    <div class="code-block">
+-- SUM(Sales[Amount]) calculated FOUR times!
+Margin % = 
+DIVIDE(
+    (SUM(Sales[Amount]) - SUM(Sales[Cost])),
+    SUM(Sales[Amount])
+)
+
+-- Adds [Total Sales] calculated THREE times!
+Performance = 
+IF(
+    [Total Sales] > [Target],
+    [Total Sales] - [Target],
+    [Total Sales]
+)
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">✅ Good: Use Variables</h3>
+                    <div class="code-block">
+-- Each calculation happens ONCE
+Margin % = 
+VAR Revenue = SUM(Sales[Amount])
+VAR Cost = SUM(Sales[Cost])
+RETURN
+    DIVIDE(Revenue - Cost, Revenue)
+
+-- [Total Sales] calculated ONCE
+Performance = 
+VAR Sales = [Total Sales]
+VAR Target = [Sales Target]
+RETURN
+    IF(Sales > Target, Sales - Target, Sales)
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border:2px solid var(--accent-platinum);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;"><strong>💰 Performance Impact:</strong> In complex measures, variables can improve performance by 10-50x!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Understanding Cardinality</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Cardinality</span> = number of unique values in a column. Lower cardinality = better compression = faster queries.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Cardinality Examples:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>Low Cardinality (GOOD):</strong> Gender (2 values), Status (3-5 values), Category (10-20 values)</li>
+                        <li><strong>Medium Cardinality:</strong> Product (100-1000 values), City (100-500 values)</li>
+                        <li><strong>High Cardinality (BAD):</strong> CustomerID (millions), TransactionID (millions), Description (unique text)</li>
+                    </ul>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Impact on Compression:</h3>
+                <div class="code-block">
+-- Example with 1 million rows:
+
+Low Cardinality Column (Gender: M/F)
+Storage: ~2KB (compressed extremely well!)
+
+High Cardinality Column (CustomerID: unique)
+Storage: ~8MB (poor compression)
+
+-- Lower cardinality = Better compression = Faster queries
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Goal:</strong> Keep cardinality as low as possible while maintaining analytical value.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Cardinality Optimization Techniques</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Practical Ways to Reduce Cardinality:</h3>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Technique 1: Remove Unnecessary Columns</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Don't need these high-cardinality columns?
+-- Remove: Order Description, Comments, Full Address
+-- Keep only what you need for analysis
+
+Power Query: Right-click column → Remove
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Technique 2: Bin/Group High-Cardinality Values</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Instead of exact price (high cardinality)
+Price Range = 
+SWITCH(
+    TRUE(),
+    Products[Price] < 10, "$0-10",
+    Products[Price] < 50, "$10-50",
+    Products[Price] < 100, "$50-100",
+    "$100+"
+)
+-- Reduces from thousands of prices to 4 categories!
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;margin-bottom:2rem;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Technique 3: Use Integer Keys Instead of Strings</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- ❌ Bad: String keys (poor compression)
+CustomerKey = "CUST-123456-ABC-DEF"
+
+-- ✅ Good: Integer keys (excellent compression)
+CustomerKey = 123456
+
+-- Integers compress 10x better than strings!
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Technique 4: Disable Auto Date/Time</strong></p>
+                    <p style="font-size:1.05rem;margin-bottom:0.5rem;">File → Options → Data Load → Uncheck "Auto date/time"</p>
+                    <p style="font-size:1.05rem;">This creates hidden tables for EVERY date column - huge overhead!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">More Best Practices</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Additional Performance Tips:</h3>
+
+                <div style="margin-bottom:1.5rem;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>✅ Use SELECTEDVALUE Instead of VALUES + HASONEVALUE</strong></p>
+                    <div class="code-block">
+-- ❌ Old way
+Product = IF(HASONEVALUE(Products[Name]), VALUES(Products[Name]), "Multiple")
+
+-- ✅ New way (simpler and faster)
+Product = SELECTEDVALUE(Products[Name], "Multiple")
+                    </div>
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>✅ Filter Early in DAX Logic</strong></p>
+                    <div class="code-block">
+-- ❌ Slow: Processes all rows, then filters
+Calc = 
+VAR AllData = ADDCOLUMNS(Sales, "Calc", [Complex Expression])
+VAR Filtered = FILTER(AllData, [Amount] > 1000)
+RETURN ...
+
+-- ✅ Fast: Filters first, processes fewer rows
+Calc = 
+VAR Filtered = FILTER(Sales, Sales[Amount] > 1000)
+VAR WithCalc = ADDCOLUMNS(Filtered, "Calc", [Complex Expression])
+RETURN ...
+                    </div>
+                </div>
+
+                <div>
+                    <p style="font-size:1.1rem;margin-bottom:0.5rem;"><strong>✅ Avoid Bi-Directional Filtering When Possible</strong></p>
+                    <p style="font-size:1.05rem;">Bi-directional relationships force DAX to check both sides, slowing queries. Use single direction + USERELATIONSHIP when possible.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Real-World Optimization Example</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Before & After: Customer Lifetime Value</h3>
+
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">❌ Before: 8,500ms (8.5 seconds!)</h3>
+                    <div class="code-block">
+Customer LTV = 
+SUMX(
+    Customers,
+    CALCULATE(
+        SUMX(
+            FILTER(
+                Sales,
+                Sales[CustomerID] = EARLIER(Customers[CustomerID])
+            ),
+            Sales[Amount]
+        )
+    )
+)
+-- Problems: Nested SUMX, FILTER, EARLIER
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color:var(--accent-silver);margin-bottom:1rem;">✅ After: 45ms (189x faster!)</h3>
+                    <div class="code-block">
+-- Optimized: Let relationships do the work
+Customer LTV = 
+VAR CustomerSales = 
+    SUMMARIZE(
+        Sales,
+        Sales[CustomerID],
+        "Total", SUM(Sales[Amount])
+    )
+RETURN
+    SUMX(CustomerSales, [Total])
+
+-- Or even simpler if relationship exists:
+Customer LTV = SUM(Sales[Amount])
+                    </div>
+                </div>
+
+                <div style="background:rgba(100,255,100,0.1);border:2px solid #64ff64;padding:2rem;margin-top:2rem;border-radius:12px;text-align:center;">
+                    <p style="font-size:1.3rem;color:var(--accent-platinum);"><strong>🚀 189x Performance Improvement!</strong></p>
+                    <p style="font-size:1.1rem;margin-top:0.5rem;">From 8.5 seconds to 45 milliseconds</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Performance Optimization Checklist</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <h3 style="color:var(--accent-platinum);margin-bottom:1rem;">Before Publishing Your Report:</h3>
+                    <ul style="font-size:1.05rem;line-height:2;">
+                        <li>☑️ Use measures (not calculated columns) for aggregations</li>
+                        <li>☑️ Avoid SUMX/COUNTX when SUM/COUNT works</li>
+                        <li>☑️ Use direct filters instead of FILTER() in CALCULATE</li>
+                        <li>☑️ Store intermediate results in variables (VAR)</li>
+                        <li>☑️ Remove unnecessary high-cardinality columns</li>
+                        <li>☑️ Disable Auto Date/Time hierarchy</li>
+                        <li>☑️ Use integer keys instead of strings when possible</li>
+                        <li>☑️ Test with Performance Analyzer - no visual > 1 second</li>
+                        <li>☑️ Test with DAX Studio - Storage Engine > 90% of time</li>
+                        <li>☑️ Use SELECTEDVALUE instead of VALUES + HASONEVALUE</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1.5rem;"><strong>Exercise: Optimize a Slow Measure</strong></p>
+                    
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Step 1: Create Slow Version</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+Sales by Region Slow = 
+SUMX(
+    Region,
+    CALCULATE(
+        SUMX(
+            FILTER(Sales, Sales[RegionID] = EARLIER(Region[RegionID])),
+            Sales[Amount]
+        )
+    )
+)
+                    </div>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 2: Test Performance</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Use Performance Analyzer to measure</li>
+                        <li>Note the query time</li>
+                    </ol>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 3: Optimize</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Optimized: Use relationship
+Sales by Region Fast = SUM(Sales[Amount])
+                    </div>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 4: Compare</strong></p>
+                    <p style="font-size:1.05rem;">Test again with Performance Analyzer. The optimized version should be 50-100x faster!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h1 class="slide-title">Congratulations! 🎉</h1>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <p style="font-size:1.3rem;margin-bottom:2rem;text-align:center;">You've completed the comprehensive 12-Day Power BI Training Program!</p>
+                    
+                    <h3 style="color:var(--accent-platinum);margin-bottom:1rem;">What You've Mastered:</h3>
+                    <ul style="font-size:1.1rem;line-height:2;">
+                        <li>✅ <strong>Data Modeling:</strong> Star schema, relationships, cardinality</li>
+                        <li>✅ <strong>DAX Fundamentals:</strong> Measures, calculated columns, context</li>
+                        <li>✅ <strong>Essential Functions:</strong> CALCULATE, FILTER, ALL, RELATED</li>
+                        <li>✅ <strong>Time Intelligence:</strong> YTD, MTD, YoY, moving averages</li>
+                        <li>✅ <strong>Advanced Patterns:</strong> RANKX, TOPN, ABC classification</li>
+                        <li>✅ <strong>Performance Optimization:</strong> Storage vs Formula Engine, DAX Studio</li>
+                    </ul>
+
+                    <div style="background:linear-gradient(135deg,rgba(192,192,192,0.2),rgba(229,228,226,0.1));border:3px solid var(--accent-platinum);padding:2.5rem;margin-top:3rem;border-radius:15px;text-align:center;">
+                        <p style="font-size:1.5rem;color:var(--accent-platinum);margin-bottom:1rem;"><strong>🏆 You're Now Ready For:</strong></p>
+                        <ul style="font-size:1.15rem;line-height:2.2;text-align:left;max-width:600px;margin:0 auto;">
+                            <li>Enterprise-level Power BI development</li>
+                            <li>Complex business intelligence projects</li>
+                            <li>Microsoft PL-300 certification</li>
+                            <li>Senior BI Developer roles</li>
+                        </ul>
+                    </div>
+
+                    <p style="font-size:1.3rem;margin-top:3rem;text-align:center;color:var(--accent-platinum);"><strong>Keep practicing, keep building, and keep learning! 🚀</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

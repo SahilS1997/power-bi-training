@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2: Advanced Data Modeling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e; --darker-bg: #16213e; --darkest-bg: #0f1419;
+            --glass-bg: rgba(255, 255, 255, 0.08); --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-silver: #C0C0C0; --accent-platinum: #E5E4E2;
+            --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--darkest-bg) 0%, var(--darker-bg) 50%, var(--dark-bg) 100%);
+            background-attachment: fixed; color: var(--text-secondary); line-height: 1.6;
+        }
+        .navbar {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(26, 26, 46, 0.9); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border); padding: 1.2rem 2rem;
+        }
+        .navbar-content {
+            max-width: 1400px; margin: 0 auto; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .navbar-brand {
+            color: var(--text-primary); font-family: 'Varela Round', sans-serif;
+            font-size: 1.1rem; font-weight: 700; letter-spacing: 0.1rem; text-transform: uppercase;
+        }
+        .nav-controls { display: flex; gap: 1rem; }
+        .nav-btn {
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            color: var(--text-primary); padding: 0.7rem 1.5rem; border-radius: 50px;
+            text-decoration: none; font-family: 'Varela Round', sans-serif;
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1rem;
+            text-transform: uppercase; transition: all 0.3s; border: 1px solid var(--glass-border);
+        }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15); border-color: var(--accent-silver);
+            transform: translateY(-2px);
+        }
+        .presentation-container { max-width: 1400px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .slide {
+            background: var(--glass-bg); backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 4rem; margin-bottom: 3rem; min-height: 70vh;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .slide-title {
+            font-family: 'Varela Round', sans-serif; font-size: 3.5rem;
+            color: var(--text-primary); letter-spacing: 0.1rem;
+            margin-bottom: 1.5rem; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .slide-subtitle {
+            font-size: 1.8rem; color: var(--accent-silver);
+            margin-bottom: 2rem; font-weight: 300;
+        }
+        .slide-content { font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); }
+        .slide-content ul, .slide-content ol { margin-left: 2rem; margin-top: 1.5rem; }
+        .slide-content li { margin-bottom: 1rem; padding-left: 0.5rem; }
+        .highlight { color: var(--accent-platinum); font-weight: 700; }
+        .code-block {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 2rem; margin: 2rem 0;
+            font-family: 'Courier New', monospace; font-size: 1rem;
+            color: var(--accent-platinum); overflow-x: auto;
+        }
+        .example-box {
+            background: rgba(192, 192, 192, 0.05); border-left: 4px solid var(--accent-silver);
+            padding: 2rem; margin: 2rem 0; border-radius: 8px;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+        .card {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 1.8rem; transition: all 0.3s;
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08); transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .card-title {
+            font-family: 'Varela Round', sans-serif; font-size: 1.2rem;
+            color: var(--text-primary); margin-bottom: 1rem;
+        }
+        .key-takeaway {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(229, 228, 226, 0.05));
+            border: 2px solid var(--accent-silver); border-radius: 15px; padding: 2.5rem; margin: 3rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 2: Advanced Data Modeling</div>
+            <div class="nav-controls">
+                <a href="Day_01_Presentation.html" class="nav-btn">← Day 1</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_03_Presentation.html" class="nav-btn">Day 3 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">Advanced Data Modeling</h1>
+            <h2 class="slide-subtitle">Module 3 | Day 2</h2>
+            <div class="slide-content">
+                <p>Explore complex modeling patterns including many-to-many relationships, role-playing dimensions, and advanced scenarios for enterprise solutions.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <h2 class="slide-title">Learning Objectives</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Implement <span class="highlight">many-to-many relationships</span> using bridge tables</li>
+                    <li>Create <span class="highlight">role-playing dimensions</span> with inactive relationships</li>
+                    <li>Understand <span class="highlight">bi-directional filtering</span> scenarios</li>
+                    <li>Handle <span class="highlight">snowflake schemas</span> and when to use them</li>
+                    <li>Build <span class="highlight">bridge tables</span> for complex scenarios</li>
+                    <li>Optimize model performance with proper design</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide">
+            <h2 class="slide-title">Many-to-Many Relationships</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">When both sides of a relationship can have multiple matches, you need a <span class="highlight">many-to-many pattern</span>.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Real-World Scenario:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.05rem;"><strong>🎓 Student Enrollment System:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>One student can enroll in <strong>multiple courses</strong> (Math, Science, History)</li>
+                        <li>One course can have <strong>multiple students</strong> (30 students in Math class)</li>
+                        <li>Power BI cannot create a <strong>direct many-to-many relationship</strong></li>
+                        <li>Solution: Use a <strong>bridge table</strong> (also called junction or fact table)</li>
+                    </ul>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">The Bridge Table Pattern:</h3>
+                <div class="code-block">
+-- THREE TABLES DESIGN
+
+Students Table          Enrollments Table       Courses Table
+--------------          -----------------       -------------
+StudentID (PK)          StudentID (FK)          CourseID (PK)
+StudentName             CourseID (FK)           CourseName
+Email                   EnrollmentDate          Credits
+                        Grade                   Instructor
+
+Relationships:
+Students (1) -----> (*) Enrollments (*) <----- (1) Courses
+         One-to-Many            Many-to-One
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Why This Works:</h3>
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:1.5rem;border-radius:8px;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>Enrollments table</strong> contains one row per student-course combination</li>
+                        <li>Each row has a <strong>unique StudentID + CourseID pair</strong></li>
+                        <li>Power BI can follow the path: Student → Enrollments → Course</li>
+                        <li>Filters flow correctly in both directions through the bridge</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📊 Example Data:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">StudentName</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">CourseName</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">EnrollmentDate</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(255,255,255,0.02);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Alice</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Math 101</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">2026-01-10</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#64ff64;">A</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Alice</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Science 101</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">2026-01-10</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#64ff64;">A-</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.02);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Bob</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Math 101</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">2026-01-11</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#ffff64;">B+</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Carol</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">Science 101</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;">2026-01-12</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:center;color:#64ff64;">A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.05rem;">Notice: Alice takes 2 courses, Math 101 has 2 students - many-to-many relationship!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Building a Bridge Table - Step by Step</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Practical Implementation Guide</h3>
+
+                <div style="background:rgba(192,192,192,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>Step 1: Identify the Many-to-Many Scenario</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>Do records on both sides relate to multiple records on the other side?</li>
+                        <li>Example: Products can have multiple suppliers, suppliers sell multiple products</li>
+                        <li>Example: Employees can work on multiple projects, projects have multiple employees</li>
+                    </ul>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 2: Create the Bridge Table</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- In Power Query, load your transaction/junction data
+-- Example: ProductSuppliers bridge table
+
+ProductSuppliers = 
+{
+    (ProductID = 1, SupplierID = 101, SupplyDate = "2026-01-01", UnitCost = 15.50),
+    (ProductID = 1, SupplierID = 102, SupplyDate = "2026-01-15", UnitCost = 14.80),
+    (ProductID = 2, SupplierID = 101, SupplyDate = "2026-01-10", UnitCost = 22.00)
+}
+                    </div>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 3: Create Relationships</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>Products table → ProductSuppliers bridge (One-to-Many on ProductID)</li>
+                        <li>Suppliers table → ProductSuppliers bridge (One-to-Many on SupplierID)</li>
+                        <li>Both relationships should be <strong>active</strong></li>
+                        <li>Set filter direction to <strong>Both</strong> or keep as Single (depends on use case)</li>
+                    </ul>
+
+                    <p style="font-size:1.1rem;margin-bottom:1rem;margin-top:2rem;"><strong>Step 4: Test Your Measures</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+-- Count distinct products per supplier
+Products Per Supplier = DISTINCTCOUNT(ProductSuppliers[ProductID])
+
+-- Count distinct suppliers per product
+Suppliers Per Product = DISTINCTCOUNT(ProductSuppliers[SupplierID])
+
+-- Average supply cost
+Avg Supply Cost = AVERAGE(ProductSuppliers[UnitCost])
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Common Many-to-Many Scenarios</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Real Business Use Cases</h3>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">🛒 E-Commerce</div>
+                        <p style="margin-bottom:1rem;"><strong>Scenario:</strong> Products in multiple categories, categories contain multiple products</p>
+                        <p style="font-size:0.95rem;"><strong>Bridge:</strong> ProductCategories table with ProductID and CategoryID</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🎬 Streaming Service</div>
+                        <p style="margin-bottom:1rem;"><strong>Scenario:</strong> Movies have multiple actors, actors appear in multiple movies</p>
+                        <p style="font-size:0.95rem;"><strong>Bridge:</strong> MovieCast table with MovieID and ActorID</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🏥 Healthcare</div>
+                        <p style="margin-bottom:1rem;"><strong>Scenario:</strong> Patients see multiple doctors, doctors treat multiple patients</p>
+                        <p style="font-size:0.95rem;"><strong>Bridge:</strong> Appointments table with PatientID and DoctorID</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📚 Library</div>
+                        <p style="margin-bottom:1rem;"><strong>Scenario:</strong> Books have multiple authors, authors write multiple books</p>
+                        <p style="font-size:0.95rem;"><strong>Bridge:</strong> BookAuthors table with BookID and AuthorID</p>
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Pro Tip:</strong> The bridge table often already exists in your source system as a "junction table", "linking table", or "associative table". Look for tables with composite primary keys (two foreign keys together).</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <h2 class="slide-title">Role-Playing Dimensions</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;">When a <span class="highlight">single dimension table</span> is used multiple times in <span class="highlight">different contexts</span> within the same fact table.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">The Challenge - Multiple Date Contexts:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📦 Sales Order Scenario:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>OrderDate:</strong> When customer placed the order</li>
+                        <li><strong>ShipDate:</strong> When order was shipped from warehouse</li>
+                        <li><strong>DeliveryDate:</strong> When customer received the order</li>
+                        <li><strong>DueDate:</strong> When payment is due</li>
+                    </ul>
+                    <p style="margin-top:1rem;font-size:1.05rem;">All four dates need to link to the <strong>same Calendar dimension</strong>, but Power BI only allows <strong>ONE active relationship</strong> per table pair!</p>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Solution - Inactive Relationships:</h3>
+                <div class="code-block">
+-- MODEL STRUCTURE
+
+Calendar Table (Dimension)        Sales Table (Fact)
+--------------                     -----------
+DateKey (PK)        ←----(ACTIVE)  OrderDateKey (FK)
+Year                   ⋯⋯(INACTIVE) ShipDateKey (FK)
+Quarter                ⋯⋯(INACTIVE) DeliveryDateKey (FK)  
+Month                  ⋯⋯(INACTIVE) DueDateKey (FK)
+DayName                             Amount
+                                    Quantity
+
+One ACTIVE relationship, three INACTIVE relationships
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Activating Inactive Relationships with USERELATIONSHIP:</h3>
+                <div class="code-block">
+-- Default measure uses ACTIVE relationship (OrderDate)
+Total Sales = SUM(Sales[Amount])
+
+-- Activate ShipDate relationship
+Sales by Ship Date = 
+CALCULATE(
+    [Total Sales],
+    USERELATIONSHIP(Sales[ShipDateKey], Calendar[DateKey])
+)
+
+-- Activate DeliveryDate relationship  
+Sales by Delivery Date = 
+CALCULATE(
+    [Total Sales],
+    USERELATIONSHIP(Sales[DeliveryDateKey], Calendar[DateKey])
+)
+
+-- Activate DueDate relationship
+Sales by Due Date = 
+CALCULATE(
+    [Total Sales],
+    USERELATIONSHIP(Sales[DueDateKey], Calendar[DateKey])
+)
+                </div>
+
+                <div style="background:rgba(229,228,226,0.1);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>📊 Comparison Example:</strong></p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.95rem;">
+                        <thead>
+                            <tr style="background:rgba(192,192,192,0.2);">
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">Month</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Sales (Order)</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Sales (Ship)</th>
+                                <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Difference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:rgba(255,255,255,0.02);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">January</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$500,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$480,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#ff6464;">-$20,000</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">February</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$550,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$520,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#ff6464;">-$30,000</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.02);">
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">March</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$600,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$570,000</td>
+                                <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;color:#ff6464;">-$30,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:1rem;font-size:1.05rem;">This shows <strong>shipping lag</strong> - orders placed in January may not ship until February!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Bi-Directional Filtering - Use with Caution</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Bi-directional cross-filtering</span> allows filters to flow in both directions along a relationship.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">How It Works:</h3>
+                <div style="background:rgba(192,192,192,0.08);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Normal (Single) Direction:</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+Products (Dimension) -----> Sales (Fact)
+   (MANY)                    (ONE)
+
+Filter: Select "iPhone" in Products slicer
+Result: Sales table filtered to show only iPhone sales ✅
+                    </div>
+
+                    <p style="font-size:1.05rem;margin-bottom:1rem;margin-top:2rem;"><strong>Bi-Directional:</strong></p>
+                    <div class="code-block" style="margin-top:0.5rem;">
+Products (Dimension) <-----> Sales (Fact)
+   (MANY)                     (ONE)
+
+Filter: Select "Q1 2026" in time slicer (filtering Sales)
+Result: Products table also filtered to show only products sold in Q1 ✅
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">When to Use Bi-Directional Filtering:</h3>
+                <div class="grid-2">
+                    <div class="card" style="background:rgba(100,255,100,0.1);border-color:#64ff64;">
+                        <div class="card-title" style="color:#64ff64;">✅ Good Use Cases</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li>Many-to-many relationships (with bridge tables)</li>
+                            <li>Showing "products that were actually sold"</li>
+                            <li>Role-playing dimensions with specific requirements</li>
+                            <li>Simplifying complex filter context</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background:rgba(255,100,100,0.1);border-color:#ff6464;">
+                        <div class="card-title" style="color:#ff6464;">❌ Avoid When</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li>It causes ambiguous filter paths</li>
+                            <li>Performance becomes slow</li>
+                            <li>Results are unpredictable or confusing</li>
+                            <li>You can solve it with proper DAX instead</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.15);border:2px solid #ff6464;padding:1.5rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;"><strong>⚠️ Warning:</strong> Bi-directional filtering can create <strong>circular dependencies</strong> and <strong>ambiguous paths</strong> in your model. Use it sparingly and always test thoroughly! In most cases, proper DAX measures are safer and more maintainable.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Snowflake vs Star Schema</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Understanding Schema Design Patterns</h3>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">⭐ Star Schema (Recommended)</div>
+                        <div class="code-block" style="margin-top:1rem;font-size:0.85rem;">
+        Calendar
+            ↓
+         Sales  ← Products
+            ↓
+       Customers
+
+Denormalized dimensions
+Direct relationships to fact
+                        </div>
+                        <p style="margin-top:1rem;font-size:0.95rem;"><strong>Pros:</strong> Simple, fast, easy to understand</p>
+                        <p style="font-size:0.95rem;"><strong>Cons:</strong> Some data duplication</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">❄️ Snowflake Schema</div>
+                        <div class="code-block" style="margin-top:1rem;font-size:0.85rem;">
+   ProductCategory
+         ↓
+   ProductSubcategory
+         ↓
+      Products
+         ↓
+       Sales
+
+Normalized dimensions
+Chained relationships
+                        </div>
+                        <p style="margin-top:1rem;font-size:0.95rem;"><strong>Pros:</strong> Less data duplication</p>
+                        <p style="font-size:0.95rem;"><strong>Cons:</strong> Complex, slower queries</p>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Best Practice for Power BI:</h3>
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Flatten snowflake schemas into star schemas during data preparation:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>Merge ProductCategory and ProductSubcategory <strong>INTO</strong> Products dimension</li>
+                        <li>This creates a <strong>denormalized</strong> Products table with all attributes</li>
+                        <li>Result: Better performance, simpler model, easier DAX</li>
+                        <li>Do this in <strong>Power Query</strong> using Merge queries</li>
+                    </ul>
+                </div>
+
+                <div class="code-block" style="margin-top:2rem;">
+-- Power Query M Code to Flatten Snowflake
+let
+    Products = Source[Products],
+    Subcategories = Source[ProductSubcategories],
+    Categories = Source[ProductCategories],
+    
+    // Merge Products with Subcategories
+    Step1 = Table.NestedJoin(Products, {"SubcategoryID"}, 
+            Subcategories, {"SubcategoryID"}, "Subcategory"),
+    
+    // Expand Subcategory columns
+    Step2 = Table.ExpandTableColumn(Step1, "Subcategory", 
+            {"SubcategoryName", "CategoryID"}),
+    
+    // Merge with Categories
+    Step3 = Table.NestedJoin(Step2, {"CategoryID"}, 
+            Categories, {"CategoryID"}, "Category"),
+    
+    // Expand Category columns
+    FinalProducts = Table.ExpandTableColumn(Step3, "Category", 
+            {"CategoryName"})
+in
+    FinalProducts
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Practice Advanced Modeling Patterns</h3>
+
+                <div style="background:rgba(229,228,226,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;"><strong>Exercise 1: Many-to-Many with Bridge Table</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create three tables:
+                            <ul style="margin-left:2rem;margin-top:0.5rem;">
+                                <li><strong>Products:</strong> ProductID, ProductName</li>
+                                <li><strong>Suppliers:</strong> SupplierID, SupplierName</li>
+                                <li><strong>ProductSuppliers:</strong> ProductID, SupplierID, SupplyDate, Cost</li>
+                            </ul>
+                        </li>
+                        <li style="margin-top:1rem;">Create relationships:
+                            <ul style="margin-left:2rem;margin-top:0.5rem;">
+                                <li>Products → ProductSuppliers (One-to-Many)</li>
+                                <li>Suppliers → ProductSuppliers (One-to-Many)</li>
+                            </ul>
+                        </li>
+                        <li style="margin-top:1rem;">Create measures:
+                            <div class="code-block" style="margin-top:0.5rem;">
+Suppliers Per Product = DISTINCTCOUNT(ProductSuppliers[SupplierID])
+Products Per Supplier = DISTINCTCOUNT(ProductSuppliers[ProductID])
+Average Supply Cost = AVERAGE(ProductSuppliers[Cost])
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Test: Select a product and verify supplier count is correct</li>
+                    </ol>
+
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;margin-top:3rem;"><strong>Exercise 2: Role-Playing Dimension</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Add ShipDate and DeliveryDate columns to your Sales table</li>
+                        <li>Create two <strong>inactive</strong> relationships:
+                            <ul style="margin-left:2rem;margin-top:0.5rem;">
+                                <li>Calendar[DateKey] → Sales[ShipDate]</li>
+                                <li>Calendar[DateKey] → Sales[DeliveryDate]</li>
+                            </ul>
+                        </li>
+                        <li style="margin-top:1rem;">Create measures using USERELATIONSHIP:
+                            <div class="code-block" style="margin-top:0.5rem;">
+Sales by Ship Date = 
+CALCULATE([Total Sales], USERELATIONSHIP(Sales[ShipDate], Calendar[DateKey]))
+
+Sales by Delivery Date = 
+CALCULATE([Total Sales], USERELATIONSHIP(Sales[DeliveryDate], Calendar[DateKey]))
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Create a table visual comparing all three date perspectives</li>
+                    </ol>
+
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;margin-top:3rem;"><strong>Exercise 3: Flatten Snowflake Schema</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>If you have separate Category and Subcategory tables, merge them into Products table using Power Query</li>
+                        <li>Use <strong>Merge Queries</strong> → Expand columns</li>
+                        <li>Remove the separate Category and Subcategory tables from your model</li>
+                        <li>Verify all hierarchies still work (Category → Subcategory → Product)</li>
+                    </ol>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Expected Results:</strong> You should see different sales totals when using OrderDate vs ShipDate vs DeliveryDate, demonstrating how role-playing dimensions provide multiple analytical perspectives on the same data.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.15rem;line-height:2;">
+                        <li><span class="highlight">Bridge tables</span> solve many-to-many relationships by creating two one-to-many relationships</li>
+                        <li><span class="highlight">Role-playing dimensions</span> allow one dimension to serve multiple contexts (OrderDate, ShipDate, etc.)</li>
+                        <li>Use <span class="highlight">USERELATIONSHIP</span> function to activate inactive relationships in measures</li>
+                        <li><span class="highlight">Bi-directional filters</span> should be used carefully - they can cause ambiguous paths and performance issues</li>
+                        <li><span class="highlight">Star schema</span> is preferred over snowflake schema in Power BI - flatten during Power Query</li>
+                        <li>Advanced patterns require thorough <span class="highlight">testing and documentation</span> to maintain</li>
+                        <li>Always ask: "Can this be solved with better <span class="highlight">DAX</span> instead of complex relationships?"</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;"><strong>💡 Remember:</strong> The goal of advanced modeling is to make your model <strong>simple to use</strong>, not complex to maintain. If users struggle to understand your model, simplify the design or improve documentation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

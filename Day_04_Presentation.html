@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4: DAX Context & Row Context</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.example-box{background:rgba(192,192,192,0.05);border-left:4px solid var(--accent-silver);padding:2rem;margin:2rem 0;border-radius:8px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:2rem 0}.card{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:1.8rem;transition:all .3s}.card:hover{background:rgba(255,255,255,0.08);transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}.card-title{font-family:'Varela Round',sans-serif;font-size:1.2rem;color:var(--text-primary);margin-bottom:1rem}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}.pbi-card{background:linear-gradient(135deg,rgba(100,149,237,0.2),rgba(100,149,237,0.1));border:2px solid rgba(100,149,237,0.3);border-radius:12px;padding:2rem;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center}.pbi-card-title{font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05rem}.pbi-card-value{font-size:2.5rem;font-weight:800;color:var(--accent-platinum);margin-bottom:0.3rem}.pbi-card-subtitle{font-size:0.85rem;color:var(--text-secondary)}.pbi-kpi{background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.1));border:2px solid rgba(46,204,113,0.3);border-radius:12px;padding:1.5rem;text-align:center}.pbi-kpi-title{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem}.pbi-kpi-value{font-size:2.2rem;font-weight:800;color:#2ecc71;margin-bottom:0.3rem}.pbi-kpi-target{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.3rem}.pbi-kpi-trend{font-size:1.1rem;color:#2ecc71}.pbi-chart-container{background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:12px;padding:1.5rem;margin-top:1.5rem}.pbi-chart-title{font-size:1rem;color:var(--text-primary);margin-bottom:1rem;text-align:center}.pbi-bar{display:flex;align-items:center;margin-bottom:0.8rem}.pbi-bar-label{width:120px;font-size:0.9rem;color:var(--text-secondary)}.pbi-bar-track{flex:1;background:rgba(255,255,255,0.1);border-radius:4px;height:30px;position:relative;overflow:hidden}.pbi-bar-fill{background:linear-gradient(90deg,#3498db,#2ecc71);height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.85rem;font-weight:700;color:#fff}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Day 4: DAX Context & Row Context</div>
+            <div class="nav-controls">
+                <a href="Day_03_Presentation.html" class="nav-btn">← Day 3</a>
+                <a href="PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
+                <a href="Day_05_Presentation.html" class="nav-btn">Day 5 →</a>
+            </div>
+        </div>
+    </nav>
+    <div class="presentation-container">
+        <div class="slide">
+            <h1 class="slide-title">DAX Context & Row Context</h1>
+            <h2 class="slide-subtitle">Module 4 | Day 4</h2>
+            <div class="slide-content">
+                <p style="font-size:1.3rem;margin-bottom:2rem;">Master <span class="highlight">filter context</span>, <span class="highlight">row context</span>, <span class="highlight">context transition</span>, and the powerful <span class="highlight">CALCULATE</span> function.</p>
+
+                <h3 style="color:var(--accent-silver);margin-top:2rem;">Learning Objectives:</h3>
+                <ul style="font-size:1.1rem;line-height:2;">
+                    <li>Understand the difference between filter context and row context</li>
+                    <li>Master the CALCULATE function for modifying filter context</li>
+                    <li>Learn context transition and when it occurs</li>
+                    <li>Use iterator functions (SUMX, AVERAGEX) effectively</li>
+                    <li>Avoid common context-related mistakes</li>
+                    <li>Build complex measures using context manipulation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Filter Context Explained</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Filter context</span> is the set of filters applied to your data model through slicers, visual filters, and relationships.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">How Filter Context Works:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>🎯 Example Scenario:</strong></p>
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li>You have a <strong>Total Sales</strong> measure: <code>SUM(Sales[Amount])</code></li>
+                        <li>User selects <strong>"2025"</strong> in the Year slicer</li>
+                        <li>Power BI automatically filters the Sales table to 2025 records</li>
+                        <li>Your measure now returns total sales for <strong>2025 only</strong></li>
+                        <li>This happens <strong>automatically</strong> - you don't write special code!</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+-- Same measure, different results based on filter context
+
+Total Sales = SUM(Sales[Amount])
+
+-- No filters active: Returns $10,000,000 (all-time total)
+-- Year = 2025: Returns $2,500,000 (2025 only)
+-- Year = 2025, Region = "USA": Returns $800,000 (USA in 2025)
+-- Product = "iPhone": Returns $1,200,000 (all iPhone sales)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Power BI Card Visual Example:</h3>
+                <div class="grid-3">
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Total Sales (All Time)</div>
+                        <div class="pbi-card-value">$10.0M</div>
+                        <div class="pbi-card-subtitle">No filters active</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Total Sales (2025)</div>
+                        <div class="pbi-card-value">$2.5M</div>
+                        <div class="pbi-card-subtitle">Year slicer = 2025</div>
+                    </div>
+                    <div class="pbi-card">
+                        <div class="pbi-card-title">Total Sales (USA, 2025)</div>
+                        <div class="pbi-card-value">$800K</div>
+                        <div class="pbi-card-subtitle">Year + Region filters</div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Key Concept:</strong> Filter context is what makes measures <strong>dynamic</strong> and <strong>context-aware</strong>. The same measure formula produces different results based on what's filtered!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Row Context Explained</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Row context</span> iterates through a table one row at a time, allowing you to reference column values in the current row.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Where Row Context Exists:</h3>
+                <div class="grid-2">
+                    <div class="card" style="background:rgba(100,255,100,0.1);border-color:#64ff64;">
+                        <div class="card-title" style="color:#64ff64;">✅ Has Row Context</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li><strong>Calculated Columns</strong> - automatic</li>
+                            <li><strong>Iterator Functions</strong> (SUMX, FILTER)</li>
+                            <li><strong>Table Functions</strong> (ADDCOLUMNS)</li>
+                            <li><strong>Variables with iteration</strong></li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background:rgba(255,100,100,0.1);border-color:#ff6464;">
+                        <div class="card-title" style="color:#ff6464;">❌ No Row Context</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li><strong>Measures</strong> (by default)</li>
+                            <li><strong>Regular Aggregations</strong> (SUM, AVG)</li>
+                            <li><strong>CALCULATE</strong> (without iterators)</li>
+                            <li><strong>Filter functions</strong> (without iteration)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Example - Calculated Column:</h3>
+                <div class="code-block">
+-- Calculated Column (has row context automatically)
+Profit = Sales[Revenue] - Sales[Cost]
+
+-- For each row:
+-- Row 1: $500 - $300 = $200
+-- Row 2: $800 - $450 = $350
+-- Row 3: $1,200 - $700 = $500
+-- Result: New column with profit for each transaction
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Example Data Visualization:</h3>
+                <table style="width:100%;border-collapse:collapse;font-size:0.9rem;margin-top:1rem;">
+                    <thead>
+                        <tr style="background:rgba(192,192,192,0.2);">
+                            <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:left;">OrderID</th>
+                            <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Revenue</th>
+                            <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">Cost</th>
+                            <th style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;background:rgba(100,255,100,0.2);">Profit (Calculated)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background:rgba(255,255,255,0.02);">
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1001</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$500</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$300</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;background:rgba(100,255,100,0.1);color:#64ff64;">$200</td>
+                        </tr>
+                        <tr style="background:rgba(255,255,255,0.05);">
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1002</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$800</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$450</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;background:rgba(100,255,100,0.1);color:#64ff64;">$350</td>
+                        </tr>
+                        <tr style="background:rgba(255,255,255,0.02);">
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;">1003</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$1,200</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;">$700</td>
+                            <td style="border:1px solid rgba(255,255,255,0.2);padding:0.7rem;text-align:right;background:rgba(100,255,100,0.1);color:#64ff64;">$500</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top:1rem;font-size:1.05rem;">Each row calculates its own profit value using row context!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">CALCULATE - The Most Powerful DAX Function</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">CALCULATE</span> is the #1 most important function in DAX. It <strong>modifies filter context</strong>.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Basic Syntax:</h3>
+                <div class="code-block">
+CALCULATE(
+    <expression>,         -- What to calculate (usually a measure)
+    <filter1>,           -- First filter to apply
+    <filter2>,           -- Second filter (optional)
+    ...                  -- More filters (optional)
+)
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Real-World Examples:</h3>
+                <div class="code-block">
+-- Sales for 2025 only
+Sales 2025 = CALCULATE([Total Sales], Calendar[Year] = 2025)
+
+-- Sales for USA only
+Sales USA = CALCULATE([Total Sales], Customers[Country] = "USA")
+
+-- Sales for Red Products only
+Sales Red Products = CALCULATE([Total Sales], Products[Color] = "Red")
+
+-- Multiple filters at once (AND logic)
+Sales USA 2025 = 
+CALCULATE(
+    [Total Sales], 
+    Calendar[Year] = 2025,
+    Customers[Country] = "USA"
+)
+
+-- Remove all filters from a table
+All Time Sales = CALCULATE([Total Sales], ALL(Calendar))
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Power BI KPI Card Examples:</h3>
+                <div class="grid-3">
+                    <div class="pbi-kpi">
+                        <div class="pbi-kpi-title">Total Sales</div>
+                        <div class="pbi-kpi-value">$10.5M</div>
+                        <div class="pbi-kpi-target">Target: $10M</div>
+                        <div class="pbi-kpi-trend">↑ 5% vs Target</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(52,152,219,0.2),rgba(52,152,219,0.1));border-color:rgba(52,152,219,0.3);">
+                        <div class="pbi-kpi-title">Sales USA Only</div>
+                        <div class="pbi-kpi-value" style="color:#3498db;">$3.2M</div>
+                        <div class="pbi-kpi-target">Using CALCULATE filter</div>
+                        <div class="pbi-kpi-trend" style="color:#3498db;">30.5% of total</div>
+                    </div>
+                    <div class="pbi-kpi" style="background:linear-gradient(135deg,rgba(231,76,60,0.2),rgba(231,76,60,0.1));border-color:rgba(231,76,60,0.3);">
+                        <div class="pbi-kpi-title">Sales 2025</div>
+                        <div class="pbi-kpi-value" style="color:#e74c3c;">$2.5M</div>
+                        <div class="pbi-kpi-target">Current year filtered</div>
+                        <div class="pbi-kpi-trend" style="color:#e74c3c;">23.8% of total</div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>💡 Power of CALCULATE:</strong> It allows you to create measures that show specific subsets of data regardless of what's selected in slicers. This is essential for comparisons, KPIs, and advanced analytics!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Filter Context vs Row Context - Side by Side</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-platinum);margin-bottom:1.5rem;">Understanding the Difference with Visual Examples</h3>
+
+                <div class="grid-2" style="margin-top:2rem;">
+                    <div style="background:rgba(100,149,237,0.1);border:2px solid rgba(100,149,237,0.3);border-radius:12px;padding:2rem;">
+                        <h4 style="color:#6495ed;margin-bottom:1rem;">🎯 FILTER CONTEXT (Measures)</h4>
+                        <div class="code-block" style="font-size:0.85rem;">
+Total Profit = 
+SUM(Sales[Revenue]) - SUM(Sales[Cost])
+                        </div>
+                        <p style="font-size:0.95rem;margin-top:1rem;line-height:1.7;">
+                            <strong>How it works:</strong><br/>
+                            1. Looks at ALL filtered rows<br/>
+                            2. Sums all Revenue values<br/>
+                            3. Sums all Cost values<br/>
+                            4. Subtracts totals<br/>
+                            5. Returns single number
+                        </p>
+                        <div class="pbi-card" style="margin-top:1rem;">
+                            <div class="pbi-card-value">$1,050</div>
+                            <div class="pbi-card-subtitle">One aggregated result</div>
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(46,204,113,0.1);border:2px solid rgba(46,204,113,0.3);border-radius:12px;padding:2rem;">
+                        <h4 style="color:#2ecc71;margin-bottom:1rem;">🔄 ROW CONTEXT (Calculated Column)</h4>
+                        <div class="code-block" style="font-size:0.85rem;">
+Profit Column = 
+Sales[Revenue] - Sales[Cost]
+                        </div>
+                        <p style="font-size:0.95rem;margin-top:1rem;line-height:1.7;">
+                            <strong>How it works:</strong><br/>
+                            1. Goes row by row<br/>
+                            2. Gets Revenue for THIS row<br/>
+                            3. Gets Cost for THIS row<br/>
+                            4. Subtracts values<br/>
+                            5. Stores result in THIS row
+                        </p>
+                        <table style="width:100%;font-size:0.8rem;margin-top:1rem;border-collapse:collapse;">
+                            <tr style="background:rgba(255,255,255,0.1);">
+                                <td style="padding:0.3rem;border:1px solid rgba(255,255,255,0.2);">Row 1: $200</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.05);">
+                                <td style="padding:0.3rem;border:1px solid rgba(255,255,255,0.2);">Row 2: $350</td>
+                            </tr>
+                            <tr style="background:rgba(255,255,255,0.1);">
+                                <td style="padding:0.3rem;border:1px solid rgba(255,255,255,0.2);">Row 3: $500</td>
+                            </tr>
+                        </table>
+                        <p style="font-size:0.85rem;margin-top:0.5rem;text-align:center;">Multiple row-level results</p>
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.15);border:2px solid #ff6464;padding:1.5rem;margin-top:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;"><strong>⚠️ Critical Rule:</strong> You <strong>CANNOT</strong> use aggregation functions (SUM, AVG, COUNT) inside row context without CALCULATE. They need filter context!</p>
+                    <div class="code-block" style="margin-top:1rem;background:rgba(255,0,0,0.1);">
+-- WRONG - This doesn't work in a calculated column
+Wrong Column = SUM(Sales[Amount])  -- Error!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Context Transition - The Magic Bridge</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Context Transition</span> happens when CALCULATE converts row context into filter context.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">The Problem CALCULATE Solves:</h3>
+                <div style="background:rgba(229,228,226,0.05);padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+                    <p style="font-size:1.05rem;margin-bottom:1rem;"><strong>Scenario:</strong> You want to use a measure inside a calculated column</p>
+                    <div class="code-block" style="background:rgba(255,0,0,0.1);">
+-- WRONG - Measure doesn't have row context
+Sales Amount Column = [Total Sales]  -- Returns same value for all rows!
+                    </div>
+                    <div class="code-block" style="margin-top:1rem;background:rgba(0,255,0,0.1);">
+-- CORRECT - CALCULATE creates context transition
+Sales Amount Column = CALCULATE([Total Sales])  -- Now works correctly!
+                    </div>
+                    <p style="font-size:0.95rem;margin-top:1rem;"><strong>What CALCULATE does:</strong> It takes the current row (row context) and turns it into a filter (filter context), so the measure can evaluate correctly for that specific row.</p>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Visual Example - Bar Chart:</h3>
+                <div class="pbi-chart-container">
+                    <div class="pbi-chart-title">Sales by Product Category (with Context Transition)</div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">Electronics</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:85%;">$4.2M</div>
+                        </div>
+                    </div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">Clothing</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:65%;background:linear-gradient(90deg,#e74c3c,#c0392b);">$3.2M</div>
+                        </div>
+                    </div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">Home & Garden</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:48%;background:linear-gradient(90deg,#f39c12,#e67e22);">$2.4M</div>
+                        </div>
+                    </div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">Sports</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:20%;background:linear-gradient(90deg,#9b59b6,#8e44ad);">$1.0M</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">When Context Transition Occurs:</h3>
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;border-radius:8px;">
+                    <ul style="font-size:1.05rem;line-height:1.9;">
+                        <li><strong>Automatic:</strong> When you use CALCULATE inside row context</li>
+                        <li><strong>Result:</strong> Current row becomes a filter on all related tables</li>
+                        <li><strong>Impact:</strong> Measures can now work in calculated columns</li>
+                        <li><strong>Performance:</strong> Can be slow - use sparingly in calculated columns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Iterator Functions (X Functions)</h2>
+            <div class="slide-content">
+                <p style="font-size:1.2rem;margin-bottom:2rem;"><span class="highlight">Iterator functions</span> (SUMX, AVERAGEX, etc.) create row context and iterate through tables.</p>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;">Common Iterator Functions:</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Basic Iterators</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li><strong>SUMX</strong> - Sum with row-level calc</li>
+                            <li><strong>AVERAGEX</strong> - Average with calc</li>
+                            <li><strong>COUNTX</strong> - Count with condition</li>
+                            <li><strong>MAXX / MINX</strong> - Max/Min with calc</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Advanced Iterators</div>
+                        <ul style="font-size:0.95rem;line-height:1.7;">
+                            <li><strong>FILTER</strong> - Filter table by condition</li>
+                            <li><strong>ADDCOLUMNS</strong> - Add calculated columns</li>
+                            <li><strong>RANKX</strong> - Rank values</li>
+                            <li><strong>CONCATENATEX</strong> - Join text</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Example Comparison:</h3>
+                <div class="code-block">
+-- Regular SUM (no row context)
+Total Revenue = SUM(Sales[Amount])
+-- Just adds up the Amount column
+
+-- SUMX (with row context)
+Total Profit = 
+SUMX(
+    Sales,
+    Sales[Revenue] - Sales[Cost]  -- Calculated per row, then summed
+)
+
+-- Why use SUMX?
+-- Because "Revenue - Cost" must be calculated row-by-row BEFORE summing
+-- SUM(Sales[Revenue]) - SUM(Sales[Cost]) might give different result!
+                </div>
+
+                <h3 style="color:var(--accent-silver);margin-bottom:1rem;margin-top:2rem;">Performance Comparison Chart:</h3>
+                <div class="pbi-chart-container">
+                    <div class="pbi-chart-title">Calculation Speed: SUM vs SUMX (1M rows)</div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">SUM (Storage)</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:5%;background:linear-gradient(90deg,#2ecc71,#27ae60);">15ms</div>
+                        </div>
+                    </div>
+                    <div class="pbi-bar">
+                        <div class="pbi-bar-label">SUMX (Formula)</div>
+                        <div class="pbi-bar-track">
+                            <div class="pbi-bar-fill" style="width:95%;background:linear-gradient(90deg,#e74c3c,#c0392b);">2,500ms</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align:center;margin-top:1rem;font-size:1.05rem;">SUMX is 167x slower - use only when necessary!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Common Context Mistakes</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Avoid These DAX Context Pitfalls</h3>
+
+                <div style="background:rgba(255,100,100,0.1);border:2px solid #ff6464;padding:1.5rem;margin-bottom:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>❌ Mistake #1: Using SUM in Calculated Column</strong></p>
+                    <div class="code-block" style="background:rgba(255,0,0,0.1);">
+-- WRONG - SUM needs filter context, not row context
+Total Column = SUM(Sales[Amount])  -- Same value for all rows!
+                    </div>
+                    <div class="code-block" style="margin-top:0.5rem;background:rgba(0,255,0,0.1);">
+-- CORRECT - Use simple column reference
+Amount = Sales[Amount]  -- Gets value for current row
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.1);border:2px solid #ff6464;padding:1.5rem;margin-bottom:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>❌ Mistake #2: Forgetting CALCULATE for Context Transition</strong></p>
+                    <div class="code-block" style="background:rgba(255,0,0,0.1);">
+-- WRONG - Measure won't work properly in row context
+Product Sales Column = [Total Sales]  -- Same for all products!
+                    </div>
+                    <div class="code-block" style="margin-top:0.5rem;background:rgba(0,255,0,0.1);">
+-- CORRECT - CALCULATE creates context transition
+Product Sales Column = CALCULATE([Total Sales])  -- Correct per product
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,100,100,0.1);border:2px solid #ff6464;padding:1.5rem;margin-bottom:2rem;border-radius:12px;">
+                    <p style="font-size:1.1rem;margin-bottom:1rem;"><strong>❌ Mistake #3: Not Understanding Filter Flow</strong></p>
+                    <div class="code-block" style="background:rgba(255,0,0,0.1);">
+-- WRONG - Filters on dimension don't affect unrelated measures
+Sales in Red = [Total Sales]  -- This won't filter by color automatically!
+                    </div>
+                    <div class="code-block" style="margin-top:0.5rem;background:rgba(0,255,0,0.1);">
+-- CORRECT - Explicitly filter
+Sales in Red = CALCULATE([Total Sales], Products[Color] = "Red")
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Hands-On Exercise</h2>
+            <div class="slide-content">
+                <h3 style="color:var(--accent-silver);margin-bottom:1.5rem;">Practice Context Manipulation</h3>
+
+                <div style="background:rgba(229,228,226,0.08);padding:2rem;border-radius:12px;">
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;"><strong>Exercise 1: CALCULATE with Filters</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create a basic measure:
+                            <div class="code-block" style="margin-top:0.5rem;">
+Total Sales = SUM(Sales[Amount])
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Create filtered versions:
+                            <div class="code-block" style="margin-top:0.5rem;">
+Sales This Year = CALCULATE([Total Sales], Calendar[Year] = YEAR(TODAY()))
+Sales Last Year = CALCULATE([Total Sales], Calendar[Year] = YEAR(TODAY()) - 1)
+Sales USA = CALCULATE([Total Sales], Customers[Country] = "USA")
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Create 3 card visuals showing Total, This Year, and USA sales</li>
+                        <li style="margin-top:1rem;">Add year slicer - notice how "Sales This Year" stays fixed!</li>
+                    </ol>
+
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;margin-top:3rem;"><strong>Exercise 2: Iterator Functions</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create measures using iterators:
+                            <div class="code-block" style="margin-top:0.5rem;">
+-- Regular sum
+Total Quantity = SUM(Sales[Quantity])
+
+-- Weighted average using SUMX
+Weighted Avg Price = 
+DIVIDE(
+    SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+    SUM(Sales[Quantity])
+)
+
+-- Count high-value orders
+High Value Orders = COUNTX(FILTER(Sales, Sales[Amount] > 1000), Sales[OrderID])
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Compare results in a table visual</li>
+                        <li style="margin-top:1rem;">Observe how SUMX and COUNTX create row context</li>
+                    </ol>
+
+                    <p style="font-size:1.2rem;margin-bottom:1.5rem;margin-top:3rem;"><strong>Exercise 3: Context Transition</strong></p>
+                    <ol style="font-size:1.05rem;line-height:1.9;">
+                        <li>Create a calculated column that uses a measure:
+                            <div class="code-block" style="margin-top:0.5rem;">
+-- In Products table
+Product Total Sales = CALCULATE([Total Sales])
+                            </div>
+                        </li>
+                        <li style="margin-top:1rem;">Verify each product shows its own sales total</li>
+                        <li style="margin-top:1rem;">Try without CALCULATE and see the difference</li>
+                    </ol>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.05rem;"><strong>🎯 Expected Results:</strong> Your CALCULATE measures should show specific filtered values regardless of slicers. Your iterator functions should produce different results than simple aggregations. Context transition should allow measures to work in calculated columns.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">Key Takeaways</h2>
+            <div class="slide-content">
+                <div class="key-takeaway">
+                    <ul style="font-size:1.15rem;line-height:2;">
+                        <li><span class="highlight">Filter context</span> comes from slicers, filters, and visuals - it affects measures</li>
+                        <li><span class="highlight">Row context</span> iterates through rows - present in calculated columns and X functions</li>
+                        <li><span class="highlight">CALCULATE</span> is the most powerful DAX function - it modifies filter context</li>
+                        <li><span class="highlight">Context transition</span> happens when CALCULATE converts row context to filter context</li>
+                        <li><span class="highlight">Iterator functions</span> (SUMX, AVERAGEX) create row context for complex calculations</li>
+                        <li>You <strong>cannot</strong> use SUM/AVG/COUNT in calculated columns without CALCULATE</li>
+                        <li>Use <span class="highlight">CALCULATE</span> to create measures with fixed filters (ignore slicers)</li>
+                        <li>Iterator functions are slower - use only when row-level calculations are necessary</li>
+                    </ul>
+                </div>
+
+                <div style="background:rgba(192,192,192,0.1);border-left:4px solid var(--accent-silver);padding:1.5rem;margin-top:2rem;border-radius:8px;">
+                    <p style="font-size:1.1rem;"><strong>💡 Next Steps:</strong> Now that you understand context, we'll explore <strong>Essential DAX Functions</strong> in Day 5, including FILTER, ALL, ALLEXCEPT, CALCULATE modifiers, and more!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
