@@ -38,7 +38,7 @@ class FabricAdminClient:
             if all([os.getenv('AZURE_CLIENT_ID'), 
                    os.getenv('AZURE_TENANT_ID'), 
                    os.getenv('AZURE_CLIENT_SECRET')]):
-                print("🔐 Using Service Principal authentication")
+                print("Using Service Principal authentication")
                 self.credential = ClientSecretCredential(
                     tenant_id=os.getenv('AZURE_TENANT_ID'),
                     client_id=os.getenv('AZURE_CLIENT_ID'),
@@ -46,15 +46,15 @@ class FabricAdminClient:
                 )
             else:
                 # Fallback to default (Azure CLI, Managed Identity, etc.)
-                print("🔐 Using Default Azure credentials")
+                print("Using Default Azure credentials")
                 self.credential = DefaultAzureCredential()
             
             # Get initial token to verify auth
             self._get_token()
-            print("✅ Authentication successful")
+            print("Authentication successful")
             
         except Exception as e:
-            print(f"❌ Authentication failed: {e}")
+            print(f"Authentication failed: {e}")
             raise
     
     def _get_token(self) -> str:
@@ -106,11 +106,11 @@ class FabricAdminClient:
             
             success = self._save_days(days)
             if success:
-                print(f"✅ Day {day_number} unlocked successfully")
+                print(f"Day {day_number} unlocked successfully")
             return success
             
         except Exception as e:
-            print(f"❌ Error unlocking day {day_number}: {e}")
+            print(f"Error unlocking day {day_number}: {e}")
             return False
     
     def lock_day(self, day_number: int) -> bool:
@@ -127,11 +127,11 @@ class FabricAdminClient:
             
             success = self._save_days(days)
             if success:
-                print(f"🔒 Day {day_number} locked successfully")
+                print(f"Day {day_number} locked successfully")
             return success
             
         except Exception as e:
-            print(f"❌ Error locking day {day_number}: {e}")
+            print(f"Error locking day {day_number}: {e}")
             return False
     
     def unlock_all_days(self, unlocked_by: str = 'admin') -> bool:
@@ -155,22 +155,46 @@ class FabricAdminClient:
             return False
     
     def _save_days(self, days: List[Dict]) -> bool:
-        """Save training days to Fabric"""
+        """Save training days to Fabric using OneLake DFS API"""
         try:
-            url = f"{self.onelake_base}/training_days.json"
+            file_path = "training_days.json"
             content = json.dumps(days, indent=2)
+            content_bytes = content.encode('utf-8')
+            content_length = len(content_bytes)
             
-            response = self._make_request(
-                'PUT',
-                url,
+            # Step 1: Create/Open the file
+            create_url = f"{self.onelake_base}/{file_path}?resource=file"
+            create_response = self._make_request('PUT', create_url)
+            
+            if create_response.status_code not in [200, 201]:
+                print(f"Error creating file: {create_response.status_code} - {create_response.text}")
+                return False
+            
+            # Step 2: Append content
+            append_url = f"{self.onelake_base}/{file_path}?action=append&position=0"
+            append_response = self._make_request(
+                'PATCH',
+                append_url,
                 headers={'Content-Type': 'application/json'},
-                data=content
+                data=content_bytes
             )
             
-            return response.status_code in [200, 201]
+            if append_response.status_code not in [200, 202]:
+                print(f"Error appending content: {append_response.status_code} - {append_response.text}")
+                return False
+            
+            # Step 3: Flush to finalize
+            flush_url = f"{self.onelake_base}/{file_path}?action=flush&position={content_length}"
+            flush_response = self._make_request('PATCH', flush_url)
+            
+            if flush_response.status_code not in [200, 201]:
+                print(f"Error flushing file: {flush_response.status_code} - {flush_response.text}")
+                return False
+            
+            return True
             
         except Exception as e:
-            print(f"❌ Error saving days: {e}")
+            print(f"Error saving days: {e}")
             return False
     
     # ========== Recording Operations ==========
@@ -243,22 +267,46 @@ class FabricAdminClient:
             return False
     
     def _save_recordings(self, recordings: List[Dict]) -> bool:
-        """Save recordings to Fabric"""
+        """Save recordings to Fabric using OneLake DFS API"""
         try:
-            url = f"{self.onelake_base}/recordings.json"
+            file_path = "recordings.json"
             content = json.dumps(recordings, indent=2)
+            content_bytes = content.encode('utf-8')
+            content_length = len(content_bytes)
             
-            response = self._make_request(
-                'PUT',
-                url,
+            # Step 1: Create/Open the file
+            create_url = f"{self.onelake_base}/{file_path}?resource=file"
+            create_response = self._make_request('PUT', create_url)
+            
+            if create_response.status_code not in [200, 201]:
+                print(f"Error creating file: {create_response.status_code} - {create_response.text}")
+                return False
+            
+            # Step 2: Append content
+            append_url = f"{self.onelake_base}/{file_path}?action=append&position=0"
+            append_response = self._make_request(
+                'PATCH',
+                append_url,
                 headers={'Content-Type': 'application/json'},
-                data=content
+                data=content_bytes
             )
             
-            return response.status_code in [200, 201]
+            if append_response.status_code not in [200, 202]:
+                print(f"Error appending content: {append_response.status_code} - {append_response.text}")
+                return False
+            
+            # Step 3: Flush to finalize
+            flush_url = f"{self.onelake_base}/{file_path}?action=flush&position={content_length}"
+            flush_response = self._make_request('PATCH', flush_url)
+            
+            if flush_response.status_code not in [200, 201]:
+                print(f"Error flushing file: {flush_response.status_code} - {flush_response.text}")
+                return False
+            
+            return True
             
         except Exception as e:
-            print(f"❌ Error saving recordings: {e}")
+            print(f"Error saving recordings: {e}")
             return False
     
     # ========== Stats & Reporting ==========
