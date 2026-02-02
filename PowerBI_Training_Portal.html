@@ -1696,8 +1696,12 @@
 
                     const actionsDiv = card.querySelector('.day-actions');
                     if (actionsDiv) {
+                        const isGitHub = window.location.hostname.includes('github.io');
+                        const basePath = isGitHub ? '/power-bi-training/' : './';
+                        const playerUrl = `${basePath}Video_Player.html?url=${encodeURIComponent(recording.url)}&title=${encodeURIComponent(recording.title)}&duration=${encodeURIComponent(recording.duration)}&day=${dayNumber}`;
+                        
                         const recordingBtn = document.createElement('a');
-                        recordingBtn.href = recording.url;
+                        recordingBtn.href = playerUrl;
                         recordingBtn.target = '_blank';
                         recordingBtn.className = 'btn btn-recording';
                         recordingBtn.innerHTML = `
