@@ -632,35 +632,47 @@
             await updateStats();
         }
 
-        // Login handling
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login handling
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    try {
+                        const username = document.getElementById('username').value.trim();
+                        const password = document.getElementById('password').value;
 
-            console.log('Login attempt:', username);
-            console.log('Expected:', ADMIN_CREDENTIALS.username);
-            console.log('Username match:', username === ADMIN_CREDENTIALS.username);
-            console.log('Password match:', password === ADMIN_CREDENTIALS.password);
+                        console.log('Login attempt:', username);
+                        console.log('Expected:', ADMIN_CREDENTIALS.username);
+                        console.log('Username match:', username === ADMIN_CREDENTIALS.username);
+                        console.log('Password match:', password === ADMIN_CREDENTIALS.password);
 
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                // Clear any old session data
-                localStorage.clear();
-                localStorage.setItem('admin_authenticated', 'true');
-                localStorage.setItem('admin_username', username);
-                document.getElementById('errorMessage').style.display = 'none';
-                await showDashboard();
-            } else {
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').textContent = `Invalid credentials. Use: ${ADMIN_CREDENTIALS.username} / ${ADMIN_CREDENTIALS.password}`;
-                console.error('Login failed - credentials mismatch');
+                        if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                            // Clear any old session data
+                            localStorage.clear();
+                            localStorage.setItem('admin_authenticated', 'true');
+                            localStorage.setItem('admin_username', username);
+                            document.getElementById('errorMessage').style.display = 'none';
+                            
+                            console.log('Login successful, showing dashboard...');
+                            await showDashboard();
+                        } else {
+                            document.getElementById('errorMessage').style.display = 'block';
+                            document.getElementById('errorMessage').textContent = `Invalid credentials. Use: ${ADMIN_CREDENTIALS.username} / ${ADMIN_CREDENTIALS.password}`;
+                            console.error('Login failed - credentials mismatch');
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        alert('Login error: ' + error.message);
+                    }
+                });
             }
-        });
 
-        // Check authentication on load
-        window.addEventListener('load', async function() {
+            // Check authentication on load
             if (localStorage.getItem('admin_authenticated') === 'true') {
-                await showDashboard();
+                showDashboard();
             }
         });
 
