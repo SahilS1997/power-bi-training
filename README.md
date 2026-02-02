@@ -6,6 +6,9 @@ A comprehensive 12-day Power BI training program with interactive presentations 
 
 - **12 Complete Training Modules**: From Introduction to Advanced DAX and Performance Optimization
 - **Interactive Presentations**: Modern glassmorphism design with animations
+- **Admin Portal**: Content control and recording management system
+- **Progressive Unlocking**: Control when students access each day's content
+- **Recording Integration**: Upload and stream session recordings
 - **Trainer Profile**: Professional profile with industry delivery stories across 6 sectors
 - **Industry Stories**: Real-world implementations in Financial Services, Retail, Healthcare, Manufacturing, Professional Services, and Supply Chain
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
@@ -29,6 +32,22 @@ A comprehensive 12-day Power BI training program with interactive presentations 
 
 Visit the training portal: [Power BI Training Portal](https://sahils1997.github.io/power-bi-training/PowerBI_Training_Portal.html)
 
+Admin Portal: [Admin Access](https://sahils1997.github.io/power-bi-training/Admin_Portal.html)
+
+## 🔐 Admin Access
+
+**Admin Portal Features:**
+- Content unlocking/locking control
+- Session recording management  
+- Progressive content release
+- Real-time dashboard statistics
+
+**Credentials:**
+- Username: `admin@powerbi.training`
+- Password: `PowerBI2026Admin!`
+
+📖 [Complete Admin Guide](documentation/ADMIN_PORTAL_GUIDE.md)
+
 ## 👨‍🏫 Trainer
 
 **Sahil Sreedharan**
@@ -51,6 +70,7 @@ power-bi-training/
 ├── index.html                       # Landing page (redirects to portal)
 ├── PowerBI_Training_Portal.html     # Main training portal
 ├── Trainer_Profile.html             # Trainer profile page
+├── Admin_Portal.html                # Admin content management portal
 ├── presentations/                   # All training day presentations
 │   ├── Day_01_Presentation.html
 │   ├── Day_02_Presentation.html
@@ -60,6 +80,7 @@ power-bi-training/
 │   ├── Day_01_Data_Modeling_Foundations.md
 │   ├── Day_02_Advanced_Data_Modeling.md
 │   ├── ...
+│   ├── ADMIN_PORTAL_GUIDE.md
 │   ├── FINAL_PROJECT_STATUS.md
 │   ├── TRAINING_COMPLETION_STATUS.md
 │   └── PowerBI_Practice_File_Setup_Instructions.md

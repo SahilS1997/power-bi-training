@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Power BI Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --darkest-bg: #0f1419;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-gold: #F2C811;
+            --accent-silver: #C0C0C0;
+            --accent-green: #00D26A;
+            --accent-red: #FF4757;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--darkest-bg) 0%, var(--darker-bg) 50%, var(--dark-bg) 100%);
+            background-attachment: fixed;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo h1 {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo p {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent-gold), #e0b000);
+            border: none;
+            border-radius: 10px;
+            color: var(--darkest-bg);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(242, 200, 17, 0.4);
+        }
+
+        .error-message {
+            color: var(--accent-red);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Admin Dashboard */
+        .admin-container {
+            display: none;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .admin-user {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 0.6rem 1.5rem;
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .dashboard-header {
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .content-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-header h2 {
+            font-family: 'Varela Round', sans-serif;
+            color: var(--text-primary);
+            font-size: 1.8rem;
+        }
+
+        .day-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .day-number {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gold);
+            color: var(--darkest-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .day-info h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-status {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-locked {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .status-unlocked {
+            background: rgba(0, 210, 106, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .day-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-unlock {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-lock {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .btn-upload {
+            background: var(--accent-gold);
+            color: var(--darkest-bg);
+        }
+
+        .btn-remove {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .recording-info {
+            grid-column: 2;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+            margin-top: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--darker-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .day-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .day-controls {
+                justify-content: flex-start;
+            }
+
+            .recording-info {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>🔐 Admin Portal</h1>
+                <p>Power BI Training Management</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <p class="error-message" id="errorMessage">Invalid credentials. Please try again.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-container">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div class="navbar-brand">⚙️ Admin Portal</div>
+                <div class="navbar-actions">
+                    <span class="admin-user" id="adminUserName"></span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h1>Content Management Dashboard</h1>
+                <p style="color: var(--text-secondary);">Manage training content, recordings, and access control</p>
+            </div>
+
+            <!-- Statistics -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="statUnlocked">0</div>
+                    <div class="stat-label">Days Unlocked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statRecordings">0</div>
+                    <div class="stat-label">Recordings Available</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statLocked">12</div>
+                    <div class="stat-label">Days Locked</div>
+                </div>
+            </div>
+
+            <!-- Content Control Section -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>📚 Training Days Control</h2>
+                    <button class="btn btn-unlock" onclick="unlockAllDays()">Unlock All</button>
+                </div>
+
+                <div id="daysContainer">
+                    <!-- Day items will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="close-modal" onclick="closeUploadModal()">&times;</button>
+            <div class="modal-header">
+                <h2>📹 Upload Recording</h2>
+                <p style="color: var(--text-secondary);" id="modalDayTitle"></p>
+            </div>
+            <div class="form-group">
+                <label for="recordingUrl">Recording URL (YouTube, Vimeo, or Video URL)</label>
+                <input type="url" id="recordingUrl" placeholder="https://www.youtube.com/watch?v=..." class="form-group input">
+            </div>
+            <div class="form-group">
+                <label for="recordingTitle">Recording Title</label>
+                <input type="text" id="recordingTitle" placeholder="Session Recording - Day X" class="form-group input">
+            </div>
+            <div class="form-group">
+                <label for="recordingDuration">Duration</label>
+                <input type="text" id="recordingDuration" placeholder="2h 30min" class="form-group input">
+            </div>
+            <button class="btn btn-upload" onclick="saveRecording()" style="width: 100%; margin-top: 1rem;">Save Recording</button>
+        </div>
+    </div>
+
+    <script>
+        // Admin Credentials (In production, use backend authentication)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin@powerbi.training',
+            password: 'PowerBI2026Admin!'
+        };
+
+        // Training days data
+        const TRAINING_DAYS = [
+            { day: 1, title: 'Introduction to Power BI & Data Connectivity' },
+            { day: 2, title: 'Power Query & Data Transformation' },
+            { day: 3, title: 'Data Modeling & Relationships' },
+            { day: 4, title: 'Introduction to DAX' },
+            { day: 5, title: 'Essential DAX Functions Part 1' },
+            { day: 6, title: 'Essential DAX Functions Part 2' },
+            { day: 7, title: 'Advanced DAX Patterns' },
+            { day: 8, title: 'Time Intelligence & Date Functions' },
+            { day: 9, title: 'Power BI Visualizations' },
+            { day: 10, title: 'Advanced Analytics & AI Features' },
+            { day: 11, title: 'Power BI Service & Collaboration' },
+            { day: 12, title: 'Performance Optimization & Best Practices' }
+        ];
+
+        let currentUploadDay = null;
+
+        // Initialize content state from localStorage
+        function getContentState() {
+            const state = localStorage.getItem('powerbi_content_state');
+            return state ? JSON.parse(state) : {
+                unlockedDays: [],
+                recordings: {}
+            };
+        }
+
+        function saveContentState(state) {
+            localStorage.setItem('powerbi_content_state', JSON.stringify(state));
+            updateStats();
+        }
+
+        // Login handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                localStorage.setItem('admin_authenticated', 'true');
+                localStorage.setItem('admin_username', username);
+                showDashboard();
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // Check authentication on load
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('admin_authenticated') === 'true') {
+                showDashboard();
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('adminUserName').textContent = localStorage.getItem('admin_username');
+            renderDays();
+            updateStats();
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_authenticated');
+            localStorage.removeItem('admin_username');
+            location.reload();
+        }
+
+        // Render days
+        function renderDays() {
+            const container = document.getElementById('daysContainer');
+            const state = getContentState();
+            
+            container.innerHTML = TRAINING_DAYS.map(day => {
+                const isUnlocked = state.unlockedDays.includes(day.day);
+                const recording = state.recordings[day.day];
+
+                return `
+                    <div class="day-item">
+                        <div class="day-number">${day.day}</div>
+                        <div class="day-info">
+                            <h3>Day ${day.day}: ${day.title}</h3>
+                            <div class="day-status">
+                                <span class="status-badge ${isUnlocked ? 'status-unlocked' : 'status-locked'}">
+                                    ${isUnlocked ? '🔓 Unlocked' : '🔒 Locked'}
+                                </span>
+                                ${recording ? '<span class="status-badge status-unlocked">📹 Recording Available</span>' : ''}
+                            </div>
+                            ${recording ? `<div class="recording-info">📹 ${recording.title} (${recording.duration})</div>` : ''}
+                        </div>
+                        <div class="day-controls">
+                            <button class="btn ${isUnlocked ? 'btn-lock' : 'btn-unlock'}" 
+                                    onclick="toggleDayLock(${day.day})">
+                                ${isUnlocked ? '🔒 Lock' : '🔓 Unlock'}
+                            </button>
+                            <button class="btn btn-upload" onclick="openUploadModal(${day.day})">
+                                ${recording ? '✏️ Edit' : '📤 Upload'} Recording
+                            </button>
+                            ${recording ? `<button class="btn btn-remove" onclick="removeRecording(${day.day})">🗑️ Remove</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle day lock/unlock
+        function toggleDayLock(day) {
+            const state = getContentState();
+            const index = state.unlockedDays.indexOf(day);
+            
+            if (index > -1) {
+                state.unlockedDays.splice(index, 1);
+            } else {
+                state.unlockedDays.push(day);
+                state.unlockedDays.sort((a, b) => a - b);
+            }
+            
+            saveContentState(state);
+            renderDays();
+        }
+
+        // Unlock all days
+        function unlockAllDays() {
+            if (confirm('Unlock all 12 training days?')) {
+                const state = getContentState();
+                state.unlockedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                saveContentState(state);
+                renderDays();
+            }
+        }
+
+        // Upload modal
+        function openUploadModal(day) {
+            currentUploadDay = day;
+            const dayData = TRAINING_DAYS.find(d => d.day === day);
+            const state = getContentState();
+            const recording = state.recordings[day];
+
+            document.getElementById('modalDayTitle').textContent = `Day ${day}: ${dayData.title}`;
+            document.getElementById('recordingUrl').value = recording?.url || '';
+            document.getElementById('recordingTitle').value = recording?.title || `Session Recording - Day ${day}`;
+            document.getElementById('recordingDuration').value = recording?.duration || '';
+            
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            currentUploadDay = null;
+        }
+
+        function saveRecording() {
+            const url = document.getElementById('recordingUrl').value;
+            const title = document.getElementById('recordingTitle').value;
+            const duration = document.getElementById('recordingDuration').value;
+
+            if (!url || !title) {
+                alert('Please fill in URL and Title');
+                return;
+            }
+
+            const state = getContentState();
+            state.recordings[currentUploadDay] = { url, title, duration };
+            saveContentState(state);
+            
+            closeUploadModal();
+            renderDays();
+            alert('Recording saved successfully!');
+        }
+
+        function removeRecording(day) {
+            if (confirm('Remove this recording?')) {
+                const state = getContentState();
+                delete state.recordings[day];
+                saveContentState(state);
+                renderDays();
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const state = getContentState();
+            document.getElementById('statUnlocked').textContent = state.unlockedDays.length;
+            document.getElementById('statRecordings').textContent = Object.keys(state.recordings).length;
+            document.getElementById('statLocked').textContent = 12 - state.unlockedDays.length;
+        }
+
+        // Close modal on outside click
+        document.getElementById('uploadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUploadModal();
+            }
+        });
+    </script>
+</body>
+</html>
