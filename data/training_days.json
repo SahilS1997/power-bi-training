@@ -2,85 +2,133 @@
   {
     "dayNumber": 1,
     "title": "Introduction to Power BI & Data Connectivity",
-    "isUnlocked": false,
-    "unlockedAt": null,
-    "unlockedBy": null
+    "description": "Getting started with Power BI Desktop",
+    "isUnlocked": true,
+    "unlockedAt": "2026-02-03T00:00:00Z",
+    "unlockedBy": "admin",
+    "presentationUrl": "presentations/Day_01_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 2,
     "title": "Power Query & Data Transformation",
+    "description": "Master data transformation",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_02_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 3,
     "title": "Data Modeling & Relationships",
+    "description": "Build efficient data models",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_03_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 4,
     "title": "Introduction to DAX",
+    "description": "Learn DAX fundamentals",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_04_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 5,
     "title": "Essential DAX Functions Part 1",
+    "description": "Key DAX functions",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_05_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 6,
     "title": "Essential DAX Functions Part 2",
+    "description": "Advanced functions",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_06_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 7,
     "title": "Advanced DAX Patterns",
+    "description": "Complex calculations",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_07_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 8,
     "title": "Time Intelligence & Date Functions",
+    "description": "Time-based analysis",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_08_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 9,
     "title": "Power BI Visualizations",
+    "description": "Create stunning visuals",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_09_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 10,
     "title": "Advanced Analytics & AI Features",
+    "description": "AI-powered insights",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_10_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 11,
     "title": "Power BI Service & Collaboration",
+    "description": "Share and collaborate",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_11_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   },
   {
     "dayNumber": 12,
     "title": "Performance Optimization & Best Practices",
+    "description": "Optimize your reports",
     "isUnlocked": false,
     "unlockedAt": null,
-    "unlockedBy": null
+    "unlockedBy": null,
+    "presentationUrl": "presentations/Day_12_Presentation.html",
+    "resourcesUrl": null,
+    "recording": null
   }
 ]
