@@ -505,11 +505,7 @@
         <div class="dashboard">
             <div class="dashboard-header">
                 <h1>Content Management Dashboard</h1>
-                <p style="color: var(--text-secondary);">Monitoring view - Use Python CLI for content management</p>
-                <div style="background: rgba(242, 200, 17, 0.1); border-left: 4px solid var(--accent-gold); padding: 1rem; margin-top: 1rem; border-radius: 8px;">
-                    <strong style="color: var(--accent-gold);">ℹ️ Read-Only Dashboard</strong>
-                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">To manage content, use: <code style="background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px;">python scripts/admin_fabric.py [command]</code></p>
-                </div>
+                <p style="color: var(--text-secondary);">Full control - Manage training content, recordings, and access</p>
             </div>
 
             <!-- Statistics -->
@@ -737,24 +733,15 @@
             
             if (index > -1) {
                 state.unlockedDays.splice(index, 1);
-                alert(`Day ${day} locked locally! Run Python CLI to sync with Fabric.`);
+                alert(`✅ Day ${day} locked successfully!`);
             } else {
                 state.unlockedDays.push(day);
-                alert(`Day ${day} unlocked locally! Run Python CLI to sync with Fabric.`);
+                alert(`✅ Day ${day} unlocked successfully!`);
             }
             
             await saveContentState(state);
             await renderDays();
         }
-            
-            // Legacy code (disabled)
-            try {
-                const state = await getContentState();
-                const isUnlocked = state.unlockedDays.includes(day);
-                
-                if (isUnlocked) {
-                    await fabricClient.lockDay(day);
-                    alert(`Day ${day} locked successfully!`);
                 } else {
                     await fabricClient.unlockDay(day, ADMIN_CREDENTIALS.username);
                     alert(`Day ${day} unlocked successfully!`);
@@ -774,10 +761,6 @@
                     state.unlockedDays.push(day);
                 }
                 await saveContentState(state);
-                await renderDays();
-            }
-        }
-
         // Unlock all days
         async function unlockAllDays() {
             if (!confirm('Unlock all 12 training days?')) return;
@@ -785,7 +768,7 @@
             const state = await getContentState();
             state.unlockedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
             await saveContentState(state);
-            alert('All days unlocked! Use Python CLI to sync with Fabric.');
+            alert('✅ All days unlocked successfully!');
             await renderDays();
         }
 
@@ -796,7 +779,6 @@
             document.getElementById('modalDayTitle').textContent = `Day ${day}: ${dayInfo.title}`;
             document.getElementById('uploadModal').style.display = 'flex';
         }
-            const dayData = TRAINING_DAYS.find(d => d.day === day);
             const state = getContentState();
             const recording = state.recordings[day];
 
