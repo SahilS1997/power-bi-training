@@ -1,12 +1,9 @@
 name: Sync Fabric to GitHub
 
 on:
-  # DISABLED: Enable after Service Principal setup complete
-  # schedule:
-  #   - cron: '*/5 * * * *'
-  
-  # Allow manual trigger only
-  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:  # Allow manual triggers
 
 jobs:
   sync:
