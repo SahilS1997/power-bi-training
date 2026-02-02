@@ -140,13 +140,14 @@
 
         .navbar {
             position: fixed;
-            top: 0;
+            bottom: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(26, 26, 46, 0.9);
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border);
             padding: 1rem 2rem;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .navbar-content {
@@ -194,7 +195,7 @@
         .dashboard {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 6rem 2rem 4rem;
+            padding: 2rem 2rem 6rem;
         }
 
         .dashboard-header {
@@ -459,7 +460,7 @@
     <div id="adminDashboard" class="admin-container">
         <nav class="navbar">
             <div class="navbar-content">
-                <div class="navbar-brand">⚙️ Admin Portal</div>
+                <div class="navbar-brand">Admin</div>
                 <div class="navbar-actions">
                     <span class="admin-user" id="adminUserName"></span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -592,24 +593,29 @@
         }
 
         // Login handling
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+
+            console.log('Login attempt:', username);
+            console.log('Expected:', ADMIN_CREDENTIALS.username);
 
             if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
                 localStorage.setItem('admin_authenticated', 'true');
                 localStorage.setItem('admin_username', username);
-                showDashboard();
+                document.getElementById('errorMessage').style.display = 'none';
+                await showDashboard();
             } else {
                 document.getElementById('errorMessage').style.display = 'block';
+                console.error('Login failed - credentials mismatch');
             }
         });
 
         // Check authentication on load
-        window.addEventListener('load', function() {
+        window.addEventListener('load', async function() {
             if (localStorage.getItem('admin_authenticated') === 'true') {
-                showDashboard();
+                await showDashboard();
             }
         });
 
