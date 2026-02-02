@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power BI Training - 12-Day Accelerated Program</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Fabric Client -->
-    <script src="scripts/fabricClient.js"></script>
     <style>
         :root {
             --dark-bg: #1a1a2e;
@@ -1667,13 +1665,23 @@
 
     <!-- Content Control System -->
     <script>
-        // Initialize Fabric Client
-        const fabricClient = new FabricClient();
-        
-        // Load content state from Fabric and apply locks/recordings
+        // Load training data from GitHub repo (synced from Fabric)
         (async function() {
             try {
-                const days = await fabricClient.getAllTrainingDays();
+                // Detect environment
+                const isGitHub = window.location.hostname === 'sahils1997.github.io';
+                const baseUrl = isGitHub 
+                    ? 'https://sahils1997.github.io/power-bi-training/data'
+                    : 'data';
+                
+                // Fetch training data from GitHub repo
+                const [daysResponse, recordingsResponse] = await Promise.all([
+                    fetch(`${baseUrl}/training_days.json`),
+                    fetch(`${baseUrl}/recordings.json`)
+                ]);
+                
+                const days = await daysResponse.json();
+                const recordings = await recordingsResponse.json();
                 
                 // Create state object for compatibility
                 const contentState = {
@@ -1681,26 +1689,17 @@
                     recordings: {}
                 };
                 
-                days.forEach(day => {
-                    if (day.recording) {
-                        contentState.recordings[day.dayNumber] = {
-                            url: day.recording.videoUrl,
-                            title: day.recording.title,
-                            duration: day.recording.duration,
-                            embedUrl: day.recording.embedUrl
-                        };
-                    }
+                // Map recordings by day number
+                recordings.forEach(rec => {
+                    contentState.recordings[rec.dayNumber] = {
+                        url: rec.videoUrl,
+                        title: rec.title,
+                        duration: rec.duration,
+                        embedUrl: rec.embedUrl
+                    };
                 });
                 
-                console.log('✅ Loaded from Microsoft Fabric:', contentState);
-            } catch (error) {
-                console.warn('⚠️ Fabric unavailable, checking localStorage:', error);
-                const state = localStorage.getItem('powerbi_content_state');
-                if (!state) {
-                    console.log('ℹ️ No content restrictions - all days visible');
-                    return;
-                }
-                const contentState = JSON.parse(state);
+                console.log('✅ Loaded from GitHub (synced from Fabric)');
             const dayCards = document.querySelectorAll('.day-card');
 
             dayCards.forEach((card, index) => {

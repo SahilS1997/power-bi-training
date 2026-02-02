@@ -1,0 +1,86 @@
+[
+  {
+    "dayNumber": 1,
+    "title": "Introduction to Power BI & Data Connectivity",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 2,
+    "title": "Power Query & Data Transformation",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 3,
+    "title": "Data Modeling & Relationships",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 4,
+    "title": "Introduction to DAX",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 5,
+    "title": "Essential DAX Functions Part 1",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 6,
+    "title": "Essential DAX Functions Part 2",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 7,
+    "title": "Advanced DAX Patterns",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 8,
+    "title": "Time Intelligence & Date Functions",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 9,
+    "title": "Power BI Visualizations",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 10,
+    "title": "Advanced Analytics & AI Features",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 11,
+    "title": "Power BI Service & Collaboration",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  },
+  {
+    "dayNumber": 12,
+    "title": "Performance Optimization & Best Practices",
+    "isUnlocked": false,
+    "unlockedAt": null,
+    "unlockedBy": null
+  }
+]
