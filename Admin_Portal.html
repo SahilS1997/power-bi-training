@@ -606,14 +606,19 @@
 
             console.log('Login attempt:', username);
             console.log('Expected:', ADMIN_CREDENTIALS.username);
+            console.log('Username match:', username === ADMIN_CREDENTIALS.username);
+            console.log('Password match:', password === ADMIN_CREDENTIALS.password);
 
             if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                // Clear any old session data
+                localStorage.clear();
                 localStorage.setItem('admin_authenticated', 'true');
                 localStorage.setItem('admin_username', username);
                 document.getElementById('errorMessage').style.display = 'none';
                 await showDashboard();
             } else {
                 document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').textContent = `Invalid credentials. Use: ${ADMIN_CREDENTIALS.username} / ${ADMIN_CREDENTIALS.password}`;
                 console.error('Login failed - credentials mismatch');
             }
         });
