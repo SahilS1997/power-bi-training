@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - Power BI Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Microsoft Authentication Library -->
-    <script src="https://alcdn.msauth.net/browser/2.38.1/js/msal-browser.min.js"></script>
-    <!-- Fabric Client -->
-    <script src="scripts/fabricClient.js"></script>
     <style>
         :root {
             --dark-bg: #1a1a2e;
@@ -533,9 +529,6 @@
     </div>
 
     <script>
-        // Initialize Fabric Client
-        const fabricClient = new FabricClient();
-        
         // Admin Credentials (In production, use backend authentication)
         const ADMIN_CREDENTIALS = {
             username: 'admin@powerbi.training',
