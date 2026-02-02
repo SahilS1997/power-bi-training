@@ -48,12 +48,30 @@ Visit the training portal: [Power BI Training Portal](https://sahils1997.github.
 
 ```
 power-bi-training/
-├── PowerBI_Training_Portal.html    # Main landing page
+├── index.html                       # Landing page (redirects to portal)
+├── PowerBI_Training_Portal.html     # Main training portal
 ├── Trainer_Profile.html             # Trainer profile page
-├── Day_01_Presentation.html         # Module 1
-├── Day_02_Presentation.html         # Module 2
-├── ...
-└── Day_12_Presentation.html         # Module 12
+├── presentations/                   # All training day presentations
+│   ├── Day_01_Presentation.html
+│   ├── Day_02_Presentation.html
+│   ├── ...
+│   └── Day_12_Presentation.html
+├── documentation/                   # Course materials & docs
+│   ├── Day_01_Data_Modeling_Foundations.md
+│   ├── Day_02_Advanced_Data_Modeling.md
+│   ├── ...
+│   ├── FINAL_PROJECT_STATUS.md
+│   ├── TRAINING_COMPLETION_STATUS.md
+│   └── PowerBI_Practice_File_Setup_Instructions.md
+├── sample-data/                     # Practice CSV files
+│   ├── Sample_Data_Calendar.csv
+│   ├── Sample_Data_Customers.csv
+│   ├── Sample_Data_Products.csv
+│   └── Sample_Data_Sales.csv
+├── scripts/                         # Python utility scripts
+│   └── generate_powerpoint_day01.py
+└── assets/                          # Design resources
+    └── Design Inspirations/
 ```
 
 ## 🎨 Design Features
