@@ -240,8 +240,8 @@
         <div class="navbar-content">
             <div class="navbar-brand">Day 1: Data Modeling Foundations</div>
             <div class="nav-controls">
-                <a href="../PowerBI_Training_Portal.html" class="nav-btn">← Portal</a>
-                <a href="Day_02_Presentation.html" class="nav-btn">Next Day →</a>
+                <a href="../PowerBI_Training_Portal.html" class="nav-btn" data-nav="portal">← Portal</a>
+                <a href="Day_02_Presentation.html" class="nav-btn" data-nav="next">Next Day →</a>
             </div>
         </div>
     </nav>
@@ -476,5 +476,24 @@ One customer can have many sales transactions.
             </div>
         </div>
     </div>
+
+    <!-- Smart Navigation System -->
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : '../';
+            
+            document.querySelectorAll('a[href][data-nav="portal"]').forEach(link => {
+                link.setAttribute('href', basePath + 'PowerBI_Training_Portal.html');
+            });
+            
+            document.querySelectorAll('a[href][data-nav="prev"], a[href][data-nav="next"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (isGitHub && !href.includes('github.io')) {
+                    link.setAttribute('href', basePath + 'presentations/' + href);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

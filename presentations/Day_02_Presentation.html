@@ -98,9 +98,9 @@
         <div class="navbar-content">
             <div class="navbar-brand">Day 2: Advanced Data Modeling</div>
             <div class="nav-controls">
-                <a href="Day_01_Presentation.html" class="nav-btn">← Day 1</a>
-                <a href="../PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
-                <a href="Day_03_Presentation.html" class="nav-btn">Day 3 →</a>
+                <a href="Day_01_Presentation.html" class="nav-btn" data-nav="prev">← Day 1</a>
+                <a href="../PowerBI_Training_Portal.html" class="nav-btn" data-nav="portal">Portal</a>
+                <a href="Day_03_Presentation.html" class="nav-btn" data-nav="next">Day 3 →</a>
             </div>
         </div>
     </nav>
@@ -609,5 +609,24 @@ CALCULATE([Total Sales], USERELATIONSHIP(Sales[DeliveryDate], Calendar[DateKey])
             </div>
         </div>
     </div>
+
+    <!-- Smart Navigation System -->
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : '../';
+            
+            document.querySelectorAll('a[href][data-nav="portal"]').forEach(link => {
+                link.setAttribute('href', basePath + 'PowerBI_Training_Portal.html');
+            });
+            
+            document.querySelectorAll('a[href][data-nav="prev"], a[href][data-nav="next"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (isGitHub && !href.includes('github.io')) {
+                    link.setAttribute('href', basePath + 'presentations/' + href);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

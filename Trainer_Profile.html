@@ -1011,7 +1011,7 @@
 <body>
     <nav class="navbar" id="mainNav">
         <div class="navbar-content">
-            <a href="../PowerBI_Training_Portal.html" class="navbar-brand">
+            <a href="PowerBI_Training_Portal.html" class="navbar-brand" data-nav="portal">
                 <svg width="35" height="35" viewBox="0 0 24 24" fill="none">
                     <rect x="2" y="2" width="9" height="9" fill="#F2C811" rx="1"/>
                     <rect x="13" y="2" width="9" height="9" fill="#F25022" rx="1"/>
@@ -1524,6 +1524,20 @@
         setInterval(() => {
             moveCarousel(1);
         }, 6000);
+    </script>
+
+    <!-- Smart Navigation System -->
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : './';
+            
+            document.querySelectorAll('a[href][data-nav="portal"]').forEach(link => {
+                if (isGitHub) {
+                    link.setAttribute('href', basePath + 'PowerBI_Training_Portal.html');
+                }
+            });
+        })();
     </script>
 </body>
 </html>

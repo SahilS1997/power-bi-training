@@ -14,9 +14,9 @@
         <div class="navbar-content">
             <div class="navbar-brand">Day 7: Time Intelligence - Part 1</div>
             <div class="nav-controls">
-                <a href="Day_06_Presentation.html" class="nav-btn">← Day 6</a>
-                <a href="../PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
-                <a href="Day_08_Presentation.html" class="nav-btn">Day 8 →</a>
+                <a href="Day_06_Presentation.html" class="nav-btn" data-nav="prev">← Day 6</a>
+                <a href="../PowerBI_Training_Portal.html" class="nav-btn" data-nav="portal">Portal</a>
+                <a href="Day_08_Presentation.html" class="nav-btn" data-nav="next">Day 8 →</a>
             </div>
         </div>
     </nav>
@@ -382,5 +382,24 @@ RETURN
             </div>
         </div>
     </div>
+
+    <!-- Smart Navigation System -->
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : '../';
+            
+            document.querySelectorAll('a[href][data-nav="portal"]').forEach(link => {
+                link.setAttribute('href', basePath + 'PowerBI_Training_Portal.html');
+            });
+            
+            document.querySelectorAll('a[href][data-nav="prev"], a[href][data-nav="next"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (isGitHub && !href.includes('github.io')) {
+                    link.setAttribute('href', basePath + 'presentations/' + href);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

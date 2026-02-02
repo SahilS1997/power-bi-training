@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 4: DAX Context & Row Context</title>    <base href="https://sahils1997.github.io/power-bi-training/">    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <title>Day 4: DAX Context & Row Context</title>    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root{--dark-bg:#1a1a2e;--darker-bg:#16213e;--darkest-bg:#0f1419;--glass-bg:rgba(255,255,255,0.08);--glass-border:rgba(255,255,255,0.15);--accent-silver:#C0C0C0;--accent-platinum:#E5E4E2;--text-primary:#ffffff;--text-secondary:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,var(--darkest-bg) 0%,var(--darker-bg) 50%,var(--dark-bg) 100%);background-attachment:fixed;color:var(--text-secondary);line-height:1.6}.navbar{position:fixed;top:0;width:100%;z-index:1000;background:rgba(26,26,46,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1.2rem 2rem}.navbar-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.navbar-brand{color:var(--text-primary);font-family:'Varela Round',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase}.nav-controls{display:flex;gap:1rem}.nav-btn{background:var(--glass-bg);backdrop-filter:blur(10px);color:var(--text-primary);padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;font-family:'Varela Round',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1rem;text-transform:uppercase;transition:all .3s;border:1px solid var(--glass-border)}.nav-btn:hover{background:rgba(255,255,255,0.15);border-color:var(--accent-silver);transform:translateY(-2px)}.presentation-container{max-width:1400px;margin:0 auto;padding:6rem 2rem 4rem}.slide{background:var(--glass-bg);backdrop-filter:blur(30px);border:1px solid var(--glass-border);border-radius:20px;padding:4rem;margin-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;justify-content:center}.slide-title{font-family:'Varela Round',sans-serif;font-size:3.5rem;color:var(--text-primary);letter-spacing:.1rem;margin-bottom:1.5rem;text-shadow:0 4px 20px rgba(0,0,0,0.5)}.slide-subtitle{font-size:1.8rem;color:var(--accent-silver);margin-bottom:2rem;font-weight:300}.slide-content{font-size:1.15rem;line-height:1.9;color:var(--text-secondary)}.slide-content ul,.slide-content ol{margin-left:2rem;margin-top:1.5rem}.slide-content li{margin-bottom:1rem;padding-left:.5rem}.highlight{color:var(--accent-platinum);font-weight:700}.code-block{background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:12px;padding:2rem;margin:2rem 0;font-family:'Courier New',monospace;font-size:1rem;color:var(--accent-platinum);overflow-x:auto}.example-box{background:rgba(192,192,192,0.05);border-left:4px solid var(--accent-silver);padding:2rem;margin:2rem 0;border-radius:8px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:2rem 0}.card{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;padding:1.8rem;transition:all .3s}.card:hover{background:rgba(255,255,255,0.08);transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}.card-title{font-family:'Varela Round',sans-serif;font-size:1.2rem;color:var(--text-primary);margin-bottom:1rem}.key-takeaway{background:linear-gradient(135deg,rgba(192,192,192,0.1),rgba(229,228,226,0.05));border:2px solid var(--accent-silver);border-radius:15px;padding:2.5rem;margin:3rem 0}.pbi-card{background:linear-gradient(135deg,rgba(100,149,237,0.2),rgba(100,149,237,0.1));border:2px solid rgba(100,149,237,0.3);border-radius:12px;padding:2rem;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center}.pbi-card-title{font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05rem}.pbi-card-value{font-size:2.5rem;font-weight:800;color:var(--accent-platinum);margin-bottom:0.3rem}.pbi-card-subtitle{font-size:0.85rem;color:var(--text-secondary)}.pbi-kpi{background:linear-gradient(135deg,rgba(46,204,113,0.2),rgba(46,204,113,0.1));border:2px solid rgba(46,204,113,0.3);border-radius:12px;padding:1.5rem;text-align:center}.pbi-kpi-title{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem}.pbi-kpi-value{font-size:2.2rem;font-weight:800;color:#2ecc71;margin-bottom:0.3rem}.pbi-kpi-target{font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.3rem}.pbi-kpi-trend{font-size:1.1rem;color:#2ecc71}.pbi-chart-container{background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);border-radius:12px;padding:1.5rem;margin-top:1.5rem}.pbi-chart-title{font-size:1rem;color:var(--text-primary);margin-bottom:1rem;text-align:center}.pbi-bar{display:flex;align-items:center;margin-bottom:0.8rem}.pbi-bar-label{width:120px;font-size:0.9rem;color:var(--text-secondary)}.pbi-bar-track{flex:1;background:rgba(255,255,255,0.1);border-radius:4px;height:30px;position:relative;overflow:hidden}.pbi-bar-fill{background:linear-gradient(90deg,#3498db,#2ecc71);height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.85rem;font-weight:700;color:#fff}
     </style>
@@ -13,9 +13,9 @@
         <div class="navbar-content">
             <div class="navbar-brand">Day 4: DAX Context & Row Context</div>
             <div class="nav-controls">
-                <a href="Day_03_Presentation.html" class="nav-btn">← Day 3</a>
-                <a href="../PowerBI_Training_Portal.html" class="nav-btn">Portal</a>
-                <a href="Day_05_Presentation.html" class="nav-btn">Day 5 →</a>
+                <a href="Day_03_Presentation.html" class="nav-btn" data-nav="prev">← Day 3</a>
+                <a href="../PowerBI_Training_Portal.html" class="nav-btn" data-nav="portal">Portal</a>
+                <a href="Day_05_Presentation.html" class="nav-btn" data-nav="next">Day 5 →</a>
             </div>
         </div>
     </nav>
@@ -551,6 +551,25 @@ Product Total Sales = CALCULATE([Total Sales])
             </div>
         </div>
     </div>
+
+    <!-- Smart Navigation System -->
+    <script>
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : '../';
+            
+            document.querySelectorAll('a[href][data-nav="portal"]').forEach(link => {
+                link.setAttribute('href', basePath + 'PowerBI_Training_Portal.html');
+            });
+            
+            document.querySelectorAll('a[href][data-nav="prev"], a[href][data-nav="next"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (isGitHub && !href.includes('github.io')) {
+                    link.setAttribute('href', basePath + 'presentations/' + href);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
 

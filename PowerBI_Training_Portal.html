@@ -1572,5 +1572,33 @@
             }
         });
     </script>
+
+    <!-- Smart Navigation System -->
+    <script>
+        // Detect environment and fix navigation links
+        (function() {
+            const isGitHub = window.location.hostname.includes('github.io');
+            const basePath = isGitHub ? '/power-bi-training/' : '/';
+            
+            // Fix all relative navigation links
+            document.querySelectorAll('a[href]').forEach(link => {
+                const href = link.getAttribute('href');
+                
+                // Skip external links, anchors, and already processed links
+                if (href.startsWith('http') || href.startsWith('#') || href.includes('github.io')) {
+                    return;
+                }
+                
+                // Fix internal navigation links
+                if (isGitHub && !href.startsWith(basePath)) {
+                    if (href.startsWith('presentations/')) {
+                        link.setAttribute('href', basePath + href);
+                    } else if (href.endsWith('.html')) {
+                        link.setAttribute('href', basePath + href);
+                    }
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
