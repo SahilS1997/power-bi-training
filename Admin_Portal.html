@@ -484,6 +484,12 @@
                 <button type="submit" class="login-btn">Login</button>
                 <p class="error-message" id="errorMessage">Invalid credentials. Please try again.</p>
             </form>
+            <div style="margin-top: 20px; padding: 15px; background: #2a2a3e; border-radius: 8px; text-align: center;">
+                <p style="color: #F2C811; font-size: 12px; margin-bottom: 10px;">🔧 DEBUG MODE - Presentation Setup</p>
+                <button onclick="showDashboard()" class="login-btn" style="background: #F2C811; color: #1a1a2e;">
+                    Skip Login (Direct Access)
+                </button>
+            </div>
         </div>
     </div>
 
@@ -563,6 +569,9 @@
     </div>
 
     <script>
+        // Debug: Log script loading
+        console.log('🟢 Admin Portal Script Loaded');
+        
         // Admin Credentials (In production, use backend authentication)
         const ADMIN_CREDENTIALS = {
             username: 'admin',
@@ -677,6 +686,10 @@
         });
 
         async function showDashboard() {
+            console.log('🟢 showDashboard() called');
+            console.log('Login screen element:', document.getElementById('loginScreen'));
+            console.log('Dashboard element:', document.getElementById('adminDashboard'));
+            
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
             
@@ -754,25 +767,7 @@
             await saveContentState(state);
             await renderDays();
         }
-                } else {
-                    await fabricClient.unlockDay(day, ADMIN_CREDENTIALS.username);
-                    alert(`Day ${day} unlocked successfully!`);
-                }
-                
-                await renderDays();
-            } catch (error) {
-                console.error('Error toggling lock:', error);
-                alert('Failed to update: ' + error.message + '. Changes saved locally.');
-                
-                // Fallback to localStorage
-                const state = await getContentState();
-                const index = state.unlockedDays.indexOf(day);
-                if (index > -1) {
-                    state.unlockedDays.splice(index, 1);
-                } else {
-                    state.unlockedDays.push(day);
-                }
-                await saveContentState(state);
+
         // Unlock all days
         async function unlockAllDays() {
             if (!confirm('Unlock all 12 training days?')) return;
@@ -789,16 +784,6 @@
             currentUploadDay = day;
             const dayInfo = TRAINING_DAYS.find(d => d.day === day);
             document.getElementById('modalDayTitle').textContent = `Day ${day}: ${dayInfo.title}`;
-            document.getElementById('uploadModal').style.display = 'flex';
-        }
-            const state = getContentState();
-            const recording = state.recordings[day];
-
-            document.getElementById('modalDayTitle').textContent = `Day ${day}: ${dayData.title}`;
-            document.getElementById('recordingUrl').value = recording?.url || '';
-            document.getElementById('recordingTitle').value = recording?.title || `Session Recording - Day ${day}`;
-            document.getElementById('recordingDuration').value = recording?.duration || '';
-            
             document.getElementById('uploadModal').style.display = 'flex';
         }
 
